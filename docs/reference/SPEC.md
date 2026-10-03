@@ -373,6 +373,18 @@ This shape serialization is distinct from:
 
 ## 2. Positional structural addresses
 
+Positional structural addresses are a state-scoped interface over the canonical
+PETRA carrier. They identify occurrences or relations within one concrete
+represented state; they do not add persistent identity to PETRA occurrences.
+
+Their positional segments and ranks are representation-level selectors. They
+are not part of the carrier and must not redefine structural equality (§1.4) or
+the intrinsic ADD/REMOVE algebra (§1.4.2).
+
+The existing address grammar, resolution pipeline, failure reasons, rank
+handling, and address-effect contracts in this section are retained as a
+deferred compatibility surface pending separate Phase-7 reconciliation.
+
 ### 2.1 Syntax
 
 The normative serialized address grammar is:
