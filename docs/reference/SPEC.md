@@ -771,59 +771,72 @@ PRUNE @/0/0/0
 C(r0^C(r0^C(r0^1))) -> C(r0^C(r0^1))
 ```
 
-## 5. Partial inverse laws
+## 5. Intrinsic inverse law
 
-These are local, witness-aware rewrite laws.  They are not total algebraic
-inverses and neither operator name nor a default invocation carries enough
-history to make them total.
+The intrinsic elementary PETRA edit relations are exact converses:
 
-### 5.1 SPROUT and SHED
+```text
+P --ADD--> Q    iff    Q --REMOVE--> P
+```
 
-If `SPROUT` succeeds on a container `C`, let `w` be the returned address of
-the appended leaf in the after-shape.  Re-resolve `w` in that after-shape and
-apply explicit `SHED w`.  The result is structurally equal to the before-shape
-provided no intervening rewrite changed that selected container.  A rewrite
-witness is sufficient; invocation history is not otherwise required.
+This is the canonical algebraic inverse law. It is representation-independent
+and does not depend on positional addresses, public operator names, invocation
+defaults, serialization, or persistent identity.
 
-Conversely, if `SHED` removes the final visible term of its parent container
-and that parent remains a container, a re-resolved explicit `SPROUT` at that
-parent reconstructs the before-shape. The target is `@/` for the root
-container, or the address of the owning term for a nested exponent container.
-If the deleted term was not final, `SPROUT` has no position argument and
-appends instead, so it cannot restore the original order. If SHED collapsed
-the root container to `Leaf`, only the root anchor, selected either by default
-or explicitly as `@/`, can restore a one-leaf root shape.
+### 5.1 Pointed realization law
 
-Defaults make this partial.  A nested `SPROUT @/0` is not undone by default
-`SHED`, which searches only the top-level container.  In
-`C(r0^1, r1^C(r0^1), r2^1)`, shedding `@/0` and then sprouting at the root
-produces `C(r0^C(r0^1), r1^1, r2^1)`, not the original ordering.  Positional
-addresses also change as ranks close: an old `@/1` can select a different term
-after deleting `@/0`.  Even without a default, a container with several
-eligible leaf terms requires the returned SPROUT witness (or an explicit
-after-shape target): shedding a different eligible leaf is a valid rewrite,
-not the stated inverse.
+Let `R=(V,r,->)` be a concrete PETRA realization and let `u in V` be a
+selected occurrence.
 
-### 5.2 GRAFT and PRUNE
+If elementary ADD at `u` creates a fresh zero-child occurrence `z` and the
+fresh incidence
 
-If `GRAFT` succeeds at latent slot `s`, let `w` be its returned singleton
-terminal-leaf witness.  Re-resolve `w` in the after-shape and apply explicit
-`PRUNE w`; it restores the original latent slot and before-shape, provided no
-intervening rewrite altered the parent relation.  The witness is sufficient;
-an invocation history is not required.
+```text
+u -> z
+```
 
-Conversely, a successful explicit `PRUNE` returns the restored slot witness.
-Re-resolve it in the after-shape and apply explicit `GRAFT`; it restores the
-pruned singleton depth.  The law fails outside PRUNE's singleton-parent
-precondition because a non-singleton deletion is not a depth inverse.
+then elementary REMOVE applied to precisely that fresh incidence restores the
+original realization `R`.
 
-Defaults are not an inverse guarantee.  If two eligible terminal leaves have
-the same maximum depth, default `PRUNE` chooses the last one, which may not be
-the leaf just grafted.  Likewise, default `GRAFT` can choose a deeper or later
-newly available slot rather than the slot restored by a prior prune.  The
-slot address consumed by GRAFT is invalid in its after-shape, and a terminal
-leaf address consumed by PRUNE is invalid in its after-shape; each inverse
-must use the returned after-shape witness rather than reuse the old address.
+Conversely, if elementary REMOVE deletes a valid zero-child non-root occurrence
+`v` with parent `u`, then elementary ADD at that same parent occurrence
+reconstructs a realization root-preserving isomorphic to the before-realization.
+
+The inverse witness is therefore the selected occurrence/incidence in the
+relevant realization state. It is operation-local evidence, not a persistent
+PETRA identity.
+
+### 5.2 Unpointed form law
+
+After forgetting realization-local occurrence labels and quotienting by PETRA
+structural equality, the pointed law induces the converse relation on forms:
+
+```text
+P --ADD--> Q    iff    Q --REMOVE--> P
+```
+
+Because a bare PETRA form can have several inequivalent target occurrences,
+this law relates edit steps; it does not turn ADD or REMOVE into globally
+single-valued functions.
+
+### 5.3 Deferred public-operator compatibility laws
+
+The existing `SPROUT / SHED` and `GRAFT / PRUNE` inverse discussions are
+not the foundational inverse law of PETRA.
+
+Their exact relationship to intrinsic ADD/REMOVE depends on the still-deferred
+reconciliation of the public four-operator semantics in section 4 together
+with their positional targeting and witness contracts.
+
+Until that reconciliation is completed:
+
+- `ADD <-> REMOVE` is the normative intrinsic inverse law;
+- `SPROUT / SHED` and `GRAFT / PRUNE` remain compatibility-level behavior;
+- no statement in the deferred public-operator surface may weaken, strengthen,
+  or redefine the intrinsic converse relation.
+
+This section does not redesign section 4, addresses, serialization, witnesses,
+runtime behavior, Resolver, CLI, or API contracts.
 
 ## 6. Replacement architecture
 
