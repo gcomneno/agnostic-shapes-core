@@ -1006,13 +1006,13 @@ typed representation and resource budget. This admission does not promote the
 Graph, path, trace, and certificate facilities are derived layers, not
 prerequisites of the structural core.
 
-If introduced, they must operate on:
+If introduced, derived graph, path, trace, and certificate layers must be
+defined over canonical PETRA forms and intrinsic ADD/REMOVE edit steps.
 
-- canonical PETRA shapes;
-- versioned structural invocations;
-- positional addresses resolved in each `before_shape`;
-- successful result witnesses;
-- explicit schema versions.
+A concrete runtime representation may additionally serialize such derived
+objects through the current invocation, address, witness, and schema
+interfaces, but those compatibility surfaces are not part of the intrinsic
+graph/path semantics.
 
 They must not replay operations by integer value, prime-labelled identity, or
 legacy operator labels.
