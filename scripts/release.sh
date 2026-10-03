@@ -87,10 +87,10 @@ fi
 # ---------- 1. Bump versioni ----------
 say "1/8 — Bump versioni: ${VERSION}"
 run "sed -i.bak 's/^version = \".*\"/version = \"${VERSION}\"/' pyproject.toml"
-run "sed -i.bak 's/^version = \".*\"/version = \"${VERSION}\"/' resolver/pyproject.toml"
-run "rm -f pyproject.toml.bak resolver/pyproject.toml.bak"
+run "rm -f pyproject.toml.bak"
 if [[ "${DRY_RUN}" != "1" ]]; then
-  grep -n '^version' pyproject.toml resolver/pyproject.toml
+  grep -n '^version' pyproject.toml
+  grep -n '^version' resolver/pyproject.toml
 fi
 
 # ---------- 2. Changelog ----------
@@ -120,7 +120,7 @@ run "python -m pytest resolver/tests/ -q"
 
 # ---------- 4. Commit + tag ----------
 say "4/8 — Commit + tag"
-run "git add CHANGELOG.md pyproject.toml resolver/pyproject.toml"
+run "git add CHANGELOG.md pyproject.toml README.md CITATION.cff docs/reports/STATUS.md scripts/release.sh"
 run "git commit -m 'release: PETRA ${TAG}'"
 run "git tag -a '${TAG}' -m 'PETRA ${TAG} — Prime Exponent Tower Recursive Algebra'"
 

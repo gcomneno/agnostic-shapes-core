@@ -5,6 +5,50 @@ Tutte le modifiche rilevanti di questo progetto saranno documentate qui.
 Il formato si ispira a Keep a Changelog.
 Versioning corrente: `2.y.z`.
 
+## [Unreleased]
+
+## [2.1.0] — 2026-10-03
+
+### Added
+- Intrinsic PETRA runtime API: `intrinsic_equal`, `intrinsic_size`,
+  `intrinsic_add`, and `intrinsic_remove`.
+- Canonical one-constructor carrier formalization `P ::= Node(M_f(P))`.
+- Formal structural results for root, parenthood, connectedness, finiteness,
+  well-foundedness, zero-child uniqueness, and recursive multiset equality.
+- AIP-4 minimal edit algebra and AIP-5 interpretation theory.
+- External mathematical validation and related-work/source-register material
+  supporting the canonical-theory programme.
+
+### Changed
+- The normative SPEC now separates the intrinsic PETRA carrier from concrete
+  representation and compatibility surfaces.
+- Direct parent-child incidence is the primitive structural relation.
+- Child multiplicity is intrinsic; sibling order is not intrinsic.
+- `Node(empty multiset)` is the unique zero-child form; `Terminal` is not a
+  separate ontological species.
+- The intrinsic edit algebra is `ADD`/`REMOVE`.
+- `SPROUT`, `SHED`, `GRAFT`, and `PRUNE` are retained as compatibility-level
+  operators and delegate their structural effects to the intrinsic algebra.
+- Invocation/result serialization, positional addresses, witnesses, and the
+  `Leaf`/`Container`/`Term`/`Root` model are explicitly classified as
+  maintained representation/compatibility surfaces.
+- Arithmetic and prime/exponent semantics are explicitly separated as optional
+  interpretations rather than definitions of PETRA.
+- Public README, status, citation, and package metadata aligned with the
+  canonical theory and intrinsic runtime.
+
+### Compatibility
+- Existing v2 CLI, serialization, targeting, result, witness, and named
+  operator contracts remain maintained.
+- Resolver remains a derived satellite with independent package metadata and
+  stays at version `2.0.0`.
+
+### Research programme
+- Complete-theory programme #276 closed after canonical carrier, minimal
+  algebra, interpretation theory, meta-theory, external validation, normative
+  SPEC promotion, and intrinsic runtime implementation.
+
+
 ## [2.0.0] — 2026-09-17
 
 ### Added
@@ -76,7 +120,7 @@ versione PET sarebbe fuorviante. L'ultima release PET resta il tag `v0.3.0`.
 - La compatibilità permanente con PET non è un requisito e non è fornita.
 
 
-## [Unreleased]
+## Historical pre-2.0 development notes
 
 ### Added
 - `SECURITY.md` con policy di segnalazione e scope del progetto.

@@ -2,12 +2,14 @@ cff-version: 1.2.0
 message: "If you use PETRA in academic work, please cite it as below."
 title: "PETRA — Prime Exponent Tower Recursive Algebra"
 abstract: >
-  PETRA is a recursive, canonical, shape-first algebra for prime-exponent
-  tower structures. It provides immutable shapes, state-scoped positional
-  addresses, canonical serialization, and direct structural rewrites
-  (SPROUT, SHED, GRAFT, PRUNE). Concrete primes, primality testing, prime
-  generation, and integer factorization are outside the initial structural
-  core.
+  PETRA is a structural algebra for finite rooted non-plane forms. Its
+  intrinsic carrier is defined by finite recursive multisets with primitive
+  direct parent-child incidence, intrinsic child multiplicity, no intrinsic
+  sibling order, and recursive multiset structural equality. Its executable
+  intrinsic core provides ADD and REMOVE structural edits, while the retained
+  Leaf/Container/Term/Root model and SPROUT/SHED/GRAFT/PRUNE operators form a
+  representation and compatibility layer. Prime and exponent semantics are
+  optional derived interpretations rather than prerequisites of the carrier.
 type: software
 authors:
   - family-names: "Cicellyn Comneno"
@@ -15,14 +17,14 @@ authors:
     alias: "gcomneno"
 repository-code: "https://github.com/gcomneno/petra"
 url: "https://github.com/gcomneno/petra"
-doi: "10.5281/zenodo.22804836"
 license: MIT
-version: 2.0.0
-date-released: "2026-09-17"
+version: 2.1.0
+date-released: "2026-10-03"
 keywords:
   - "prime exponent tower"
   - "recursive algebra"
   - "structural rewriting"
-  - "canonical serialization"
-  - "shape-first"
-  - "symbolic computation"
+  - "finite rooted trees"
+  - "finite multisets"
+  - "structural algebra"
+  - "research software"

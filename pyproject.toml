@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "petra"
-version = "2.0.0"
-description = "PETRA — Prime Exponent Tower Recursive Algebra: canonical recursive shape-first algebra"
+version = "2.1.0"
+description = "PETRA — structural algebra for finite rooted non-plane forms with intrinsic ADD/REMOVE semantics"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
