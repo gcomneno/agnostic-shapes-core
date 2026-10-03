@@ -10,14 +10,8 @@ from .addresses import (
     ResolvedTerm,
     resolve_address,
 )
-from .model import (
-    Container,
-    Leaf,
-    PetraShape,
-    Root,
-    Term,
-    validate_shape,
-)
+from .intrinsic import intrinsic_add, intrinsic_remove
+from .model import Container, Leaf, PetraShape, validate_shape
 from .results import (
     AddressEffects,
     DefaultTarget,
@@ -43,126 +37,6 @@ def _require_invocation_target(
 
     return value
 
-
-def _append_leaf(
-    target: Container,
-) -> Container:
-    """Append one canonical terminal leaf without touching old terms."""
-
-    return Container(
-        terms=(*target.terms, Term(root=Root(len(target.terms)), exponent=Leaf()))
-    )
-
-
-def _replace_term_exponent(
-    shape: PetraShape,
-    owner_indices: tuple[int, ...],
-    replacement: PetraShape,
-) -> Container:
-    """Rebuild the immutable path to one selected term exponent."""
-
-    if not owner_indices:
-        raise AssertionError(
-            "a term exponent replacement requires an owner path"
-        )
-
-    if not isinstance(shape, Container):
-        raise AssertionError(
-            "a resolved owner path must traverse containers"
-        )
-
-    selected_index = owner_indices[0]
-    selected = shape.terms[selected_index]
-
-    if len(owner_indices) == 1:
-        new_exponent = replacement
-    else:
-        if not isinstance(selected.exponent, Container):
-            raise AssertionError(
-                "a resolved nested owner must have a container exponent"
-            )
-
-        new_exponent = _replace_term_exponent(
-            selected.exponent,
-            owner_indices[1:],
-            replacement,
-        )
-
-    rebuilt_terms = list(shape.terms)
-    rebuilt_terms[selected_index] = Term(
-        root=selected.root,
-        exponent=new_exponent,
-    )
-
-    return Container(terms=tuple(rebuilt_terms))
-
-
-def _close_ranks(
-    terms: tuple[Term, ...],
-) -> tuple[Term, ...]:
-    """Close positional ranks while preserving exponent objects."""
-
-    return tuple(
-        current
-        if current.root.rank == rank
-        else Term(
-            root=Root(rank),
-            exponent=current.exponent,
-        )
-        for rank, current in enumerate(terms)
-    )
-
-
-def _remove_term(
-    shape: PetraShape,
-    target_indices: tuple[int, ...],
-) -> PetraShape:
-    """Remove one resolved term and rebuild only its immutable path."""
-
-    if not target_indices:
-        raise AssertionError(
-            "term removal requires a non-anchor address"
-        )
-
-    if not isinstance(shape, Container):
-        raise AssertionError(
-            "a resolved term path must traverse containers"
-        )
-
-    selected_index = target_indices[0]
-
-    if len(target_indices) == 1:
-        remaining = (
-            shape.terms[:selected_index]
-            + shape.terms[selected_index + 1 :]
-        )
-
-        if not remaining:
-            return Leaf()
-
-        return Container(
-            terms=_close_ranks(remaining),
-        )
-
-    selected = shape.terms[selected_index]
-
-    if not isinstance(selected.exponent, Container):
-        raise AssertionError(
-            "a resolved nested target must cross a container exponent"
-        )
-
-    new_exponent = _remove_term(
-        selected.exponent,
-        target_indices[1:],
-    )
-
-    rebuilt_terms = list(shape.terms)
-    rebuilt_terms[selected_index] = Term(
-        root=selected.root,
-        exponent=new_exponent,
-    )
-
-    return Container(terms=tuple(rebuilt_terms))
 
 def _find_deepest_last_latent_slot(
     shape: PetraShape,
@@ -292,36 +166,21 @@ def apply_sprout(
 
     if isinstance(resolved, ResolvedAnchor):
         selected_shape = resolved.shape
-
-        if isinstance(selected_shape, Leaf):
-            after_shape: PetraShape = Container(
-                terms=(
-                    Term(
-                        root=Root(0),
-                        exponent=Leaf(),
-                    ),
-                )
-            )
-            witness_address = Address(indices=(0,))
-        else:
-            old_width = len(selected_shape.terms)
-            after_shape = _append_leaf(selected_shape)
-            witness_address = Address(
-                indices=(old_width,),
-            )
+        old_width = (
+            0 if isinstance(selected_shape, Leaf)
+            else len(selected_shape.terms)
+        )
+        after_shape = intrinsic_add(shape, ())
+        witness_address = Address(indices=(old_width,))
 
     elif (
         isinstance(resolved, ResolvedTerm)
         and isinstance(resolved.term.exponent, Container)
     ):
         old_width = len(resolved.term.exponent.terms)
-        replacement = _append_leaf(
-            resolved.term.exponent,
-        )
-        after_shape = _replace_term_exponent(
+        after_shape = intrinsic_add(
             shape,
             resolved.address.indices,
-            replacement,
         )
         witness_address = Address(
             indices=(
@@ -417,19 +276,9 @@ def apply_graft(
             "a selected GRAFT slot must be latent"
         )
 
-    replacement = Container(
-        terms=(
-            Term(
-                root=Root(0),
-                exponent=Leaf(),
-            ),
-        )
-    )
-
-    after_shape = _replace_term_exponent(
+    after_shape = intrinsic_add(
         shape,
         resolved.address.indices,
-        replacement,
     )
 
     witness_address = Address(
@@ -553,10 +402,9 @@ def apply_prune(
             "a selected PRUNE target must be nested"
         )
 
-    after_shape = _replace_term_exponent(
+    after_shape = intrinsic_remove(
         shape,
-        parent_owner_indices,
-        Leaf(),
+        resolved.address.indices,
     )
 
     witness_address = Address(
@@ -689,7 +537,7 @@ def apply_shed(
             parent_owner.term.exponent.terms
         )
 
-    after_shape = _remove_term(
+    after_shape = intrinsic_remove(
         shape,
         resolved.address.indices,
     )

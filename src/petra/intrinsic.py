@@ -2,9 +2,84 @@
 
 from __future__ import annotations
 
-from .model import Container, Leaf, PetraShape, validate_shape
+from .model import Container, Leaf, PetraShape, Root, Term, validate_shape
 
-__all__ = ["intrinsic_equal", "intrinsic_size"]
+__all__ = [
+    "intrinsic_add",
+    "intrinsic_equal",
+    "intrinsic_remove",
+    "intrinsic_size",
+]
+
+
+def intrinsic_add(
+    shape: PetraShape,
+    parent_occurrence: tuple[int, ...],
+) -> PetraShape:
+    """Add one fresh zero-child occurrence at a selected parent occurrence.
+
+    ``parent_occurrence`` is a realization-local selector into the current
+    runtime representation. It is operation-local information, not persistent
+    PETRA identity.
+    """
+
+    validate_shape(shape)
+    path = _require_occurrence_path(parent_occurrence)
+    selected, frames = _select_occurrence(shape, path)
+
+    if isinstance(selected, Leaf):
+        replacement: PetraShape = Container(
+            terms=(Term(root=Root(0), exponent=Leaf()),)
+        )
+    else:
+        replacement = Container(
+            terms=(
+                *selected.terms,
+                Term(root=Root(len(selected.terms)), exponent=Leaf()),
+            )
+        )
+
+    return _rebuild_frames(frames, replacement)
+
+
+def intrinsic_remove(
+    shape: PetraShape,
+    leaf_occurrence: tuple[int, ...],
+) -> PetraShape:
+    """Remove one selected non-root zero-child occurrence.
+
+    ``leaf_occurrence`` is a realization-local selector into the current
+    runtime representation. The root occurrence cannot be removed.
+    """
+
+    validate_shape(shape)
+    path = _require_occurrence_path(leaf_occurrence)
+    if not path:
+        raise ValueError("intrinsic REMOVE cannot remove the root occurrence")
+
+    selected, frames = _select_occurrence(shape, path)
+    if not isinstance(selected, Leaf):
+        raise ValueError("intrinsic REMOVE target must be zero-child")
+
+    parent, selected_index = frames[-1]
+    remaining = (
+        parent.terms[:selected_index]
+        + parent.terms[selected_index + 1 :]
+    )
+
+    if remaining:
+        replacement: PetraShape = Container(
+            terms=tuple(
+                term
+                if term.root.rank == rank
+                else Term(root=Root(rank), exponent=term.exponent)
+                for rank, term in enumerate(remaining)
+            )
+        )
+    else:
+        replacement = Leaf()
+
+    return _rebuild_frames(frames[:-1], replacement)
 
 
 def intrinsic_equal(left: PetraShape, right: PetraShape) -> bool:
@@ -40,6 +115,48 @@ def intrinsic_size(shape: PetraShape) -> int:
             pending.extend(term.exponent for term in current.terms)
 
     return total
+
+
+def _require_occurrence_path(value: object) -> tuple[int, ...]:
+    if not isinstance(value, tuple):
+        raise TypeError("intrinsic occurrence path must be a tuple")
+    if any(type(index) is not int or index < 0 for index in value):
+        raise ValueError("intrinsic occurrence path must contain non-negative ints")
+    return value
+
+
+def _select_occurrence(
+    shape: PetraShape,
+    path: tuple[int, ...],
+) -> tuple[PetraShape, list[tuple[Container, int]]]:
+    current = shape
+    frames: list[tuple[Container, int]] = []
+
+    for index in path:
+        if not isinstance(current, Container):
+            raise ValueError("intrinsic occurrence path crosses zero-child form")
+        if index >= len(current.terms):
+            raise ValueError("intrinsic occurrence path is out of range")
+
+        frames.append((current, index))
+        current = current.terms[index].exponent
+
+    return current, frames
+
+
+def _rebuild_frames(
+    frames: list[tuple[Container, int]],
+    replacement: PetraShape,
+) -> PetraShape:
+    rebuilt = replacement
+
+    for container, index in reversed(frames):
+        terms = list(container.terms)
+        selected = terms[index]
+        terms[index] = Term(root=selected.root, exponent=rebuilt)
+        rebuilt = Container(terms=tuple(terms))
+
+    return rebuilt
 
 
 def _intrinsic_class_id(
