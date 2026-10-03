@@ -949,6 +949,7 @@ Therefore, no interpretation may:
 - introduce intrinsic sibling order, positional ranks, or persistent identity;
 - influence address resolution or select operator targets;
 - redefine the intrinsic ADD/REMOVE algebra;
+- make prime assignment or factorization a prerequisite for ADD/REMOVE;
 - alter intrinsic PETRA conformance.
 
 The prime/exponent reading is one such optional derived interpretation.
