@@ -176,10 +176,9 @@ Structural equality is the canonical equality of PETRA itself. Representational
 equality of a particular serialization, address syntax, runtime object, or
 projection must not redefine it.
 
-#### 1.4.1 Phase-7 transition precedence
+#### 1.4.1 Normative precedence
 
-Sections 1.1–1.4 define the normative PETRA ontology and structural equality
-from this Phase-7 promotion onward.
+Sections 1.1–1.4 define the normative PETRA ontology and structural equality.
 
 The positional/ordered serialization, address, public-operator, Resolver, and
 runtime contracts elsewhere in this specification are representation- or
@@ -876,7 +875,7 @@ Because a bare PETRA form can have several inequivalent target occurrences,
 this law relates edit steps; it does not turn ADD or REMOVE into globally
 single-valued functions.
 
-### 5.3 Deferred public-operator compatibility laws
+### 5.3 Public-operator compatibility laws
 
 The existing `SPROUT / SHED` and `GRAFT / PRUNE` inverse discussions are
 not the foundational inverse law of PETRA.
@@ -887,7 +886,7 @@ ADD/REMOVE algebra.
 
 Their positional targeting, invocation defaults, witness contracts, and
 representation-specific inverse behavior remain compatibility-level surfaces
-subject to separate Phase-7 reconciliation.
+and do not alter the intrinsic inverse law.
 
 Accordingly:
 
