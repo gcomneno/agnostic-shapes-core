@@ -48,6 +48,10 @@ Versioning corrente: `2.y.z`.
   algebra, interpretation theory, meta-theory, external validation, normative
   SPEC promotion, and intrinsic runtime implementation.
 
+### Published
+
+- Zenodo Version DOI: `10.5281/zenodo.23123734`.
+- Zenodo Concept DOI: `10.5281/zenodo.22741778`.
 
 ## [2.0.0] — 2026-09-17
 
