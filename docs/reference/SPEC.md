@@ -1041,21 +1041,36 @@ numeric-projection work is not automatically mandatory.
 
 ## 11. Conformance checklist
 
-A conforming PETRA implementation must:
+A conforming intrinsic PETRA implementation must:
 
-- implement the grammar and roles in section 1;
-- reject empty containers and malformed relations;
-- derive root ranks only from current visible position;
-- implement canonical validation, normalization, and equality;
-- resolve state-scoped positional addresses as specified in section 2;
-- preserve the invocation and result semantics in section 3;
-- implement all four operators, defaults, failures, and examples in section 4;
-- preserve only the partial inverse laws and counterexamples in section 5;
-- produce exactly one post-rewrite witness for every successful operator;
-- preserve the exact before-shape on failure;
-- avoid value-first, factorization-first, and prime-selection rewrite rules;
-- avoid permanent compatibility dependencies on the historical PET runtime;
-- treat projection and derived analytical layers as separate admissions.
+- implement the canonical carrier and zero-child form of sections 1.1–1.2;
+- preserve multiplicity while treating sibling order, positional ranks, and
+  persistent occurrence identity as non-intrinsic;
+- implement direct incidence and structural equality as specified in sections
+  1.3–1.4;
+- implement the intrinsic ADD/REMOVE edit relations of section 1.4.2;
+- preserve the exact intrinsic inverse law of section 5;
+- avoid value-first, factorization-first, prime-selection, or numeric-projection
+  rules in structural identity or intrinsic rewrites.
+
+An implementation that exposes the retained compatibility/runtime surfaces must
+additionally:
+
+- preserve the representation and resource-limit contracts of section 1.5
+  without promoting `Leaf / Container / Term / Root` or positional ranks into
+  the carrier;
+- resolve state-scoped positional addresses as specified in section 2 without
+  treating them as persistent identity;
+- preserve the invocation and result compatibility semantics in section 3;
+- implement the public `SPROUT / SHED / GRAFT / PRUNE` surface as the
+  compatibility restrictions of intrinsic ADD/REMOVE specified in section 4;
+- preserve the compatibility witness and failure-state contracts, including
+  exactly one post-rewrite witness on success and the exact before-shape on
+  failure;
+- avoid permanent dependencies on the historical PET runtime.
+
+Projection and derived analytical layers remain separate admissions and are not
+required for intrinsic PETRA conformance.
 
 An implementation is not conforming merely because it reproduces historical
 PET numeric behavior.
