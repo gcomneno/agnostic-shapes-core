@@ -10,6 +10,10 @@ from .addresses import (
     render_address,
     resolve_address,
 )
+from .intrinsic import (
+    intrinsic_equal,
+    intrinsic_size,
+)
 from .metrics import (
     node_count,
 )
@@ -82,6 +86,8 @@ __all__ = [
     "apply_prune",
     "apply_shed",
     "apply_sprout",
+    "intrinsic_equal",
+    "intrinsic_size",
     "node_count",
     "normalize_shape",
     "parse_address",
