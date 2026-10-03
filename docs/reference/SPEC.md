@@ -52,117 +52,141 @@ PETRA follows these rules:
 
 ## 1. Object model
 
-### 1.1 Grammar and roles
+### 1.1 Canonical carrier
 
-The normative grammar is:
+The normative PETRA carrier is the set of root-preserving isomorphism classes
+of finite rooted non-plane tree realizations.
 
-```text
-PETRA     ::= Leaf | Container
-Leaf      ::= 1
-Container ::= Product(Term+)
-Term      ::= Root ^ PETRA
-```
-
-`Container` owns an ordered, non-empty sequence of visible `Term` objects.
-`Term` owns exactly one root identity and exactly one exponent relation to a
-complete `PETRA` object.  `Leaf` is the terminal PETRA object.  It is not a
-container, a term, a root, or an empty product.
-
-When a term's exponent is `Leaf`, its canonical exponent-one relation is
-implicit in compact notation.  The relation nevertheless owns a latent slot,
-written `^`, at which that `Leaf` can be materialized into depth.  Thus `^`
-is a relation target, not a node and not the numeric value one.
-
-An empty container is never a valid PETRA shape.  Any rewrite that removes
-the last term from a container replaces that container with `Leaf`; this is the
-canonical leaf restoration rule.
-
-### 1.2 Root identities and canonical order
-
-`Root` is an opaque, nonnumeric **positional identity**.  It is neither a
-prime label nor an integer.  Within one container in one shape state, its
-canonical spellings are the ordinal ranks `r0`, `r1`, ..., in visible-term
-order.  They are scoped to that container and are recomputed after every
-successful rewrite.  Thus `r0` is not a persistent instance identity: a term
-that was `r1` before a sibling deletion can be `r0` afterwards, and a newly
-appended term receives its rank only after canonicalization.
-
-Here, “opaque identity” means that the rank is not interpreted as a number,
-prime label, allocation token, or history-bearing object identifier.  It does
-not mean immutable identity across shape states.  A root rank identifies a
-term position only together with its containing state and container.  This is
-the same state-scoped positional basis as an address, so rank recomputation
-can retarget an old textual address without contradicting root opacity.
-
-The canonical child order is the sequence of those ranks.  A new term is
-inserted after the last visible term of its selected container; all ranks are
-then assigned from zero in sequence.  Deletion closes the sequence and
-reassigns ranks.  This rule is deterministic and depends only on the input
-shape and invocation.  It does not depend on object allocation order,
-traversal order, insertion history external to the current state, prime
-labels, or numeric magnitude.
-
-Root identities are unique within their container.  Multiple leaf terms are
-allowed: they are distinct terms because their root identities differ.  This
-is the only duplicate constraint needed by these operators.  In particular,
-"canonical leaf" means `r^1` with its exponent relation to `Leaf`; it does
-not mean a chosen prime.
-
-### 1.3 Shape notation and illustrative numeric notation
-
-This document writes a container as `C(r0^P0, r1^P1, ...)`.  For example,
-the anonymous shape illustrated by the familiar `2^2` is:
+Equivalently, the carrier admits the recursive presentation:
 
 ```text
-A = C(r0^C(r0^1))
+P ::= Node(M_f(P))
 ```
 
-The familiar expression is only a post-rewrite illustration obtained by a
-separate canonical display/projection layer.  It is never an operator input
-or target-selection mechanism.  Under that illustrative mapping, the shapes
-used below display as follows:
+where `M_f(P)` is the finite-multiset constructor over PETRA forms.
+
+A concrete realization consists of:
+
+- a finite non-empty set of node occurrences;
+- one distinguished root occurrence;
+- a direct parent-child incidence relation;
+- no parent for the root;
+- exactly one immediate parent for every non-root occurrence;
+- reachability of every occurrence from the root.
+
+Occurrence labels, object identities, addresses, ranks, numeric values, and
+serialization tokens are not part of the carrier.
+
+The recursive `Node` presentation and the direct-incidence presentation
+describe the same structure. `Node(M)` denotes one root occurrence together
+with one outgoing child incidence for each copy in the finite multiset `M`.
+
+### 1.2 Zero-child form, multiplicity, and sibling order
+
+The canonical zero-child form is:
 
 ```text
-C(r0^C(r0^1), r1^1)          -> 2^2 * 3
-C(r0^C(r0^1, r1^1))          -> 2^(2 * 3)
-C(r0^C(r0^C(r0^1)))          -> 2^(2^2)
+Z := Node(empty multiset)
 ```
 
-The examples do not assert that these numbers are chosen before the shape
-rewrite, nor that the root identities are prime labels.
+`Z` is not a second ontological constructor. It is the arity-zero case of
+`Node` and is the unique one-occurrence PETRA form.
 
-### 1.4 Canonical validation, normalization, and equality
+Child multiplicity is intrinsic. If a node has several children whose rooted
+subforms are structurally equal, those copies remain distinct incidences in a
+concrete realization and contribute with their full multiplicity to the parent
+multiset.
 
-A PETRA shape is canonical when:
+Sibling order is not intrinsic. Permuting child occurrences of one parent does
+not change the PETRA form.
 
-- every object conforms to the grammar in section 1.1;
-- every container is non-empty;
-- every visible term occupies exactly one position in its container;
-- root ranks are exactly `r0`, `r1`, ..., in visible order;
-- every exponent relation targets one complete PETRA object;
-- no prime label, represented integer, allocation identity, or rewrite history
-  participates in structural identity.
+Consequently, no canonical PETRA identity may depend on:
 
-Canonical normalization assigns root ranks from visible order recursively. It
-does not choose primes, calculate values, reorder terms according to numeric
-magnitude, or reconstruct a shape from an integer.
+- left-to-right sibling position;
+- insertion history;
+- positional root ranks;
+- object allocation identity;
+- traversal order;
+- prime labels or represented integers.
 
-Canonical equality is recursive shape equality:
+### 1.3 Direct incidence and occurrence-local targeting
 
-- `Leaf` equals only `Leaf`;
-- two containers are equal when their ordered term sequences have equal length
-  and corresponding exponent targets are canonically equal;
-- root ranks follow from those positions and do not provide persistent identity
-  across shape states.
+For node occurrences `u` and `v` in one concrete realization, write:
 
-Every public operator invocation receives an already valid canonical shape.
-Validation occurs before address parsing or resolution. Implementations must not
-silently normalize a malformed or non-canonical input before resolving its
-target.
+```text
+u -> v
+```
 
-After a successful rewrite, the affected shape is normalized before witnesses
-and address effects are finalized. A failed rewrite preserves the exact
-`before_shape`.
+when `v` is an immediate child of `u`.
+
+This direct parent-child incidence is the primitive structural relation of the
+normative carrier.
+
+A node occurrence is realization-local. Occurrences are needed to express
+concrete incidence and to target local operations, but they do not carry
+persistent identity across PETRA forms or rewrite states.
+
+Addresses, positional ranks, witness tokens, or other selectors may later be
+used by representations and APIs to identify an occurrence within one concrete
+state. Such selectors are not part of PETRA structural identity.
+
+### 1.4 Structural equality
+
+A PETRA form is a root-preserving structural-isomorphism class.
+
+Two concrete realizations
+
+```text
+R = (V, r, ->)
+S = (W, s, =>)
+```
+
+represent the same PETRA form exactly when there exists a bijection
+`f : V -> W` such that:
+
+```text
+f(r) = s
+
+u -> v    iff    f(u) => f(v)
+```
+
+for all `u,v in V`.
+
+Equivalently, in the recursive presentation:
+
+```text
+Node(M) = Node(N)
+```
+
+exactly when the copies in the finite multisets `M` and `N` can be matched
+bijectively, preserving multiplicity, so that every matched pair of child forms
+is recursively equal.
+
+Therefore:
+
+- sibling permutation does not affect equality;
+- multiplicity does affect equality;
+- no positional rank or persistent occurrence identity participates in
+  equality;
+- `Z` equals only the zero-child form `Node(empty multiset)`.
+
+Structural equality is the canonical equality of PETRA itself. Representational
+equality of a particular serialization, address syntax, runtime object, or
+projection must not redefine it.
+
+#### 1.4.1 Phase-7 transition precedence
+
+Sections 1.1–1.4 define the normative PETRA ontology and structural equality
+from this Phase-7 promotion onward.
+
+The positional/ordered serialization, address, operator, Resolver, and runtime
+contracts elsewhere in this specification are retained temporarily for
+separate Phase-7 reconciliation. Where such deferred text presupposes ordered
+siblings, `Leaf | Container | Term | Root` ontology, or positional ranks as
+structural identity, it must not be used to override sections 1.1–1.4.
+
+This transition rule does not itself redesign those deferred compatibility
+surfaces.
 
 ### 1.5 Canonical textual serialization
 
