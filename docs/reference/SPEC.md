@@ -587,16 +587,38 @@ and traversal have succeeded:
 A numeric projection may be an optional, non-normative derived field and must
 not participate in resolution or success/failure.
 
-## 4. Structural rewrites
+## 4. Public rewrite compatibility over the intrinsic algebra
 
-All rewrite rules below take a PETRA shape and the normalized invocation, resolve
-the stated target, perform exactly the stated structural replacement, and then
-canonicalize the affected container ranks.  Defaults are ergonomic target
-selection only; they are not a separate operator semantics.
+The public `SPROUT`, `SHED`, `GRAFT`, and `PRUNE` contracts are
+compatibility-level targeting and invocation surfaces over the intrinsic
+ADD/REMOVE algebra defined in section 1.4.2.
+
+At the carrier level their structural effects classify as:
+
+```text
+SPROUT -> ADD at the selected parent occurrence
+SHED   -> REMOVE of the selected zero-child child incidence
+GRAFT  -> ADD restricted to a zero-child target occurrence
+PRUNE  -> REMOVE restricted to the leaf incidence of the selected unary local form
+```
+
+No public operator introduces a third intrinsic edit direction.
+
+The address syntax, defaults, reason identifiers, positional ranks, witness
+addresses, and concrete `Leaf / Container / Term / Root` spellings below are
+retained as compatibility behavior pending their own Phase-7 reconciliation.
+They select and represent intrinsic edits; they do not redefine PETRA carrier
+ontology, structural equality, or ADD/REMOVE.
+
+All public rewrite rules below take a PETRA shape and normalized invocation,
+resolve the compatibility target, perform the corresponding intrinsic edit,
+and then apply the existing compatibility canonicalization/witness contract.
+Defaults are target-selection policy only; they are not separate structural
+semantics.
 
 ### 4.1 SPROUT — add width
 
-`SPROUT` inserts one canonical leaf term at the end of a selected container.
+`SPROUT` is the public compatibility form of elementary ADD at the occurrence represented by the selected parent container.
 
 | Item | Contract |
 | --- | --- |
@@ -604,6 +626,7 @@ selection only; they are not a separate operator semantics.
 | Explicit target | `@/` selects the semantic root anchor; a term address projects to that term's materialized exponent container |
 | Default | the top-level insertion through `@/` |
 | Preconditions | a term-address target must project to a container; the root anchor accepts either a root container or root `Leaf` |
+| Intrinsic effect | one elementary `ADD` at the selected parent occurrence |
 | Explicit check order | accept `@/`; otherwise accept a term address only if its selected term's exponent is a `Container`; otherwise `sprout-target-not-container` |
 | Rewrite | append one canonical leaf term: `C(t0,...,tn) -> C(t0,...,tn,r(n+1)^1)`, then re-canonicalize ranks; root `Leaf -> C(r0^1)` for either root-anchor mode |
 | Success reason | `sprout-applied` |
@@ -642,8 +665,7 @@ post-rewrite illustrative notation is `2^(2 * 3)`.
 
 ### 4.2 SHED — remove width
 
-`SHED` deletes one selected canonical leaf **term** from its parent container.
-The explicit target always denotes the leaf term, never its parent container.
+`SHED` is the public compatibility form of elementary REMOVE for a selected zero-child child incidence. The explicit compatibility target denotes the leaf term representing that child occurrence, never its parent container.
 
 | Item | Contract |
 | --- | --- |
@@ -651,6 +673,7 @@ The explicit target always denotes the leaf term, never its parent container.
 | Explicit target | the term address must resolve to a direct leaf term (`Term(root, Leaf)`) |
 | Default | the last eligible direct leaf term of the top-level container in canonical order |
 | Preconditions | target is an eligible leaf term; its parent is a container |
+| Intrinsic effect | one elementary `REMOVE` of the selected zero-child child incidence |
 | Explicit check order | accept a term address only if its selected term's exponent is `Leaf`; otherwise `shed-target-not-leaf` |
 | Rewrite | remove that term from its parent; if no terms remain, replace the parent container with `Leaf` |
 | Success reason | `shed-applied` |
@@ -686,8 +709,7 @@ exponent container.
 
 ### 4.3 GRAFT — add depth
 
-`GRAFT` materializes a selected latent exponent-one slot by replacing its
-`Leaf` target with a one-term container containing a canonical leaf.
+`GRAFT` is the public compatibility restriction of elementary ADD to an occurrence represented by a zero-child (`Leaf`) target. In the retained compatibility representation, this materializes the selected latent exponent-one slot as a one-term container.
 
 | Item | Contract |
 | --- | --- |
@@ -695,6 +717,7 @@ exponent container.
 | Explicit target | `term-address/^`; the selected relation must be latent (its current exponent target is `Leaf`) |
 | Default | deepest eligible latent slot; ties select the last slot in canonical preorder order |
 | Preconditions | the slot is latent; an already materialized exponent is ineligible |
+| Intrinsic effect | one elementary `ADD` at the selected zero-child target occurrence |
 | Explicit check order | if the address is not a slot address, `graft-target-not-slot`; otherwise accept a relation targeting `Leaf`, or emit `graft-slot-already-materialized` |
 | Rewrite | `r^1 -> r^C(r0^1)` at the selected relation |
 | Success reason | `graft-applied` |
@@ -729,8 +752,7 @@ For a tie, the eligible slots of
 
 ### 4.4 PRUNE — remove depth
 
-`PRUNE` deletes an eligible terminal leaf term from a singleton exponent
-container and restores its parent term's implicit exponent-one slot.
+`PRUNE` is the public compatibility restriction of elementary REMOVE to the leaf incidence of a selected unary local form. In the retained compatibility representation, deleting that leaf restores the parent term's implicit exponent-one slot.
 
 | Item | Contract |
 | --- | --- |
@@ -738,6 +760,7 @@ container and restores its parent term's implicit exponent-one slot.
 | Explicit target | the address selects the leaf term itself |
 | Default | deepest eligible terminal leaf; ties select the last eligible leaf in canonical preorder order |
 | Preconditions | selected term has exponent `Leaf`; it is the sole term of a container; that container is the exponent target of a parent term (never the root container) |
+| Intrinsic effect | one elementary `REMOVE` of the sole zero-child child incidence of that unary local form |
 | Explicit check order | if the address is not a term address or its term's exponent is not `Leaf`, `prune-target-not-terminal-leaf`; otherwise if its parent is the root container, `prune-target-has-no-parent-relation`; otherwise if that parent is not singleton, `prune-parent-not-singleton-exponent`; otherwise accept |
 | Rewrite | let `leaf_term` be the selected leaf term, `exponent_container = C(leaf_term)` its singleton parent exponent container, and `parent_term` the term whose exponent relation targets `exponent_container`. Destroy `leaf_term`, `exponent_container`, and the relation `parent_term -> exponent_container`; create the replacement relation `parent_term -> Leaf`, which is `parent_term`'s restored latent `^` slot. `parent_term` and its containing and ancestor relations remain. |
 | Success reason | `prune-applied` |
