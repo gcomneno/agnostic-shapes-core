@@ -928,6 +928,33 @@ Historically useful PET behavior remains available through Git history, tag
 
 ## 7. Prime-tower projection boundary
 
+### 7.1 Interpretation boundary
+
+PETRA is normatively independent of any interpretation.
+
+An interpretation is an optional derived layer. If defined, it must be defined
+over canonical PETRA forms or over a representation whose relation to PETRA
+forms is explicitly declared.
+
+The dependency is directional:
+
+```text
+interpretation depends on PETRA
+PETRA does not depend on interpretation
+```
+
+Therefore, no interpretation may:
+
+- determine PETRA structural identity or structural equality;
+- introduce intrinsic sibling order, positional ranks, or persistent identity;
+- influence address resolution or select operator targets;
+- redefine the intrinsic ADD/REMOVE algebra;
+- alter intrinsic PETRA conformance.
+
+The prime/exponent reading is one such optional derived interpretation.
+
+### 7.2 Prime-tower projection boundary
+
 A projection may eventually interpret PETRA forms through a separately
 specified deterministic prime-assignment rule and derive a numeric
 prime-exponent tower.
