@@ -170,14 +170,12 @@ def test_intrinsic_remove_rejects_root_or_non_leaf_target() -> None:
     ):
         intrinsic_remove(shape, ())
 
+    non_leaf_target = container(unary(Leaf()))
     with pytest.raises(
         ValueError,
         match="target must be zero-child",
     ):
-        intrinsic_remove(shape, (0,)) if False else intrinsic_remove(
-            container(unary(Leaf())),
-            (0,),
-        )
+        intrinsic_remove(non_leaf_target, (0,))
 
 
 def test_intrinsic_edit_paths_are_realization_local_and_validated() -> None:
