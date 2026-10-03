@@ -311,7 +311,9 @@ Canonical text processing uses these fixed limits:
 | Decimal digits in one root-rank token | 4 |
 
 A total model node is one `Leaf`, `Container`, or `Term`; `Root` is owned by a
-term and is not counted separately. The corresponding runtime primitive is
+term and is not counted separately. This is representation-level resource
+accounting for the retained typed serialization model, not the intrinsic
+`size(P)` of section 1.4.2. The corresponding runtime primitive is
 `petra.node_count(shape)`, admitted under the metrics policy in section 8.
 The odd total leaves room for the largest
 possible complete PETRA tree under that accounting. The limits are deliberately
@@ -950,16 +952,23 @@ when that projection contract demonstrates a concrete need.
 
 No historical PET metric becomes a PETRA metric automatically.
 
-A metric may enter the PETRA runtime only when it:
+Every admitted metric must declare its semantic level:
 
-- is defined directly on canonical PETRA shapes;
-- has an explicit domain and result type;
-- is independent of represented integers unless declared as a projection
+- an intrinsic carrier metric is defined on PETRA forms or realizations and is
+  invariant under structural equality;
+- a representation-level metric is defined on a retained compatibility
+  representation and must not redefine PETRA carrier ontology, structural
+  equality, or the intrinsic ADD/REMOVE algebra.
+
+In either case, an admitted metric must:
+
+- have an explicit domain and result type;
+- be independent of represented integers unless declared as a projection
   metric;
-- remains well-defined across canonical normalization;
-- states whether it observes objects, terms, relations, addresses, rewrites, or
-  paths;
-- has examples and tests derived from this specification.
+- remain well-defined at its declared semantic level;
+- state whether it observes carrier occurrences or representation objects,
+  terms, relations, addresses, rewrites, or paths;
+- have examples and tests when exposed through the runtime.
 
 Historical PET-Metrics results remain research evidence. They
 must not be promoted as PETRA laws or invariants without a new derivation and
@@ -967,18 +976,30 @@ admission decision.
 
 ### Admitted metrics
 
+`size(P)`
+
+- Intrinsic carrier metric defined in section 1.4.2.
+- Counts node occurrences in any realization of the PETRA form `P`.
+- Invariant under structural equality.
+- Every intrinsic ADD/REMOVE step changes it by exactly one.
+
 `petra.node_count(shape) -> int`
 
-- Defined directly on canonical PETRA shapes.
+- Representation-level compatibility metric over the retained typed shape
+  model.
 - Domain: `PetraShape`. Result type: `int`.
 - Independent of represented integers.
-- Well-defined across canonical normalization.
-- Observes objects: one `Leaf`, one `Container`, or one `Term` each
-  contributes 1; `Root` is owned by a `Term` and is not counted separately.
+- Counts representation objects: one `Leaf`, one `Container`, or one `Term`
+  each contributes 1; `Root` is owned by a `Term` and is not counted
+  separately.
+- Distinct from intrinsic `size(P)`; it must not be used to redefine carrier
+  size or structural equality.
+- Supplies the total-model-node resource accounting specified in section 1.5.1.
 - Tests: `tests/test_petra_metrics.py`.
 
-This is the first metric admitted to PETRA under this policy. It supersedes
-no historical PET metric.
+The runtime name `node_count` is retained for compatibility with the existing
+typed representation and resource budget. This admission does not promote the
+`Leaf / Container / Term / Root` representation into the PETRA carrier.
 
 ## 9. Graph, path, trace, and certificate boundary
 
