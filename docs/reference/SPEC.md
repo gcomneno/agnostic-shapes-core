@@ -873,15 +873,20 @@ single-valued functions.
 The existing `SPROUT / SHED` and `GRAFT / PRUNE` inverse discussions are
 not the foundational inverse law of PETRA.
 
-Their exact relationship to intrinsic ADD/REMOVE depends on the still-deferred
-reconciliation of the public four-operator semantics in section 4 together
-with their positional targeting and witness contracts.
+Section 4 now classifies the structural effects of `SPROUT`, `SHED`,
+`GRAFT`, and `PRUNE` as compatibility-level restrictions of the intrinsic
+ADD/REMOVE algebra.
 
-Until that reconciliation is completed:
+Their positional targeting, invocation defaults, witness contracts, and
+representation-specific inverse behavior remain compatibility-level surfaces
+subject to separate Phase-7 reconciliation.
+
+Accordingly:
 
 - `ADD <-> REMOVE` is the normative intrinsic inverse law;
-- `SPROUT / SHED` and `GRAFT / PRUNE` remain compatibility-level behavior;
-- no statement in the deferred public-operator surface may weaken, strengthen,
+- public-operator inverse behavior is interpreted through the structural
+  classification in section 4;
+- no compatibility-level targeting or witness rule may weaken, strengthen,
   or redefine the intrinsic converse relation.
 
 This section does not redesign section 4, addresses, serialization, witnesses,
