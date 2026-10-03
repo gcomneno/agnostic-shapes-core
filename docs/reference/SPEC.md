@@ -482,6 +482,20 @@ it in the after-shape.
 
 ## 3. Invocation and result serialization
 
+Invocation and result serialization is a compatibility interface over the
+canonical PETRA carrier, the state-scoped address interface of section 2, and
+the intrinsic ADD/REMOVE algebra of section 1.4.2.
+
+Serialized operator names, target objects, resolved-target records, witness
+addresses, reason identifiers, and schema fields are representation-level
+protocol data. They do not add PETRA ontology, persistent occurrence identity,
+or a structural edit direction beyond ADD/REMOVE.
+
+The existing JSON schemas, success/failure envelopes, operator-specific reason
+matrix, target/witness serialization, and canonical JSON rules in this section
+are retained as a deferred compatibility surface pending separate Phase-7
+reconciliation.
+
 The normative machine-readable invocation is JSON with an explicit target
 mode. Omission is invalid; it never silently means a default. Invocation and
 result use distinct serialized schema values.
