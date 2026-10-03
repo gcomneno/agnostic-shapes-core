@@ -1021,22 +1021,23 @@ No derived layer is required until a concrete PETRA use case justifies it.
 
 ## 10. Implementation dependency order
 
-The canonical implementation order is:
+The canonical implementation dependency order is:
 
-1. immutable PETRA shape model;
-2. canonical normalization and equality;
-3. positional structural-address parser and resolver;
-4. atomic rewrite result and witness model;
-5. `SPROUT` and `SHED`;
-6. `GRAFT` and `PRUNE`;
-7. canonical PETRA serialization;
-8. minimal PETRA CLI;
-9. optional derived layers justified by concrete requirements;
-10. removal of the PET runtime and completion of the package, CLI, and
-    repository rename.
+1. canonical PETRA carrier and structural equality;
+2. intrinsic ADD/REMOVE edit relations and inverse law;
+3. canonical representation and validation boundaries required by the active
+   runtime;
+4. compatibility interfaces required by concrete runtime use cases, including
+   positional addressing, invocation/result serialization, witnesses, and the
+   public four-operator surface;
+5. optional CLI and derived layers justified by concrete requirements;
+6. removal of obsolete PET runtime dependencies.
 
-Graph, path, trace, certificate, metric, and numeric-projection work is not
-automatically mandatory.
+Compatibility interfaces do not become prerequisites of the intrinsic carrier
+or edit algebra merely because the current runtime implements them.
+
+Graph, path, trace, certificate, representation-level metric, and
+numeric-projection work is not automatically mandatory.
 
 ## 11. Conformance checklist
 
