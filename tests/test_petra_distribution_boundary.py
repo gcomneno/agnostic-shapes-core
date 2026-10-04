@@ -47,11 +47,11 @@ def _pyproject_scripts() -> dict[str, str]:
     return scripts
 
 
-def test_distribution_configuration_exposes_only_petra() -> None:
+def test_distribution_configuration_exposes_runtime_packages() -> None:
     assert _pyproject_value("project", "name") == "petra"
     assert _pyproject_scripts() == {"petra": "petra.cli:main"}
     assert _pyproject_value("tool.setuptools.packages.find", "where") == ["src"]
-    assert _pyproject_value("tool.setuptools.packages.find", "include") == ["petra"]
+    assert _pyproject_value("tool.setuptools.packages.find", "include") == ["petra", "shapes"]
 
 
 def test_distribution_source_boundary_keeps_legacy_out_of_package_discovery() -> None:
@@ -63,7 +63,7 @@ def test_distribution_source_boundary_keeps_legacy_out_of_package_discovery() ->
             "the legacy-exclusion contract is vacuously satisfied"
         )
 
-    assert _pyproject_value("tool.setuptools.packages.find", "include") == ["petra"]
+    assert _pyproject_value("tool.setuptools.packages.find", "include") == ["petra", "shapes"]
 
 
 def test_petra_source_has_no_legacy_pet_imports() -> None:

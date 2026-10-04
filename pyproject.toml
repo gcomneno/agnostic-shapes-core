@@ -27,7 +27,7 @@ petra = "petra.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["petra"]
+include = ["petra", "shapes"]
 
 [tool.pytest]
 pythonpath = ["src"]
@@ -72,7 +72,7 @@ ignore = [
 
 [tool.mypy]
 python_version = "3.10"
-files = ["src/petra"]
+files = ["src/petra", "src/shapes"]
 warn_unused_ignores = true
 warn_redundant_casts = true
 warn_unreachable = true
