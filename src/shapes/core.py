@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from typing import TypeAlias
 
@@ -144,6 +145,32 @@ def validate(shape: object) -> None:
             raise ValueError("shape structural key is inconsistent")
 
         pending.extend(current.children)
+
+
+
+def iter_occurrences(
+    shape: Shape,
+) -> Iterator[tuple[OccurrencePath, Shape]]:
+    """Yield every occurrence with its path in the current canonical state.
+
+    Traversal is deterministic preorder over the concrete canonical tuple
+    representation. Paths are operation-local, state-scoped selectors only;
+    they are not persistent occurrence identity across edited forms.
+
+    Structurally equal sibling occurrences remain distinct traversal entries
+    because each child incidence has its own path in the current realization.
+    """
+
+    validate(shape)
+
+    pending: list[tuple[OccurrencePath, Shape]] = [((), shape)]
+
+    while pending:
+        path, current = pending.pop()
+        yield path, current
+
+        for index in range(len(current.children) - 1, -1, -1):
+            pending.append(((*path, index), current.children[index]))
 
 
 def _require_occurrence_path(value: object) -> OccurrencePath:

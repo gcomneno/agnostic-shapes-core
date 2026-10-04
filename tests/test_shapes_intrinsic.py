@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from shapes import Shape, add, remove, size, validate
+from shapes import Shape, add, iter_occurrences, remove, size, validate
 
 
 def node(*children: Shape) -> Shape:
@@ -198,3 +198,99 @@ def test_paths_are_state_scoped_after_recanonicalization() -> None:
     assert reused_stale_path == node(unary, unary)
     assert current_edited_path == node(node(zero, zero), zero)
     assert reused_stale_path != current_edited_path
+
+
+def test_iter_occurrences_yields_root_and_nested_paths() -> None:
+    zero = Shape()
+    unary = node(zero)
+    shape = node(unary, zero)
+
+    occurrences = list(iter_occurrences(shape))
+
+    assert occurrences == [
+        ((), shape),
+        ((0,), unary),
+        ((0, 0), zero),
+        ((1,), zero),
+    ]
+
+
+def test_iter_occurrences_preserves_duplicate_occurrences() -> None:
+    zero = Shape()
+    shape = node(zero, zero)
+
+    occurrences = list(iter_occurrences(shape))
+
+    assert occurrences == [
+        ((), shape),
+        ((0,), zero),
+        ((1,), zero),
+    ]
+    assert occurrences[1][1] == occurrences[2][1]
+
+
+def test_iter_occurrence_paths_are_valid_add_targets() -> None:
+    zero = Shape()
+    before = node(node(zero), zero)
+
+    paths = [
+        path
+        for path, _ in iter_occurrences(before)
+    ]
+
+    after_forms = {
+        add(before, path)
+        for path in paths
+    }
+
+    assert size(after_forms.pop()) == size(before) + 1
+    assert all(
+        size(after) == size(before) + 1
+        for after in after_forms
+    )
+
+
+def test_iter_occurrence_paths_select_removable_zero_child_occurrences() -> None:
+    zero = Shape()
+    before = node(node(zero), zero)
+
+    leaf_paths = [
+        path
+        for path, occurrence in iter_occurrences(before)
+        if path and not occurrence.children
+    ]
+
+    assert leaf_paths == [(0, 0), (1,)]
+
+    after_forms = [
+        remove(before, path)
+        for path in leaf_paths
+    ]
+
+    assert all(
+        size(after) == size(before) - 1
+        for after in after_forms
+    )
+
+
+def test_iter_occurrence_paths_must_be_rederived_after_edit() -> None:
+    zero = Shape()
+    before = node(zero, zero)
+
+    before_paths = [
+        path
+        for path, _ in iter_occurrences(before)
+    ]
+
+    after = add(before, (1,))
+
+    after_occurrences = dict(iter_occurrences(after))
+
+    assert before_paths == [(), (0,), (1,)]
+    assert after_occurrences[(0,)] == node(zero)
+    assert after_occurrences[(1,)] == zero
+
+    reused_old_path = add(after, (1,))
+    current_nested_path = add(after, (0,))
+
+    assert reused_old_path != current_nested_path
