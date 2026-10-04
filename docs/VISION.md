@@ -1,92 +1,166 @@
-# PETRA Vision
+
+# SHAPES / PETRA Vision
 
 ## Identity
 
+The architecture has two primary layers:
+
+```text
+SHAPES
+    agnostic structural substrate
+
+PETRA
+    Prime Exponent Tower Recursive Algebra
+    interpretation layer over SHAPES
+```
+
+PIP — the Prime Interpretation Problem — belongs inside PETRA.
+
+## Foundational separation
+
+The research programme originally discovered its structural carrier while working under the PETRA name.
+
+The promoted evidence now supports a stronger separation.
+
+SHAPES owns form.
+
+PETRA assigns one particular family of external meanings to form.
+
+Therefore:
+
+```text
+shape first
+    ↓
+structural equality
+    ↓
+intrinsic structural edits
+    ↓
+optional interpretation
+```
+
+not:
+
+```text
+prime/exponent meaning
+    ↓
+structure
+```
+
+## SHAPES
+
+SHAPES is the interpretation-agnostic core.
+
+Its canonical forms are finite rooted non-plane structures with:
+
+- one node species;
+- finite child multisets;
+- primitive direct parent-child incidence;
+- intrinsic child multiplicity;
+- no intrinsic sibling order;
+- no persistent occurrence identity;
+- recursive structural equality.
+
+The zero-child form is the arity-zero case of the same node species.
+
+The intrinsic elementary edit directions are:
+
+```text
+ADD
+REMOVE
+```
+
+No prime, exponent, integer, factorization, or arithmetic interpretation is required to construct, compare, or edit a SHAPES form.
+
+## PETRA
+
 PETRA means **Prime Exponent Tower Recursive Algebra**.
 
-It studies recursive canonical structures whose mathematical interpretation is
-built from prime-exponent towers.
+PETRA is a pluggable interpretation layer directly over SHAPES.
 
-PETRA is not primarily an integer encoder. Its primary objects are shapes.
+Its role is to study and implement prime/exponent interpretations without feeding interpretation-specific meaning back into SHAPES ontology.
 
-## Foundational shift
+The dependency is:
 
-The historical PET architecture followed this direction:
+```text
+PETRA -> SHAPES
+future interpretation -> SHAPES
 
-1. start from an integer;
-2. factor it into primes;
-3. encode exponents recursively;
-4. derive trees, metrics, rewrites, graphs, and reports.
+SHAPES -X-> PETRA
+PETRA -X-> future interpretation
+```
 
-PETRA follows the opposite direction:
+Future interpretations may sit beside PETRA:
 
-1. construct a valid recursive shape;
-2. normalize its local positional identities;
-3. transform it directly;
-4. derive optional interpretations or analytical layers afterwards.
+```text
+PETRA ----------\
+                 \
+Future X ---------> SHAPES
+Future Y --------/
+```
 
-The shape is therefore primary. A number, if needed, is a projection.
+Sibling interpretation layers do not depend on one another unless a separate future architecture explicitly introduces such a dependency.
 
-## Structural core
+## PIP
 
-PETRA consists of:
+The Prime Interpretation Problem is PETRA's foundational interpretation problem.
 
-- terminal `Leaf` objects;
-- ordered non-empty `Container` objects;
-- visible `Term` objects;
-- exponent relations;
-- local canonical root ranks;
-- positional structural addresses;
-- deterministic direct rewrites.
+It asks which prime/exponent interpretation rules over SHAPES are admissible and what properties they have.
 
-The canonical operator vocabulary is:
+PIP is not the SHAPES carrier.
 
-- `SPROUT` and `SHED` for width;
-- `GRAFT` and `PRUNE` for depth.
+PIP is not a sibling plugin beside PETRA.
 
-## One architecture
+PIP lives inside PETRA.
 
-PETRA replaces PET-Base, PET/PEG compatibility layers, and PET-Metrics tied to the
-old representation.
+## Representation
 
-Those projects remain part of the research history, but they are not permanent
-layers beneath PETRA.
+Runtime representations may require:
 
-The active project must converge on:
+- deterministic serialization;
+- selectors or addresses;
+- canonical rendering;
+- traversal rules;
+- witnesses;
+- API-specific result types.
 
-- one specification;
-- one object model;
-- one operator vocabulary;
-- one package;
-- one CLI.
+Those are engineering interfaces over SHAPES.
 
-## Prime interpretation
+They do not become structural ontology merely because a runtime needs them.
 
-Root ranks are not primes and are not persistent identifiers.
+In particular, the currently released `Leaf / Container / Term / Root` representation, positional ranks, `^` slots, and `SPROUT / SHED / GRAFT / PRUNE` contracts belong to the pre-separation PETRA compatibility runtime.
 
-A future projection may interpret canonical positions through prime values, but
-that mapping must not determine identity, order, addressing, or rewrite
-behavior.
+Their future fate must be decided explicitly during migration.
 
-The initial core therefore needs neither factorization nor primality support.
+## Resolver
 
-## Research direction
+Resolver is a satellite.
 
-PETRA creates a clean basis for studying:
+Structure-only Resolver capabilities may migrate to SHAPES.
 
-- structural equality and normalization;
-- local reversible and partially reversible transformations;
-- rewrite spaces;
-- paths and witnesses;
-- structural metrics admitted from first principles;
-- optional prime-tower interpretations.
+Arithmetic and prime-related behavior belongs outside SHAPES and is a candidate for PETRA or another interpretation/analytic layer.
 
-No historical empirical result becomes a PETRA theorem without being rederived
-on the PETRA model.
+Resolver must not force numeric projection into SHAPES.
+
+## Historical continuity
+
+The architecture changes prospectively.
+
+It does not rewrite historical evidence.
+
+Published PET and PETRA releases, research notes, validation reports, experiments, DOI metadata, and citations retain the names and contracts under which they were produced.
 
 ## Engineering principle
 
-Nothing is preserved because it already exists.
+Keep the dependency graph honest.
 
-A previous artifact enters PETRA only when the current specification requires
-it and its semantics remain correct under the shape-first model.
+If a concept requires primes or exponents, it is not SHAPES merely because it originated in the same repository.
+
+If a concept is purely structural, PETRA should consume it from SHAPES rather than own a duplicate.
+
+The intended long-term dependency is simple:
+
+```text
+interpretations
+      ↓
+    SHAPES
+```
