@@ -99,6 +99,28 @@ Do not silently reuse `1`, `C(r0^...)`, `^`, positional root ranks, or `petra.*`
 
 Every admitted representation concept must have an explicit structural justification.
 
+### Admitted Phase 2.3 boundary
+
+The first admitted SHAPES representation contract is intentionally narrow:
+
+- `OccurrencePath` is a state-scoped selector into one current canonical
+  runtime state;
+- `iter_occurrences()` deterministically enumerates every current occurrence
+  together with such a path;
+- equal sibling forms remain separate occurrences when they represent
+  separate child incidences;
+- paths and traversal order remain representational and do not participate in
+  structural identity;
+- paths must be rederived after edits rather than treated as persistent
+  occurrence identity.
+
+No neutral SHAPES serialization, parser, CLI, schema namespace, witness
+protocol, edit-result protocol, graph API, or additional metric has yet been
+admitted.
+
+Those capabilities remain deferred until a maintained consumer demonstrates
+a requirement during dependent migration.
+
 ## Phase 2.4 — dependent migration
 
 Classify repository dependents.

@@ -140,6 +140,95 @@ Selectors, paths, addresses, positional ranks, witness tokens, or other targetin
 
 Such selectors are not part of SHAPES structural identity.
 
+### 1.3.1 Runtime occurrence paths
+
+The maintained SHAPES runtime exposes `OccurrencePath` as the first public
+occurrence-targeting representation.
+
+An occurrence path is a finite tuple of non-negative integer indices:
+
+```text
+OccurrencePath := tuple[int, ...]
+```
+
+interpreted against one concrete canonical runtime `Shape` state.
+
+The empty path:
+
+```text
+()
+```
+
+selects the root occurrence.
+
+For a non-empty path:
+
+```text
+(i0, i1, ..., ik)
+```
+
+each index selects one child incidence from the current runtime node's
+canonical `children` tuple, then continues recursively from that selected
+child occurrence.
+
+This indexing is representational only.
+
+In particular:
+
+- tuple position is not intrinsic sibling identity;
+- tuple position does not participate in structural equality;
+- deterministic traversal order does not make SHAPES plane or ordered;
+- an occurrence path is not a persistent node identifier;
+- object identity is not occurrence identity;
+- structurally equal sibling forms may occupy distinct child incidences and
+  therefore have distinct paths in one concrete runtime state.
+
+Occurrence paths are state-scoped.
+
+A path is meaningful against the current canonical runtime state that it
+describes. The same path may therefore be applied to an equal immutable
+`Shape` value with the same canonical representation.
+
+A path does not carry provenance from one object instance and does not identify
+an occurrence persistently across state transitions. Construction or an edit
+may canonicalize sibling representation again, so a path obtained before such
+a transition must not be assumed to identify the same occurrence afterward.
+
+Consumers that need occurrence selectors after an edit or any state transition
+where occurrence correspondence is not preserved must derive them again from
+the resulting state.
+
+The public runtime traversal:
+
+```python
+iter_occurrences(shape)
+```
+
+yields `(path, occurrence)` pairs in deterministic preorder over the current
+canonical tuple representation.
+
+For every valid finite runtime `Shape`:
+
+```text
+number of yielded occurrence entries = size(shape)
+```
+
+Every concrete occurrence is yielded exactly once per child incidence.
+Repeated references to structurally equal or even object-identical child
+values remain separate occurrences when they occupy separate incidences.
+
+Every yielded path is a valid occurrence selector for the current state:
+
+- it may be supplied to `ADD` / `add` as a parent selector;
+- it may be supplied to `REMOVE` / `remove` exactly when it selects an
+  eligible zero-child non-root occurrence.
+
+Neither the path values nor their traversal order may be used to redefine
+SHAPES structural equality, multiplicity, or non-plane semantics.
+
+Occurrence paths are an API representation contract, not an extension of the
+SHAPES ontology.
+
 ### 1.4 Structural equality
 
 A SHAPES form is a root-preserving structural-isomorphism class.
