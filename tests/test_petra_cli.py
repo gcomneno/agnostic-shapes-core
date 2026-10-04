@@ -109,7 +109,7 @@ def test_petra_console_script_entry_point_is_declared() -> None:
     assert _pyproject_value("project", "name") == "petra"
     assert _pyproject_scripts() == {"petra": "petra.cli:main"}
     assert _pyproject_value("tool.setuptools.packages.find", "where") == ["src"]
-    assert _pyproject_value("tool.setuptools.packages.find", "include") == ["petra"]
+    assert _pyproject_value("tool.setuptools.packages.find", "include") == ["petra", "shapes"]
 
 
 def test_petra_console_script_entry_point_executes_in_editable_environment() -> None:

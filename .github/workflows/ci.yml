@@ -45,7 +45,7 @@ jobs:
           pip install -e ./resolver
 
       - name: Lint (ruff)
-        run: ruff check src/petra/ tests/test_petra_*.py tests/test_report_contracts.py
+        run: ruff check src/petra/ src/shapes/ tests/test_petra_*.py tests/test_shapes_*.py tests/test_report_contracts.py
 
       - name: Type check (mypy)
         run: mypy
