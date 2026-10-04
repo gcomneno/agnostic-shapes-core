@@ -1,137 +1,208 @@
-# PETRA Implementation Roadmap
+
+# SHAPES / PETRA Implementation Roadmap
 
 ## Authority
 
 This roadmap orders implementation work after the canonical
-[PETRA specification](docs/reference/SPEC.md).
+[SHAPES core specification](docs/reference/SPEC.md).
 
-It does not preserve the former PET architecture as a permanent lower layer.
+It does not itself make behavior normative.
 
-## Current phase — canonical specification
+## Completed prerequisite — pending-work closure
 
-Complete the documentation-only architecture transition:
+Before the SHAPES/PETRA separation began:
 
-- establish PETRA as the sole current architecture;
-- define the shape-first grammar and conformance rules;
-- classify former PET material as historical or research-only;
-- remove compatibility-first requirements from the active roadmap;
-- keep production code unchanged until the specification is accepted.
+- all open pull requests were resolved;
+- all open issues were resolved or explicitly deferred/superseded;
+- `main` was clean and aligned with `origin/main`.
 
-## Phase 1 — immutable shape model
+The architectural migration therefore starts from a closed backlog.
 
-Implement:
+## Phase 2.1 — normative SHAPES / PETRA boundary
 
-- `Leaf`;
-- `Container`;
+Documentation only.
+
+Establish:
+
+```text
+SHAPES = agnostic structural core
+PETRA  = prime/exponent interpretation layer over SHAPES
+PIP    = foundational theory inside PETRA
+```
+
+Also establish:
+
+```text
+PETRA -> SHAPES
+future interpretation -> SHAPES
+
+SHAPES -X-> PETRA
+PETRA -X-> future interpretation
+```
+
+During this phase:
+
+- do not change runtime behavior;
+- do not rename the installed package;
+- do not rename the CLI;
+- do not rename serialized schemas;
+- do not migrate Resolver;
+- do not mass-rename historical research.
+
+## Phase 2.2 — SHAPES intrinsic runtime
+
+Introduce a new SHAPES runtime package containing only concepts justified by the agnostic core.
+
+Initial runtime scope:
+
+- one recursive node/form model;
+- finite unordered child multiplicity;
+- zero-child form;
+- structural equality;
+- intrinsic size;
+- elementary `ADD`;
+- elementary `REMOVE`;
+- validation required by those contracts.
+
+Do not port merely because it exists in `src/petra`.
+
+Specifically, do not automatically admit:
+
+- `Root(rank)`;
 - `Term`;
-- exponent relations;
-- canonical local root ranks;
-- grammar invariants;
-- immutable structural equality.
-
-No addresses, operators, projections, CLI, or legacy bridges.
-
-## Phase 2 — normalization and equality
-
-Implement:
-
-- recursive canonical validation;
-- rank assignment from visible order;
-- canonical normalization;
-- explicit rejection of malformed or non-canonical input;
-- fixture-oriented shape rendering needed by tests.
-
-No numeric interpretation.
-
-## Phase 3 — positional addresses
-
-Implement:
-
-- root anchor `@/`;
-- positional term traversal;
-- typed projections;
-- exponent-relation slot `^`;
-- deterministic generic failures;
-- address-effect comparison helpers.
-
-## Phase 4 — atomic rewrite model
-
-Implement:
-
-- immutable invocation values;
-- success and failure result types;
-- exact before-shape preservation;
-- after-shape validation;
-- resolved targets;
-- exactly one success witness;
-- deterministic reason precedence;
-- no-op prevention.
-
-## Phase 5 — width operators
-
-Implement:
-
+- exponent `^` vocabulary;
+- positional sibling identity;
+- current PETRA schemas;
 - `SPROUT`;
 - `SHED`;
-- default and explicit targeting;
-- canonical leaf restoration;
-- rank retargeting;
-- witness-based partial inverse behavior.
-
-## Phase 6 — depth operators
-
-Implement:
-
 - `GRAFT`;
 - `PRUNE`;
-- latent relation slots;
-- singleton terminality;
-- deterministic depth and tie rules;
-- witness-based partial inverse behavior.
+- representation-level `node_count`.
 
-## Phase 7 — serialization
+The first SHAPES tests should be derived from intrinsic semantics, not from compatibility spelling.
 
-Define and implement canonical PETRA serialization for:
+## Phase 2.3 — SHAPES representation boundary
 
-- shapes;
-- addresses;
-- invocations;
-- results;
-- witnesses;
-- stable failure identifiers.
+Only after the intrinsic runtime is stable, decide which neutral representation interfaces SHAPES actually needs.
 
-Historical PET JSON compatibility is not a requirement.
+Possible concerns include:
 
-## Phase 8 — minimal CLI
+- deterministic serialization;
+- parsing;
+- selectors or occurrence paths;
+- operation-local targeting;
+- public result types;
+- CLI;
+- schema namespace.
 
-Build a new `petra` command exposing only stable PETRA operations.
+Do not silently reuse `1`, `C(r0^...)`, `^`, positional root ranks, or `petra.*` schemas as SHAPES contracts.
 
-Do not mechanically rename the historical `pet` CLI.
+Every admitted representation concept must have an explicit structural justification.
 
-## Phase 9 — optional derived layers
+## Phase 2.4 — dependent migration
 
-Open separate work only when concrete requirements justify:
+Classify repository dependents.
 
-- graphs and neighborhood traversal;
-- paths;
-- traces and certificates;
-- PETRA-native metrics;
-- prime-tower projection;
-- research probes.
+For Resolver:
 
-No historical layer is promoted automatically.
+- migrate structure-only search and metrics only when they can be expressed over SHAPES;
+- keep prime assignment, integer conversion, factorization-driven construction, and numeric projections outside SHAPES;
+- keep Resolver as a satellite during migration.
 
-## Phase 10 — complete replacement
+Research tools should migrate only when still maintained and when their semantics match the new layer boundary.
 
-- remove `src/pet/`;
-- remove obsolete runtime tests and tools;
-- remove old package exports and commands;
-- rename the distribution and CLI to `petra`;
-- update CI and documentation checks;
-- rename the repository when the new runtime is ready;
-- publish a distinct PETRA release line.
+## Phase 2.5 — retire pre-separation `petra` core package
+
+The current `src/petra` package disappears only after:
+
+1. all agnostic core functionality required by maintained consumers exists in SHAPES;
+2. SHAPES tests pass independently;
+3. structure-only dependents no longer require `petra`;
+4. compatibility behavior has been classified as:
+   - removed;
+   - migrated to SHAPES representation;
+   - retained only as historical evidence;
+   - reserved for future PETRA.
+
+Do not leave `petra` as a permanent alias for SHAPES.
+
+At the end of this phase there must be no dependency:
+
+```text
+SHAPES -> petra
+```
+
+## Phase 3 — PETRA interpretation layer
+
+Only after the SHAPES boundary is executable and the old structural `petra` package has been retired may the new PETRA layer be introduced.
+
+PETRA must depend on SHAPES.
+
+Initial PETRA work begins from an explicit interpretation contract, not from restoring historical runtime vocabulary.
+
+PIP belongs in this phase.
+
+The PETRA contract must address at least:
+
+- interpretation domain and codomain;
+- prime assignment;
+- exponent semantics;
+- interpretation equivalence;
+- injectivity conditions;
+- reachable image;
+- computability and partiality;
+- reverse interpretation, if any;
+- materialization limits.
+
+PETRA interpretation must never redefine SHAPES equality or intrinsic `ADD / REMOVE`.
+
+## Future sibling interpretations
+
+Other interpretation layers may be added directly over SHAPES.
+
+They must not be forced through PETRA.
+
+Example:
+
+```text
+PETRA -----------\
+                  \
+Interpretation X ---> SHAPES
+Interpretation Y ---/
+```
+
+A future meta-layer comparing interpretations is possible but is not part of the current roadmap.
+
+## Historical material
+
+Do not mass-rename:
+
+- `docs/research/`;
+- archived documents;
+- historical PET/PETRA reports;
+- release notes;
+- changelog history;
+- DOI/CITATION metadata;
+- published version references.
+
+Historical names identify historical contracts and evidence.
+
+## Release boundary
+
+The SHAPES separation is a breaking architectural transition.
+
+Distribution, Python package, CLI, repository, and schema naming will be decided explicitly during their respective migration phases rather than inferred mechanically from the conceptual name.
+
+No technical namespace rename is implied merely by Phase 2.1.
 
 ## Guiding rule
 
-Build from the PETRA specification. Reuse previous artifacts only after a
-current requirement proves they belong.
+Structure belongs to SHAPES.
+
+Prime/exponent interpretation belongs to PETRA.
+
+PIP belongs inside PETRA.
+
+Historical evidence remains historical.
+
+Do not cross these boundaries for convenience.
