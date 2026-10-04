@@ -294,3 +294,14 @@ def test_iter_occurrence_paths_must_be_rederived_after_edit() -> None:
     current_nested_path = add(after, (0,))
 
     assert reused_old_path != current_nested_path
+
+
+
+def test_iter_occurrences_count_equals_intrinsic_size() -> None:
+    zero = Shape()
+    shared = node(zero)
+    shape = node(shared, shared, zero)
+
+    occurrences = list(iter_occurrences(shape))
+
+    assert len(occurrences) == size(shape)

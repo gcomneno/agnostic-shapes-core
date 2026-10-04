@@ -57,6 +57,34 @@ REMOVE
 
 After quotienting realization-local labels by structural equality, these induce relations on SHAPES forms.
 
+### Current SHAPES runtime representation API
+
+The maintained SHAPES runtime also exposes state-scoped occurrence traversal:
+
+```python
+from shapes import iter_occurrences
+```
+
+`iter_occurrences(shape)` yields `(OccurrencePath, Shape)` pairs for every
+occurrence in deterministic preorder over the current canonical runtime
+representation.
+
+`OccurrencePath` is a selector for one concrete `Shape` state only.
+
+It is **not**:
+
+- persistent occurrence identity;
+- intrinsic sibling order;
+- part of structural equality;
+- a stable identifier across edits.
+
+Equal sibling forms remain distinct occurrences when they correspond to
+distinct child incidences. After an edit, consumers must derive paths again
+from the resulting state.
+
+The normative contract is defined by
+[`docs/reference/SPEC.md`](docs/reference/SPEC.md).
+
 ## PETRA layer
 
 PETRA is reserved for prime/exponent interpretations of already-existing SHAPES forms.
