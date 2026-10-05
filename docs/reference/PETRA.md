@@ -719,14 +719,227 @@ Implementation begins only after this contract is accepted.
 
 ---
 
-## 18. Initial Phase 3 conformance checklist
+## 18. First maintained interpretation policy
 
-A future PETRA runtime must:
+Phase 3 PIP research establishes the first maintained PETRA interpretation
+policy:
+
+```text
+LRPE
+=
+Local-Rank Paired-Exponent
+```
+
+This promotion is intentionally narrow.
+
+It does not mean:
+
+```text
+PETRA = LRPE
+```
+
+and it does not make LRPE the only valid PETRA interpretation.
+
+PETRA remains a prime/exponent interpretation-policy space over SHAPES.
+
+LRPE is the first concrete policy selected for maintained runtime
+implementation because the Phase 3 research establishes that it is:
+
+- structurally admissible;
+- sibling-order invariant;
+- total on SHAPES;
+- effectively computable;
+- locally prime-injective;
+- factor-decodable;
+- faithful;
+- non-surjective onto `N+`;
+- equipped with a decidable reachable image;
+- equipped with an effective single-valued inverse on that image.
+
+### 18.1 LRPE structural ranking
+
+For every finite child multiset `M`, distinct child-form classes are ordered by
+a deterministic total order depending only on SHAPES structure.
+
+For:
+
+```text
+T ∈ supp(M),
+```
+
+define:
+
+```text
+rank_M(T)
+=
+1 + |{ U ∈ supp(M) : U ≺ T }|.
+```
+
+The order used by the runtime must be:
+
+- deterministic;
+- structural;
+- independent of sibling occurrence position;
+- independent of `OccurrencePath`;
+- independent of object identity and construction history.
+
+The runtime representation used to compute this order is an implementation
+detail and does not become SHAPES identity or serialization.
+
+### 18.2 LRPE prime assignment
+
+Let `p_n` denote the `n`-th prime.
+
+LRPE assigns:
+
+```text
+A_LRPE(M,T)
+=
+p_{rank_M(T)}.
+```
+
+Thus distinct child classes receive distinct local prime bases.
+
+Equal child copies share one prime base.
+
+### 18.3 LRPE exponent policy
+
+Define:
+
+```text
+pair(m,v)
+=
+2^(m-1) * (2v-1).
+```
+
+Then:
+
+```text
+E_LRPE(m,v)
+=
+pair(m,v).
+```
+
+The pairing is bijective on:
+
+```text
+N+ × N+
+```
+
+with inverse obtained from the two-adic decomposition:
+
+```text
+e = 2^a * q
+```
+
+where `q` is odd:
+
+```text
+m = a + 1
+v = (q + 1) / 2.
+```
+
+### 18.4 LRPE forward interpretation
+
+LRPE therefore interprets:
+
+```text
+LRPE(Z) = 1
+```
+
+and:
+
+```text
+LRPE(Node(M))
+    =
+∏[T ∈ supp(M)]
+    p_{rank_M(T)}
+    ^
+    pair(mult_M(T), LRPE(T)).
+```
+
+### 18.5 LRPE image
+
+LRPE is faithful but not surjective onto `N+`.
+
+Every non-unit reachable value has prime support equal to an initial prime
+segment:
+
+```text
+{p_1, ..., p_k}
+```
+
+and every exponent must decode recursively to a valid child multiplicity and
+reachable child value whose structural order agrees with the corresponding
+local rank.
+
+The reachable image is decidable by the maintained reverse interpreter.
+
+### 18.6 LRPE reverse interpretation
+
+The maintained LRPE reverse interpreter is partial over `N+` and total on:
+
+```text
+Image(LRPE).
+```
+
+It must:
+
+1. map `1` to `Z`;
+2. factor non-unit inputs;
+3. reject non-contiguous prime support;
+4. unpair every exponent;
+5. recursively decode child values;
+6. reject duplicate decoded child classes;
+7. verify structural-rank consistency;
+8. reconstruct intrinsic multiplicity;
+9. return the resulting SHAPES form.
+
+Every recursive child value is strictly smaller than the current integer, so
+the algorithm terminates.
+
+Failure because an integer is outside the LRPE image is semantic reverse-domain
+failure, not a materialization-limit failure.
+
+### 18.7 Matula–Göbel status
+
+Matula–Göbel remains a mathematically established reference interpretation and
+a valid PIP comparison object.
+
+It is not selected as the initial maintained PETRA runtime policy.
+
+PETRA makes no novelty claim for Matula–Göbel numbering or its
+integer/rooted-tree bijection.
+
+### 18.8 Explicit policy selection
+
+The initial runtime must not silently define:
+
+```text
+PETRA value = LRPE value.
+```
+
+The architecture must preserve policy identity explicitly.
+
+LRPE may be the only maintained executable policy initially, but public
+interpretation operations must still make the selected policy concept
+explicit rather than collapsing PETRA into one arithmetic mapping.
+
+No implicit universal default policy is established by this specification.
+
+---
+
+## 19. Initial Phase 3 conformance checklist
+
+The initial PETRA runtime must:
 
 - depend on SHAPES;
 - accept SHAPES forms as interpretation input;
 - keep SHAPES independent of PETRA;
 - implement only explicitly selected prime/exponent policies;
+- provide LRPE as the first maintained interpretation policy;
+- preserve explicit policy identity even while LRPE is the only maintained
+  executable policy;
 - preserve sibling permutation invariance;
 - represent multiplicity explicitly in exponent semantics;
 - distinguish semantic partiality from materialization limits;

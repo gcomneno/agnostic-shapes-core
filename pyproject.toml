@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "petra"
 version = "2.1.0"
-description = "SHAPES agnostic structural core with satellite structural tooling"
+description = "SHAPES structural core with PETRA interpretation layer"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -24,7 +24,7 @@ Issues = "https://github.com/gcomneno/petra/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["shapes"]
+include = ["shapes", "petra"]
 
 [tool.pytest]
 pythonpath = ["src"]
@@ -68,7 +68,7 @@ ignore = [
 
 [tool.mypy]
 python_version = "3.10"
-files = ["src/shapes"]
+files = ["src/shapes", "src/petra"]
 warn_unused_ignores = true
 warn_redundant_casts = true
 warn_unreachable = true

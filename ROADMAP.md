@@ -186,6 +186,53 @@ The PETRA contract must address at least:
 
 PETRA interpretation must never redefine SHAPES equality or intrinsic `ADD / REMOVE`.
 
+### Phase 3 research result and runtime admission
+
+The first Phase 3 PIP sequence established:
+
+```text
+Matula–Göbel
+    reference interpretation
+    faithful
+    bijective with N+
+
+LRRE
+    PETRA-specific research candidate
+    non-faithful
+
+LRPE
+    PETRA-specific research candidate
+    faithful
+    proper decidable image
+    effective inverse on image
+```
+
+The general PIP result identifies factor-level preservation of:
+
+```text
+(multiplicity, recursive child value)
+```
+
+as a sufficient mechanism for global faithfulness when combined with local
+prime injectivity, structural recursion, and separation of `Z` from
+non-zero-child forms.
+
+LRPE is promoted as the first maintained PETRA runtime policy.
+
+This promotion does not identify PETRA with LRPE and does not establish an
+implicit default interpretation.
+
+The initial runtime should now introduce only the minimum machinery required
+for:
+
+- explicit interpretation-policy identity;
+- LRPE forward interpretation;
+- LRPE reverse interpretation;
+- semantic image rejection;
+- distinction between semantic failure and runtime materialization limits.
+
+Historical PETRA runtime APIs are not restored.
+
 ## Future sibling interpretations
 
 Other interpretation layers may be added directly over SHAPES.

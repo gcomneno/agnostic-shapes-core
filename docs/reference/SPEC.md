@@ -23,7 +23,20 @@ PETRA -X-> future interpretation
 
 Historical PET and pre-separation PETRA documents remain historical, research, design, or released-contract evidence. They do not override this SHAPES core specification.
 
-The currently installed `petra` runtime, CLI, schemas, serialization, addressing system, and compatibility operators remain temporarily executable during migration. Their existence does not promote representation- or interpretation-specific concepts into SHAPES ontology.
+The pre-separation structural `petra` runtime has been retired.
+
+Historical PETRA CLI, schemas, serialization, addressing, operators, and
+compatibility surfaces remain historical evidence only unless explicitly
+re-admitted by a current normative contract.
+
+The active PETRA interpretation layer is specified separately by:
+
+```text
+docs/reference/PETRA.md
+```
+
+Its existence does not promote interpretation-specific concepts into SHAPES
+ontology.
 
 ## Scope
 
@@ -1043,22 +1056,18 @@ current architecture:
 No bridge, reader, command, test suite, or duplicate runtime becomes a SHAPES
 requirement merely because it existed historically.
 
-The currently executable `petra` package is the released pre-separation
-compatibility runtime from which the SHAPES/PETRA architecture is now being
-extracted.
+The pre-separation structural `petra` compatibility runtime has been retired.
 
-During migration it may continue to expose:
+Its former surfaces — including the historical CLI, serialized schemas,
+`Leaf / Container / Term / Root`, positional ranks and addresses,
+`SPROUT / SHED / GRAFT / PRUNE`, and historical result or witness contracts —
+are not active SHAPES interfaces.
 
-- the `petra` Python package;
-- the `petra` CLI;
-- `petra.*` serialized schemas;
-- `Leaf / Container / Term / Root`;
-- positional ranks and addresses;
-- `SPROUT / SHED / GRAFT / PRUNE`;
-- existing result and witness contracts.
+They remain historical evidence unless a current normative layer explicitly
+re-admits a concept.
 
-That temporary coexistence does not make those interfaces SHAPES ontology and
-does not define the future PETRA interpretation contract.
+The active `petra` package is the post-separation interpretation layer over
+SHAPES and is governed by `docs/reference/PETRA.md`.
 
 The migration order is:
 
@@ -1253,11 +1262,17 @@ SHAPES -X-> future interpretation
 PETRA -X-> future interpretation
 ```
 
-The currently executable `petra` compatibility runtime may coexist temporarily
-during migration, but that coexistence does not alter the dependency order.
+The old structural `petra` package has been retired.
 
-The old structural `petra` package must be retired before the new PETRA
-interpretation implementation becomes the active meaning of PETRA.
+The active `petra` package now implements the post-separation PETRA
+interpretation layer over SHAPES.
+
+This transition does not alter the dependency order:
+
+```text
+PETRA -> SHAPES
+SHAPES -X-> PETRA
+```
 
 ## 11. Conformance checklist
 
