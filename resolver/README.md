@@ -33,8 +33,7 @@ The package root intentionally exports no compatibility API.
 
 Pre-separation PETRA-coupled Resolver modules still exist temporarily while the
 repository completes the architectural migration. They include the classic
-search, distance, verification, projection, analytics, research, and CLI
-surfaces.
+search, distance, verification, projection, analytics, and research surfaces.
 
 Those modules are compatibility or research artifacts. Their presence does not
 make their semantics part of SHAPES, and they are scheduled for retirement or
@@ -59,8 +58,10 @@ They are not aliases for the SHAPES-native APIs.
 
 ## Command line
 
-The existing Resolver command-line programs are pre-separation compatibility
-surfaces and are scheduled for retirement during Phase 2.4.
+The pre-separation Resolver command-line programs have been retired during
+Phase 2.4.
+
+The package currently installs no Resolver CLI entry points.
 
 No replacement SHAPES CLI, parser, serializer, or schema has been admitted yet.
 
