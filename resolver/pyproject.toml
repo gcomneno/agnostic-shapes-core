@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "resolver"
 version = "2.0.0"
-description = "Bounded A* search over PETRA canonical shapes"
+description = "Resolver satellite over the SHAPES structural core"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
