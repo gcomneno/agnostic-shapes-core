@@ -115,11 +115,17 @@ The first admitted SHAPES representation contract is intentionally narrow:
   occurrence identity.
 
 No neutral SHAPES serialization, parser, CLI, schema namespace, witness
-protocol, edit-result protocol, graph API, or additional metric has yet been
-admitted.
+protocol, edit-result protocol, or graph API has yet been admitted.
 
-Those capabilities remain deferred until a maintained consumer demonstrates
-a requirement during dependent migration.
+During dependent migration, maintained Resolver usage demonstrated a concrete
+requirement for two additional intrinsic carrier metrics. SHAPES therefore
+admits:
+
+- `height(shape)`, with root occurrence depth `0`;
+- `leaf_count(shape)`, counting zero-child occurrences with multiplicity.
+
+Further capabilities, including additional metrics, remain deferred until a
+maintained consumer demonstrates a requirement during dependent migration.
 
 ## Phase 2.4 — dependent migration
 

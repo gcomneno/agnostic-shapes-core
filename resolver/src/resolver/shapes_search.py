@@ -20,7 +20,9 @@ from shapes import (
     OccurrencePath,
     Shape,
     add,
+    height,
     iter_occurrences,
+    leaf_count,
     remove,
     size,
     validate,
@@ -60,36 +62,6 @@ class ShapePath:
     @property
     def length(self) -> int:
         return len(self.steps)
-
-
-def _max_depth(shape: Shape) -> int:
-    """Return maximum occurrence depth, with the root at depth zero."""
-
-    best = 0
-    pending: list[tuple[Shape, int]] = [(shape, 0)]
-
-    while pending:
-        current, depth = pending.pop()
-        best = max(best, depth)
-        pending.extend((child, depth + 1) for child in current.children)
-
-    return best
-
-
-def _leaf_count(shape: Shape) -> int:
-    """Return the number of zero-child occurrences."""
-
-    total = 0
-    pending = [shape]
-
-    while pending:
-        current = pending.pop()
-        if current.children:
-            pending.extend(current.children)
-        else:
-            total += 1
-
-    return total
 
 
 def _neighbors(shape: Shape) -> Iterator[ShapeStep]:
@@ -144,8 +116,8 @@ def _build_cached_metrics(
     heuristic_cache: dict[Shape, int] = {}
 
     target_size = size(target)
-    target_depth = _max_depth(target)
-    target_leaves = _leaf_count(target)
+    target_depth = height(target)
+    target_leaves = leaf_count(target)
 
     def shape_size(shape: Shape) -> int:
         cached = size_cache.get(shape)
@@ -154,17 +126,17 @@ def _build_cached_metrics(
             size_cache[shape] = cached
         return cached
 
-    def max_depth(shape: Shape) -> int:
+    def cached_height(shape: Shape) -> int:
         cached = depth_cache.get(shape)
         if cached is None:
-            cached = _max_depth(shape)
+            cached = height(shape)
             depth_cache[shape] = cached
         return cached
 
-    def leaf_count(shape: Shape) -> int:
+    def cached_leaf_count(shape: Shape) -> int:
         cached = leaf_cache.get(shape)
         if cached is None:
-            cached = _leaf_count(shape)
+            cached = leaf_count(shape)
             leaf_cache[shape] = cached
         return cached
 
@@ -173,8 +145,8 @@ def _build_cached_metrics(
         if cached is None:
             cached = max(
                 abs(shape_size(shape) - target_size),
-                abs(max_depth(shape) - target_depth),
-                abs(leaf_count(shape) - target_leaves),
+                abs(cached_height(shape) - target_depth),
+                abs(cached_leaf_count(shape) - target_leaves),
             )
             heuristic_cache[shape] = cached
         return cached

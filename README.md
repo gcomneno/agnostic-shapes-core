@@ -63,6 +63,24 @@ REMOVE
 
 After quotienting realization-local labels by structural equality, these induce relations on SHAPES forms.
 
+### Current SHAPES intrinsic metrics
+
+The maintained SHAPES runtime exposes three intrinsic carrier metrics:
+
+```python
+from shapes import height, leaf_count, size
+```
+
+- `size(shape)` counts node occurrences;
+- `height(shape)` returns maximum occurrence depth, with the root at depth `0`;
+- `leaf_count(shape)` counts zero-child occurrences with multiplicity.
+
+All three are invariant under SHAPES structural equality and independent of
+PETRA interpretation or represented integers.
+
+For every elementary `ADD` / `REMOVE` step, `size` changes by exactly one,
+while `height` and `leaf_count` each change by at most one in absolute value.
+
 ### Current SHAPES runtime representation API
 
 The maintained SHAPES runtime also exposes state-scoped occurrence traversal:
