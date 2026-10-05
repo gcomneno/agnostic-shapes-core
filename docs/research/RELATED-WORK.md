@@ -15,14 +15,14 @@ system.
 
 ## 1. Integer-to-tree encodings: Matula and Göbel
 
-The closest classical predecessor to PETRA's Phase 3 arithmetic interpretation
+The closest classical predecessor to PETRA's arithmetic interpretation space
 is the Matula–Göbel correspondence between positive integers and finite rooted
-trees up to isomorphism.
+trees.
 
 Matula's 1968 construction gives a recursive rooted-tree enumeration by prime
 factorization. Göbel independently established the same one-to-one
 correspondence in 1980. Subsequent work studies the resulting Matula numbers
-and tree invariants derived from them.
+and structural invariants derived from them.
 
 Accordingly, PETRA does **not** claim novelty for:
 
@@ -30,24 +30,48 @@ Accordingly, PETRA does **not** claim novelty for:
 - recursive prime-index numbering of rooted trees;
 - reconstructing rooted trees by recursively factoring integers.
 
-After the SHAPES/PETRA separation, the relevant architectural distinction is
-now:
+After the SHAPES/PETRA separation, the relevant architectural picture is:
 
 ```text
 SHAPES
-    finite rooted non-plane structural carrier
-        ↓
-PETRA
-    optional prime/exponent interpretation policies
-        ↓
-PIP
-    classification of those policies
+    interpretation-agnostic structural carrier
+        |
+        +--> Matula–Göbel
+        |
+        +--> Interpretation X
+        |
+        +--> PETRA prime/exponent policy space
+                 |
+                 +--> PIP
 ```
 
-The Matula–Göbel numbering itself is now treated as direct related work and as
-the first PIP control baseline.
+This is a conceptual classification, not a compulsory implementation graph.
 
-In current PETRA notation it can be written:
+Many mathematical interpretations may be layered over SHAPES.
+
+Matula–Göbel is one such established external interpretation. Because its
+recursive rule is expressible using prime assignment and exponent semantics,
+it can additionally be classified as one member of the PETRA candidate-policy
+space under the Phase 3 `(A,E)` contract.
+
+Therefore:
+
+```text
+PETRA != Matula–Göbel
+```
+
+and:
+
+```text
+Matula–Göbel
+    ∈
+candidate PETRA prime/exponent interpretations
+```
+
+when evaluated under that contract.
+
+In current SHAPES/PETRA notation the Matula–Göbel interpretation can be
+written:
 
 ```text
 MG(Z) = 1
@@ -58,13 +82,18 @@ MG(Node(M))
     p_{MG(T)} ^ mult_M(T)
 ```
 
-This is compatible with the SHAPES non-plane carrier because structurally
-equal child copies share the same prime base and their intrinsic multiplicity
-appears as its exponent.
+This formulation is naturally compatible with the SHAPES non-plane carrier:
+structurally equal child copies share the same prime base, while intrinsic
+multiplicity becomes the corresponding exponent.
 
-Phase 3 research therefore asks what PETRA's policy framework and any future
-candidate interpretations add beyond this established baseline, rather than
-presenting the baseline correspondence itself as novel.
+Matula–Göbel is therefore useful as a **reference interpretation** for PIP,
+not as PETRA's definition, preferred interpretation, or automatically selected
+runtime policy.
+
+The PETRA research programme concerns the wider prime/exponent interpretation
+space and the classification of its policies, including policies with
+different assignment rules, exponent semantics, domains, images,
+faithfulness properties, reversibility, and computational behavior.
 
 ### Recent recursive-factorization work
 

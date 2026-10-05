@@ -53,6 +53,30 @@ reading list. Prefer stable DOI or official publication links in this register.
 
 ### Matula–Göbel rooted-tree numbering
 
+**Classification:** A — direct related work and Phase 3 reference interpretation.
+
+Primary sources:
+
+- D. W. Matula, "A Natural Rooted Tree Enumeration by Prime Factorization",
+  *SIAM Review* 10 (1968), p. 273.
+- F. Göbel, "On a 1-1-correspondence between rooted trees and natural
+  numbers", *Journal of Combinatorial Theory, Series B* 29 (1980), 141–143.
+  DOI: 10.1016/0095-8956(80)90049-0.
+- I. Gutman and A. Ivić, "On Matula numbers", *Discrete Mathematics* 150
+  (1996), 131–142. DOI: 10.1016/0012-365X(95)00182-V.
+
+For Phase 3, Matula–Göbel is treated as one external mathematical
+interpretation over the SHAPES carrier that can be classified inside the PETRA
+prime/exponent policy framework.
+
+It is not treated as the definition, preferred interpretation, or default
+runtime policy of PETRA.
+
+See `pip-1-matula-goebel-reference.md`.
+
+
+### Matula–Göbel rooted-tree numbering
+
 **Classification:** A — direct related work.
 
 Primary sources:
