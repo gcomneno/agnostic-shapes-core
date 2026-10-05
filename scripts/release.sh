@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# scripts/release.sh — Flusso di release per PETRA.
+# scripts/release.sh — Flusso di release per Agnostic SHAPES Core.
 #
 # Uso:
 #   scripts/release.sh <versione>              # release vera
@@ -11,8 +11,8 @@ set -euo pipefail
 # ---------- Configurazione ----------
 CONCEPT_DOI="10.5281/zenodo.22741778"
 CONCEPT_RECORD_URL="https://zenodo.org/records/22741778"
-PARENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-REPO_DIR="$(cd "${PARENT_DIR}/petra" && pwd)"
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PARENT_DIR="$(dirname "${REPO_DIR}")"
 
 # ---------- Colori ----------
 C_RESET=$'\033[0m'
@@ -51,15 +51,14 @@ if [[ ! "${VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 
 TAG="v${VERSION}"
-ARCHIVE="${PARENT_DIR}/PETRA-${VERSION}.zip"
-CHECKSUM="${PARENT_DIR}/PETRA-${VERSION}.sha256"
+ARCHIVE="${PARENT_DIR}/agnostic-shapes-core-${VERSION}.zip"
+CHECKSUM="${PARENT_DIR}/agnostic-shapes-core-${VERSION}.sha256"
 NOTES="${PARENT_DIR}/RELEASE_NOTES_v${VERSION}.md"
 
 # ---------- Controlli preliminari ----------
-say "Release PETRA ${TAG} $( [[ ${DRY_RUN} == 1 ]] && echo '(DRY-RUN)' )"
+say "Release Agnostic SHAPES Core ${TAG} $( [[ ${DRY_RUN} == 1 ]] && echo '(DRY-RUN)' )"
 
-[[ -f "pyproject.toml" ]] || die "pyproject.toml non trovato: esegui dalla root del repo petra."
-[[ -d "resolver" ]]      || die "Directory resolver/ non trovata."
+[[ -f "pyproject.toml" ]] || die "pyproject.toml non trovato: esegui dalla root del repository."
 
 if [[ -n "$(git status --porcelain)" ]]; then
   warn "Working tree non pulito:"
@@ -112,22 +111,20 @@ if [[ -d ".venv" ]]; then
 fi
 
 run "python -m pip install -e '.[test]' -q"
-run "python -m pip install -e 'resolver/' -q"
-say "  → test root"
 run "python -m pytest tests/ -q"
-say "  → test resolver"
-run "python -m pytest resolver/tests/ -q"
+run "ruff check src tests"
+run "mypy src/shapes src/petra"
 
 # ---------- 4. Commit + tag ----------
 say "4/8 — Commit + tag"
 run "git add CHANGELOG.md pyproject.toml README.md CITATION.cff docs/reports/STATUS.md scripts/release.sh"
-run "git commit -m 'release: PETRA ${TAG}'"
-run "git tag -a '${TAG}' -m 'PETRA ${TAG} — Prime Exponent Tower Recursive Algebra'"
+run "git commit -m 'release: Agnostic SHAPES Core ${TAG}'"
+run "git tag -a '${TAG}' -m 'Agnostic SHAPES Core ${TAG}'"
 
 # ---------- 5. Archivio + checksum ----------
 say "5/8 — Archivio + SHA256"
 run "rm -f '${ARCHIVE}' '${CHECKSUM}'"
-run "cd '${PARENT_DIR}' && git -C petra archive --format=zip --prefix='PETRA-${VERSION}/' -o '${ARCHIVE}' '${TAG}'"
+run "git -C '${REPO_DIR}' archive --format=zip --prefix='agnostic-shapes-core-${VERSION}/' -o '${ARCHIVE}' '${TAG}'"
 run "cd '${PARENT_DIR}' && sha256sum \"\$(basename '${ARCHIVE}')\" > \"\$(basename '${CHECKSUM}')\""
 if [[ "${DRY_RUN}" != "1" ]]; then
   ( cd "${PARENT_DIR}" && sha256sum -c "$(basename "${CHECKSUM}")" )
@@ -141,7 +138,7 @@ run "git push origin '${TAG}'"
 # ---------- 7. GitHub Release ----------
 say "7/8 — GitHub Release"
 if [[ "${DRY_RUN}" == "1" ]]; then
-  run "gh release create '${TAG}' --title 'PETRA ${TAG} — Prime Exponent Tower Recursive Algebra' --notes-file '${NOTES}' --latest"
+  run "gh release create '${TAG}' --title 'Agnostic SHAPES Core ${TAG}' --notes-file '${NOTES}' --latest"
   run "gh release upload '${TAG}' '${ARCHIVE}' '${CHECKSUM}'"
 else
   if gh release view "${TAG}" >/dev/null 2>&1; then
@@ -149,12 +146,12 @@ else
   else
     if [[ -f "${NOTES}" ]]; then
       gh release create "${TAG}" \
-        --title "PETRA ${TAG} — Prime Exponent Tower Recursive Algebra" \
+        --title "Agnostic SHAPES Core ${TAG}" \
         --notes-file "${NOTES}" \
         --latest
     else
       gh release create "${TAG}" \
-        --title "PETRA ${TAG} — Prime Exponent Tower Recursive Algebra" \
+        --title "Agnostic SHAPES Core ${TAG}" \
         --generate-notes \
         --latest
     fi
@@ -163,38 +160,35 @@ else
   fi
 fi
 
-# ---------- 8. Promemoria Zenodo ----------
-say "8/8 — Promemoria Zenodo"
+# ---------- 8. Verifica Zenodo ----------
+say "8/8 — Verifica archiviazione Zenodo"
 cat <<REMINDER
 
 ${C_BOLD}============================================================${C_RESET}
 ${C_BOLD}  ✅ Release GitHub completata.${C_RESET}
-${C_YELLOW}  ⚠️  PASSO MANUALE RICHIESTO: upload su Zenodo${C_RESET}
+${C_YELLOW}  ⚠️  Verifica l'archiviazione automatica Zenodo.${C_RESET}
 ${C_BOLD}============================================================${C_RESET}
 
-  1. Apri il record concept su Zenodo:
-     ${C_BLUE}${CONCEPT_RECORD_URL}${C_RESET}
-     (Concept DOI: ${CONCEPT_DOI})
+  Repository Zenodo abilitato:
+     gcomneno/agnostic-shapes-core
 
-  2. Clicca ${C_BOLD}"New version"${C_RESET} in alto a destra.
+  Concept DOI storico:
+     ${CONCEPT_DOI}
 
-  3. Carica i file:
-       ${ARCHIVE}
-       ${CHECKSUM}
+  Dopo la pubblicazione della GitHub Release:
 
-  4. Compila i campi:
-       Title:         Agnostic SHAPES Core ${TAG}
-       Version:       ${VERSION}
-       License:       MIT License
-       Resource type: Software
-       Description:   incolla il contenuto di
-                      ${NOTES}
+  1. Apri la pagina GitHub integration di Zenodo.
+  2. Verifica che la release ${TAG} venga acquisita senza errori.
+  3. Apri il record Zenodo generato automaticamente.
+  4. Verifica:
+       Title:   Agnostic SHAPES Core ${TAG}
+       Version: ${VERSION}
+       Type:    Software
+  5. Annota il nuovo Version DOI nel CHANGELOG/CITATION metadata
+     con un commit separato, se necessario.
 
-  5. Clicca ${C_BOLD}"Publish"${C_RESET} e annota il nuovo Version DOI.
-
-  6. (Opzionale) Aggiorna il CHANGELOG con la sezione "### Published"
-     e committa:
-       docs: annotate Zenodo version DOI for ${TAG}
+  Non creare manualmente una "New version" salvo fallimento esplicito
+  dell'integrazione GitHub/Zenodo.
 
 ${C_BOLD}============================================================${C_RESET}
 REMINDER
