@@ -73,6 +73,41 @@ def size(shape: Shape) -> int:
     return total
 
 
+def height(shape: Shape) -> int:
+    """Return the maximum occurrence depth, with the root at depth zero."""
+
+    validate(shape)
+
+    best = 0
+    pending: list[tuple[Shape, int]] = [(shape, 0)]
+
+    while pending:
+        current, depth = pending.pop()
+        best = max(best, depth)
+        pending.extend((child, depth + 1) for child in current.children)
+
+    return best
+
+
+def leaf_count(shape: Shape) -> int:
+    """Return the number of zero-child occurrences in ``shape``."""
+
+    validate(shape)
+
+    total = 0
+    pending = [shape]
+
+    while pending:
+        current = pending.pop()
+
+        if current.children:
+            pending.extend(current.children)
+        else:
+            total += 1
+
+    return total
+
+
 def add(shape: Shape, parent: OccurrencePath) -> Shape:
     """Add one fresh zero-child occurrence below ``parent``.
 

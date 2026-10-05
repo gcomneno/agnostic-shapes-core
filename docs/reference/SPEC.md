@@ -1203,6 +1203,37 @@ admission decision.
 - Invariant under structural equality.
 - Every intrinsic ADD/REMOVE step changes it by exactly one.
 
+`height(S) -> int`
+
+- Intrinsic carrier metric over SHAPES forms.
+- Domain: `Shape`. Result type: `int`.
+- Observes carrier occurrences only.
+- The root occurrence has depth `0`; each direct child incidence increases
+  depth by `1`.
+- Returns the maximum occurrence depth in any realization of `S`.
+- The zero-child form has height `0`.
+- Invariant under structural equality and independent of represented integers.
+- For every intrinsic ADD/REMOVE step `S -> S'`,
+  `|height(S') - height(S)| <= 1`.
+- Runtime: `shapes.height(shape)`.
+
+`leaf_count(S) -> int`
+
+- Intrinsic carrier metric over SHAPES forms.
+- Domain: `Shape`. Result type: `int`.
+- Observes carrier occurrences only.
+- Counts zero-child occurrences in any realization of `S`.
+- Multiplicity is preserved: structurally equal sibling occurrences count
+  separately when they occupy distinct child incidences.
+- Invariant under structural equality and independent of represented integers.
+- For every intrinsic ADD/REMOVE step `S -> S'`,
+  `|leaf_count(S') - leaf_count(S)| <= 1`.
+- Under ADD, leaf count is unchanged when the target was zero-child and
+  increases by one otherwise.
+- Under REMOVE, leaf count is unchanged when removing the parent's only child
+  and decreases by one otherwise.
+- Runtime: `shapes.leaf_count(shape)`.
+
 `petra.node_count(shape) -> int`
 
 - Representation-level compatibility metric over the retained typed shape

@@ -4,7 +4,16 @@ from __future__ import annotations
 
 import pytest
 
-from shapes import Shape, add, iter_occurrences, remove, size, validate
+from shapes import (
+    Shape,
+    add,
+    height,
+    iter_occurrences,
+    leaf_count,
+    remove,
+    size,
+    validate,
+)
 
 
 def node(*children: Shape) -> Shape:
@@ -51,6 +60,68 @@ def test_structural_equality_is_recursive_and_order_independent() -> None:
     right = node(zero, node(unary, zero))
 
     assert left == right
+
+
+def test_zero_child_form_has_intrinsic_height_and_leaf_count() -> None:
+    zero = Shape()
+
+    assert height(zero) == 0
+    assert leaf_count(zero) == 1
+
+
+def test_intrinsic_metrics_preserve_occurrence_multiplicity() -> None:
+    zero = Shape()
+    unary = node(zero)
+    shape = node(unary, unary, zero)
+
+    assert height(shape) == 2
+    assert leaf_count(shape) == 3
+
+
+def test_intrinsic_metrics_are_invariant_under_structural_equality() -> None:
+    zero = Shape()
+    unary = node(zero)
+
+    left = node(unary, zero)
+    right = node(zero, unary)
+
+    assert left == right
+    assert height(left) == height(right) == 2
+    assert leaf_count(left) == leaf_count(right) == 2
+
+
+def test_intrinsic_metrics_have_expected_one_step_add_cases() -> None:
+    zero = Shape()
+    unary = node(zero)
+
+    add_below_leaf = add(zero, ())
+    assert height(add_below_leaf) == height(zero) + 1
+    assert leaf_count(add_below_leaf) == leaf_count(zero)
+
+    add_below_non_leaf = add(unary, ())
+    assert height(add_below_non_leaf) == height(unary)
+    assert leaf_count(add_below_non_leaf) == leaf_count(unary) + 1
+
+
+def test_intrinsic_metrics_have_expected_one_step_remove_cases() -> None:
+    zero = Shape()
+
+    wider_parent = node(zero, zero)
+    one_leaf_path = next(
+        path
+        for path, occurrence in iter_occurrences(wider_parent)
+        if path and not occurrence.children
+    )
+    after_wider_remove = remove(wider_parent, one_leaf_path)
+
+    assert abs(height(after_wider_remove) - height(wider_parent)) <= 1
+    assert leaf_count(after_wider_remove) == leaf_count(wider_parent) - 1
+
+    unary = node(zero)
+    after_only_child_remove = remove(unary, (0,))
+
+    assert height(after_only_child_remove) == height(unary) - 1
+    assert leaf_count(after_only_child_remove) == leaf_count(unary)
 
 
 def test_add_at_root_changes_size_by_one() -> None:
@@ -168,6 +239,8 @@ def test_deep_unary_shapes_are_stack_safe_at_2048() -> None:
     leaf_path = (0,) * 2048
 
     assert size(left) == 2049
+    assert height(left) == 2048
+    assert leaf_count(left) == 1
     assert left == right
     assert hash(left) == hash(right)
     assert size(add(left, leaf_path)) == 2050
