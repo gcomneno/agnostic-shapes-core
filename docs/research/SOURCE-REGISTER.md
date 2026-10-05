@@ -6,9 +6,11 @@ This file is the maintained register for external research material used by
 PETRA as direct related work, methodological inspiration, or unpromoted source
 material.
 
-It is **non-normative for PETRA semantics**. Canonical semantics remain in
-[`../reference/SPEC.md`](../reference/SPEC.md). Novelty boundaries are maintained
-in [`RELATED-WORK.md`](RELATED-WORK.md).
+It is **non-normative for PETRA semantics**. Canonical SHAPES semantics remain in
+[`../reference/SPEC.md`](../reference/SPEC.md), while normative PETRA
+interpretation semantics are defined in
+[`../reference/PETRA.md`](../reference/PETRA.md). Novelty boundaries are
+maintained in [`RELATED-WORK.md`](RELATED-WORK.md).
 
 ## Source classes
 
@@ -48,6 +50,34 @@ Third-party PDFs are not committed to the repository merely to preserve a
 reading list. Prefer stable DOI or official publication links in this register.
 
 ## Current sources
+
+### Matula–Göbel rooted-tree numbering
+
+**Classification:** A — direct related work.
+
+Primary sources:
+
+- D. W. Matula, "A Natural Rooted Tree Enumeration by Prime Factorization",
+  *SIAM Review* 10 (1968), p. 273.
+- F. Göbel, "On a 1-1-correspondence between rooted trees and natural
+  numbers", *Journal of Combinatorial Theory, Series B* 29 (1980), 141–143.
+  DOI: 10.1016/0095-8956(80)90049-0.
+- I. Gutman and A. Ivić, "On Matula numbers", *Discrete Mathematics* 150
+  (1996), 131–142. DOI: 10.1016/0012-365X(95)00182-V.
+
+Why it matters to Phase 3 PETRA:
+
+- it gives a classical bijection between finite rooted trees up to isomorphism
+  and positive integers;
+- its recursive rule can be expressed directly as a PETRA prime/exponent
+  interpretation over SHAPES;
+- it supplies the first control baseline for PIP;
+- PETRA therefore cannot claim novelty for this bijection or its recursive
+  prime-index construction.
+
+The Phase 3 evaluation is recorded in
+`pip-1-matula-goebel-baseline.md`.
+
 
 ### Contucci et al. — rooted-tree encoding of N
 

@@ -15,39 +15,56 @@ system.
 
 ## 1. Integer-to-tree encodings: Matula and Göbel
 
-The closest historical predecessor to PETRA's arithmetic ancestry is the
-Matula-Göbel correspondence between positive integers and rooted trees.
+The closest classical predecessor to PETRA's Phase 3 arithmetic interpretation
+is the Matula–Göbel correspondence between positive integers and finite rooted
+trees up to isomorphism.
 
 Matula's 1968 construction gives a recursive rooted-tree enumeration by prime
-factorization. Göbel later obtained the same one-to-one correspondence
-independently. Subsequent work studies tree invariants through Matula numbers
-and develops the combinatorics of the correspondence.
+factorization. Göbel independently established the same one-to-one
+correspondence in 1980. Subsequent work studies the resulting Matula numbers
+and tree invariants derived from them.
 
-This prior work means PETRA does **not** claim novelty for either of the
-following ideas in isolation:
+Accordingly, PETRA does **not** claim novelty for:
 
-- recursively decomposing natural numbers through prime factorization; or
-- associating that recursive decomposition with rooted trees.
+- a bijection between positive integers and rooted trees;
+- recursive prime-index numbering of rooted trees;
+- reconstructing rooted trees by recursively factoring integers.
 
-The relevant distinction is PETRA's architectural direction. PETRA is
-shape-first: prime identities, represented integer values, factorization
-provenance, and persistent node identities are not part of canonical shape
-identity. Numeric projection is optional and derived. Consequently PETRA is
-not presented as another bijective integer encoding.
-
-A useful way to state the boundary is:
+After the SHAPES/PETRA separation, the relevant architectural distinction is
+now:
 
 ```text
-Matula-Göbel tradition:
-integer -> recursive prime-factor structure -> rooted tree
-
-PETRA:
-canonical recursive shape -> optional numeric interpretation/projection
+SHAPES
+    finite rooted non-plane structural carrier
+        ↓
+PETRA
+    optional prime/exponent interpretation policies
+        ↓
+PIP
+    classification of those policies
 ```
 
-The distinction is material because the PETRA abstraction is intentionally
-many-to-one when viewed from integers: distinct integers can induce the same
-canonical shape once concrete prime identities are forgotten.
+The Matula–Göbel numbering itself is now treated as direct related work and as
+the first PIP control baseline.
+
+In current PETRA notation it can be written:
+
+```text
+MG(Z) = 1
+
+MG(Node(M))
+    =
+∏[T ∈ supp(M)]
+    p_{MG(T)} ^ mult_M(T)
+```
+
+This is compatible with the SHAPES non-plane carrier because structurally
+equal child copies share the same prime base and their intrinsic multiplicity
+appears as its exponent.
+
+Phase 3 research therefore asks what PETRA's policy framework and any future
+candidate interpretations add beyond this established baseline, rather than
+presenting the baseline correspondence itself as novel.
 
 ### Recent recursive-factorization work
 
