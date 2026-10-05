@@ -6,7 +6,24 @@ from petra import (
     MaterializationLimits,
     ReverseDomainError,
 )
-from shapes import Shape
+from shapes import Shape, add, iter_occurrences, size
+
+
+def _enumerate_shapes_through_size(max_size: int) -> dict[int, set[Shape]]:
+    by_size: dict[int, set[Shape]] = {1: {Shape()}}
+
+    for current_size in range(1, max_size):
+        next_forms: set[Shape] = set()
+
+        for shape in by_size[current_size]:
+            assert size(shape) == current_size
+
+            for path, _occurrence in iter_occurrences(shape):
+                next_forms.add(add(shape, path))
+
+        by_size[current_size + 1] = next_forms
+
+    return by_size
 
 
 def test_policy_identity_is_explicit() -> None:
@@ -65,6 +82,37 @@ def test_lrpe_round_trip_for_distinct_child_classes() -> None:
 )
 def test_lrpe_round_trip(shape: Shape) -> None:
     assert LRPE.reverse(LRPE.interpret(shape)) == shape
+
+
+
+
+def test_lrpe_bounded_exhaustive_conformance() -> None:
+    """Corroborate LRPE runtime behavior without replacing the PIP proof."""
+
+    by_size = _enumerate_shapes_through_size(5)
+
+    assert {
+        current_size: len(forms)
+        for current_size, forms in by_size.items()
+    } == {
+        1: 1,
+        2: 1,
+        3: 2,
+        4: 4,
+        5: 9,
+    }
+
+    values: list[int] = []
+
+    for current_size in range(1, 6):
+        for shape in by_size[current_size]:
+            value = LRPE.interpret(shape)
+
+            assert LRPE.reverse(value) == shape
+            values.append(value)
+
+    assert len(values) == 17
+    assert len(values) == len(set(values))
 
 
 def test_lrpe_rejects_unreachable_three() -> None:
