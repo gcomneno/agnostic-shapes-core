@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 from petra import parse_shape
 
-from resolver import (
+from resolver.atlas import (
     AtlasBackedDistance,
     DistanceAtlas,
     build_shape_atlas,

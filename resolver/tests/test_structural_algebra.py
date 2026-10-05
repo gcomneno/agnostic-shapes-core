@@ -4,13 +4,8 @@ from __future__ import annotations
 
 from petra import parse_shape, serialize_shape
 
-from resolver import (
-    contains,
-    int_to_shape,
-    join,
-    meet,
-    structural_overlap,
-)
+from resolver.distance import int_to_shape
+from resolver.structural_algebra import contains, join, meet, structural_overlap
 
 
 def text(shape) -> str:

@@ -7,14 +7,9 @@ import json
 import pytest
 from petra import DefaultTarget, ExplicitTarget, parse_shape
 
-from resolver import (
-    PrimeKey,
-    ProjectionError,
-    ResolverError,
-    project,
-    resolve,
-)
 from resolver.cli import main as cli_main
+from resolver.projection import PrimeKey, ProjectionError, project
+from resolver.search import ResolverError, resolve
 
 # ---------------------------------------------------------------------------
 # Helpers

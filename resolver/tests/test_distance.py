@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from petra import parse_shape, serialize_shape
 
-from resolver import (
+from resolver.distance import (
     DistanceCache,
     DistanceError,
     int_to_shape,
