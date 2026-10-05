@@ -73,9 +73,9 @@ Versioning corrente: `3.y.z`.
 ### Release metadata
 - Distribution: `agnostic-shapes-core`.
 - Maintained Python packages: `shapes`, `petra`.
-- Zenodo Concept DOI: `10.5281/zenodo.22741778`.
-- Zenodo Version DOI: pending publication; the PETRA v2.1.0 Version DOI is not
-  reused.
+- Zenodo Concept DOI: `10.5281/zenodo.23161215`.
+- Zenodo Version DOI: `10.5281/zenodo.23161216`.
+- Historical PET/PETRA Concept DOI: `10.5281/zenodo.22741778`.
 
 
 ## [2.1.0] — 2026-10-03

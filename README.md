@@ -1,7 +1,7 @@
 
 # Agnostic SHAPES Core
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22741778.svg)](https://doi.org/10.5281/zenodo.22741778)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23161215.svg)](https://doi.org/10.5281/zenodo.23161215)
 
 **ASHES** is the informal nickname for the Agnostic SHAPES Core project.
 

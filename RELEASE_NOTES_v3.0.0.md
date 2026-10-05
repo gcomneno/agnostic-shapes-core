@@ -88,9 +88,19 @@ Version DOI:
 
 This DOI is not reused by ASHES v3.0.0.
 
-The existing Zenodo Concept DOI remains:
+Zenodo archived ASHES v3.0.0 in a distinct ASHES concept family.
+
+ASHES Concept DOI:
+
+`10.5281/zenodo.23161215`
+
+ASHES v3.0.0 Version DOI:
+
+`10.5281/zenodo.23161216`
+
+The historical PET/PETRA Concept DOI remains:
 
 `10.5281/zenodo.22741778`
 
-Zenodo will assign a new Version DOI after publication of the v3.0.0 GitHub
-Release.
+ASHES is architecturally derived from that historical lineage, but its Zenodo
+version family is distinct.

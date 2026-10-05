@@ -12,8 +12,8 @@
 #
 set -euo pipefail
 
-CONCEPT_DOI="10.5281/zenodo.22741778"
-CONCEPT_RECORD_URL="https://zenodo.org/records/22741778"
+CONCEPT_DOI="10.5281/zenodo.23161215"
+CONCEPT_RECORD_URL="https://zenodo.org/records/23161215"
 
 REPO_DIR="$(git rev-parse --show-toplevel)"
 PARENT_DIR="$(dirname "${REPO_DIR}")"
