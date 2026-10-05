@@ -156,6 +156,14 @@ SHAPES -> petra
 
 ## Phase 3 — PETRA interpretation layer
 
+The Phase 2 retirement boundary is complete: the pre-separation structural
+`petra` runtime has been removed.
+
+Phase 3 begins with the normative interpretation contract in
+`docs/reference/PETRA.md`.
+
+No PETRA runtime implementation is admitted until that contract is accepted.
+
 Only after the SHAPES boundary is executable and the old structural `petra` package has been retired may the new PETRA layer be introduced.
 
 PETRA must depend on SHAPES.

@@ -82,8 +82,11 @@ Equal sibling forms remain distinct occurrences when they correspond to
 distinct child incidences. After an edit, consumers must derive paths again
 from the resulting state.
 
-The normative contract is defined by
+The normative SHAPES contract is defined by
 [`docs/reference/SPEC.md`](docs/reference/SPEC.md).
+
+The normative PETRA interpretation contract is defined separately by
+[`docs/reference/PETRA.md`](docs/reference/PETRA.md).
 
 ## PETRA layer
 
