@@ -31,23 +31,23 @@ The package root intentionally exports no compatibility API.
 
 ## Migration status
 
-Pre-separation PETRA-coupled Resolver modules still exist temporarily while the
-repository completes the architectural migration. The classic search,
-distance, and verification runtime and its dependent atlas, fingerprint,
-notation, and structural-algebra surfaces have been retired.
+The pre-separation PETRA-coupled Resolver runtime has been retired.
 
-The projection layer and the remaining structural-deconstruction research
-surface remain temporarily for later Phase 3 admission or retirement.
+The maintained Resolver runtime is now limited to the explicit SHAPES-native
+submodules:
 
-Those modules are compatibility or research artifacts. Their presence does not
-make their semantics part of SHAPES, and they are scheduled for retirement or
-quarantine before the old structural `petra` package is removed.
+```text
+resolver.shapes_search
+resolver.shapes_distance
+resolver.shapes_verify
+```
 
-The retired classic search, distance, and verification APIs are not aliases for
-the SHAPES-native APIs.
+The package root exports no compatibility API, and no legacy projection,
+structural-deconstruction, numeric, or classic Resolver runtime remains
+installed.
 
-Remaining legacy names such as `PrimeKey`, `project`, `contains`, `meet`, and
-`join` are likewise not re-exported from `resolver`.
+Historical PETRA research remains preserved in repository history and research
+material; it is not retained as executable compatibility code.
 
 ## Command line
 
