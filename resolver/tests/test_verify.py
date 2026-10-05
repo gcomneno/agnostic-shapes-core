@@ -5,11 +5,7 @@ from __future__ import annotations
 import pytest
 from petra import DefaultTarget, ExplicitTarget, Operator, parse_shape
 
-from resolver import (
-    VerifyError,
-    VerifyStep,
-    verify_path,
-)
+from resolver.verify import VerifyError, VerifyStep, verify_path
 
 # ---------------------------------------------------------------------------
 # Valid and minimal

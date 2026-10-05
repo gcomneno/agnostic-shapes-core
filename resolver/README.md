@@ -1,129 +1,77 @@
 # Resolver
 
-A bounded A* search over PETRA canonical shapes.
+Resolver is a satellite package over the SHAPES structural core.
 
-Given two canonical PETRA shapes, the Resolver finds the shortest sequence
-of SPROUT, SHED, GRAFT, and PRUNE invocations that transforms the source
-shape into the target shape.
+During the SHAPES/PETRA separation, the maintained structure-only runtime is
+exposed through explicit submodules rather than through the `resolver` package
+root:
 
-The Resolver is a derived layer. It imports from the canonical `petra`
-package and never the other way around. It does not extend PETRA semantics
-and does not modify the PETRA runtime.
+```python
+from resolver.shapes_search import resolve_shapes
+from resolver.shapes_distance import structural_distance_shapes
+from resolver.shapes_verify import verify_shapes_path
+```
 
-## Requirements
+The dependency chain is:
 
-- Python 3.10 or later
-- The `petra` package must be installed. The Resolver does not declare
-  `petra` as a dependency to avoid pulling an unrelated distribution from
-  PyPI. Install PETRA first, then install the Resolver.
+```text
+resolver.shapes_verify
+        ↓
+resolver.shapes_distance
+        ↓
+resolver.shapes_search
+        ↓
+      SHAPES
+```
 
-## Installation
+These modules operate on `shapes.Shape`, intrinsic `ADD` / `REMOVE`, and
+state-scoped `OccurrencePath` selectors.
 
-From the repository root:
+The package root intentionally exports no compatibility API.
 
-~~~bash
-pip install -e .
-pip install -e ./resolver
-~~~
+## Migration status
 
-This installs both `petra` and `resolver` as editable packages.
+Pre-separation PETRA-coupled Resolver modules still exist temporarily while the
+repository completes the architectural migration. They include the classic
+search, distance, verification, projection, analytics, research, and CLI
+surfaces.
+
+Those modules are compatibility or research artifacts. Their presence does not
+make their semantics part of SHAPES, and they are scheduled for retirement or
+quarantine before the old structural `petra` package is removed.
+
+In particular, classic names such as:
+
+```text
+resolve
+structural_distance_shapes
+verify_path
+PrimeKey
+project
+contains
+meet
+join
+```
+
+are not re-exported from `resolver`.
+
+They are not aliases for the SHAPES-native APIs.
 
 ## Command line
 
-~~~bash
-resolver SOURCE TARGET [options]
-~~~
+The existing Resolver command-line programs are pre-separation compatibility
+surfaces and are scheduled for retirement during Phase 2.4.
 
-Example:
+No replacement SHAPES CLI, parser, serializer, or schema has been admitted yet.
 
-~~~bash
-resolver "1" "C(r0^C(r0^C(r0^1)))"
-~~~
+A period with no Resolver CLI is intentional and preferable to promoting the
+legacy PETRA representation into SHAPES.
 
-Options:
+## Phase 3 boundary
 
-- `--max-depth N` -- maximum number of steps (default: 10)
-- `--max-nodes N` -- maximum node count per shape (default: 20)
-- `--max-visited N` -- maximum distinct shapes explored (default: 1000)
-- `--key-json STR` -- optional JSON object mapping positional addresses to
-  primes, e.g. `{"@/0":2,"@/1":3}`
-- `--json` -- emit a single compact JSON document
+Integer conversion, factorization, prime assignment, numeric projection, and
+related interpretation behavior are not SHAPES responsibilities.
 
-When `--key-json` is supplied, the Resolver also computes the numeric
-projection of the source, the target, and each step. Projection is
-optional and external; it never influences the search.
-
-## Python API
-
-~~~python
-from resolver import PrimeKey, resolve, project
-
-path = resolve("1", "C(r0^C(r0^1))")
-for step in path.steps:
-    print(step.operator.value, step.after_shape)
-
-key = PrimeKey({(0,): 2, (0, 0): 3})
-value = project(path.target, key)
-~~~
-
-## Algorithm
-
-The Resolver uses A* with an admissible heuristic based on three structural
-lower bounds:
-
-- node-count distance divided by 2
-- maximum-depth distance
-- leaf-count distance
-
-Each canonical operator changes node count by exactly plus or minus 2, and
-changes maximum depth and leaf count by at most 1. The maximum of these
-three distances is therefore a lower bound on the number of remaining
-steps, and A* is optimal whenever it finds a path.
-
-## Performance
-
-On tower and flat shapes of size N, the Resolver explores exactly N + 1
-shapes before reaching the target. This is the optimal exploration
-signature: every step makes progress.
-
-Empirical measurements:
-
-| Depth or width | Time | Shapes explored |
-| ---: | ---: | ---: |
-| 10 | 0.015s | 11 |
-| 50 | 0.7s | 51 |
-| 100 | 5.7s | 101 |
-| 200 | 42s | 201 |
-| 500 | more than 120s | -- |
-
-The cost grows as O(N squared): each step rebuilds the entire shape
-(PETRA shapes are immutable), and there are N steps. This is a property
-of the PETRA runtime, not of the search.
-
-## Bounds
-
-All searches are bounded by `max_depth`, `max_nodes`, and `max_visited`.
-A search that cannot find a path within the bounds raises
-`ResolverError`.
-
-## Projection
-
-The projection layer converts a shape into a numeric value given an
-explicit `PrimeKey`. It does not derive the key; the caller supplies it.
-Projection refuses to materialize values beyond a fixed bit bound, so a
-path can be found even when the numeric value of its endpoints cannot be
-computed. In that case, the CLI shows a question mark for the missing
-values.
-
-## Boundary
-
-The Resolver:
-
-- does not modify PETRA
-- does not introduce new PETRA operators
-- does not claim to factorize integers
-- does not claim to compress values
-- does not influence PETRA canonical semantics
-
-It is a structural search over the graph induced by PETRA canonical
-operators, with an optional numeric projection layer.
+No executable compatibility placeholder is required for them during Phase 2.
+Any future PETRA interpretation functionality will be introduced later from an
+explicit Phase 3 contract over SHAPES.
