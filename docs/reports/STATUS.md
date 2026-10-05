@@ -2,8 +2,13 @@
 
 ## Current architecture
 
-**PETRA — Prime Exponent Tower Recursive Algebra** is the sole maintained
-project architecture, runtime, distribution, and command-line surface.
+**Agnostic SHAPES Core (ASHES)** is the maintained project container.
+
+**SHAPES** is its interpretation-agnostic structural core.
+
+**PETRA — Prime Exponent Tower Recursive Algebra** is one maintained,
+pluggable interpretation layer over SHAPES. It does not own or define the
+SHAPES carrier.
 
 Status: **PETRA v2.1.0 released — canonical theory programme complete and
 intrinsic runtime implemented**.

@@ -183,7 +183,7 @@ ${C_BOLD}============================================================${C_RESET}
        ${CHECKSUM}
 
   4. Compila i campi:
-       Title:         PETRA — Prime Exponent Tower Recursive Algebra ${TAG}
+       Title:         Agnostic SHAPES Core ${TAG}
        Version:       ${VERSION}
        License:       MIT License
        Resource type: Software

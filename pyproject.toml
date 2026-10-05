@@ -3,9 +3,9 @@ requires = ["setuptools>=65.5.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "petra"
+name = "agnostic-shapes-core"
 version = "2.1.0"
-description = "SHAPES structural core with PETRA interpretation layer"
+description = "Agnostic SHAPES structural core with pluggable interpretation layers"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -19,8 +19,8 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/gcomneno/petra"
-Issues = "https://github.com/gcomneno/petra/issues"
+Repository = "https://github.com/gcomneno/agnostic-shapes-core"
+Issues = "https://github.com/gcomneno/agnostic-shapes-core/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -38,7 +38,7 @@ test = [
     "pytest>=8,<10",
 ]
 dev = [
-    "petra[test]",
+    "agnostic-shapes-core[test]",
     "ruff>=0.6",
     "mypy>=1.10",
 ]

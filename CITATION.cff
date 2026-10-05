@@ -1,27 +1,28 @@
 cff-version: 1.2.0
-message: "If you use PETRA in academic work, please cite it as below."
-title: "PETRA — Prime Exponent Tower Recursive Algebra"
+message: "If you use the Agnostic SHAPES Core project in academic work, please cite it as below."
+title: "Agnostic SHAPES Core"
 abstract: >
-  PETRA is a structural algebra for finite rooted non-plane forms. Its
-  intrinsic carrier is defined by finite recursive multisets with primitive
-  direct parent-child incidence, intrinsic child multiplicity, no intrinsic
-  sibling order, and recursive multiset structural equality. Its executable
-  intrinsic core provides ADD and REMOVE structural edits, while the retained
-  Leaf/Container/Term/Root model and SPROUT/SHED/GRAFT/PRUNE operators form a
-  representation and compatibility layer. Prime and exponent semantics are
-  optional derived interpretations rather than prerequisites of the carrier.
+  Agnostic SHAPES Core is a structural framework for finite rooted non-plane
+  forms. SHAPES provides the interpretation-agnostic carrier, structural
+  equality, intrinsic multiplicity, and elementary ADD and REMOVE edits.
+  Interpretation layers are pluggable and depend on SHAPES rather than
+  defining it. PETRA — Prime Exponent Tower Recursive Algebra — is one such
+  maintained layer, providing prime/exponent interpretations including the
+  LRPE policy.
 type: software
 authors:
   - family-names: "Cicellyn Comneno"
     given-names: "Giancarlo"
     alias: "gcomneno"
-repository-code: "https://github.com/gcomneno/petra"
-url: "https://github.com/gcomneno/petra"
+repository-code: "https://github.com/gcomneno/agnostic-shapes-core"
+url: "https://github.com/gcomneno/agnostic-shapes-core"
 license: MIT
 version: 2.1.0
 doi: 10.5281/zenodo.23123734
 date-released: "2026-10-03"
 keywords:
+  - "SHAPES"
+  - "agnostic structural core"
   - "prime exponent tower"
   - "recursive algebra"
   - "structural rewriting"
