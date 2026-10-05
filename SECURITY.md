@@ -21,7 +21,7 @@ is not supported.
 If you believe you have found a security issue in the canonical PETRA runtime,
 please report it privately to:
 
-<https://github.com/gcomneno/petra/security/advisories/new>
+<https://github.com/gcomneno/agnostic-shapes-core/security/advisories/new>
 
 Alternatively, contact the maintainer by email:
 

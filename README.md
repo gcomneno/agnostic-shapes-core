@@ -1,9 +1,15 @@
 
-# SHAPES core / PETRA interpretation architecture
+# Agnostic SHAPES Core
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22741778.svg)](https://doi.org/10.5281/zenodo.22741778)
 
-This repository is transitioning to a layered architecture:
+**ASHES** is the informal nickname for the Agnostic SHAPES Core project.
+
+This repository hosts the interpretation-agnostic SHAPES structural core
+together with maintained pluggable interpretation layers and structural
+satellites.
+
+Its architecture is:
 
 ```text
 PETRA
@@ -108,12 +114,17 @@ The **Prime Interpretation Problem (PIP)** belongs inside PETRA. It studies whic
 
 PIP does not define SHAPES.
 
-## Current migration state
+## Current architecture state
 
 The pre-separation structural `petra` runtime has been retired.
 
-The maintained structural runtime is now `shapes`, implementing the agnostic
+The maintained structural runtime is `shapes`, implementing the agnostic
 SHAPES core defined by `docs/reference/SPEC.md`.
+
+The maintained PETRA package is now a pluggable prime/exponent interpretation
+layer over SHAPES. Its first maintained executable policy is LRPE.
+
+PETRA does not own or define the SHAPES carrier.
 
 The maintained Resolver satellite depends on SHAPES through:
 
@@ -123,11 +134,8 @@ resolver.shapes_distance
 resolver.shapes_verify
 ```
 
-There is currently no executable PETRA interpretation package.
-
-A new PETRA layer may be introduced only in Phase 3 from an explicit
-prime/exponent interpretation contract over SHAPES. The removed historical
-runtime is not a compatibility template for that future layer.
+Other interpretation layers may be added directly over SHAPES without
+depending on PETRA.
 
 ## Canonical sources
 

@@ -54,7 +54,12 @@ New SHAPES work must remain independent of:
 - factorization;
 - PETRA-specific interpretation policy.
 
-The current `petra` package, CLI, schemas, representation types, and compatibility operators predate this separation. During migration they may remain temporarily executable, but their existence does not make their PETRA-specific or representation-specific concepts part of SHAPES ontology.
+The pre-separation structural `petra` runtime, CLI, schemas, representation
+types, and compatibility operators are retired historical surfaces.
+
+The active `petra` package is a post-separation interpretation layer over
+SHAPES. Its existence does not make PETRA-specific concepts part of SHAPES
+ontology.
 
 ## Change discipline
 
@@ -134,11 +139,10 @@ retire old structural petra package
 PETRA interpretation layer over SHAPES
 ```
 
-The current `petra` runtime is not to become a permanent compatibility wrapper around SHAPES.
+The old structural `petra` package has been retired.
 
-Temporary coexistence is permitted only as an explicit migration mechanism.
-
-The old `petra` package disappears only after all agnostic runtime responsibilities and their dependents have migrated to SHAPES and before the new PETRA interpretation implementation is introduced.
+The active `petra` package must remain an interpretation layer over SHAPES and
+must not become a compatibility wrapper for the pre-separation runtime.
 
 Reuse legacy artifacts only when a current SHAPES or future PETRA requirement demonstrably needs them.
 
