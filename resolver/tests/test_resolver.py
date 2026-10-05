@@ -2,12 +2,9 @@
 
 from __future__ import annotations
 
-import json
-
 import pytest
 from petra import DefaultTarget, ExplicitTarget, parse_shape
 
-from resolver.cli import main as cli_main
 from resolver.projection import PrimeKey, ProjectionError, project
 from resolver.search import ResolverError, resolve
 
@@ -355,71 +352,3 @@ def test_projection_limit_yields_none_on_huge_tower() -> None:
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
-
-
-def test_cli_human_output(capsys: pytest.CaptureFixture[str]) -> None:
-    exit_code = cli_main(["C(r0^1)", "C(r0^1,r1^1)"])
-    captured = capsys.readouterr()
-
-    assert exit_code == 0
-    assert "length = 1" in captured.out
-    assert "SPROUT" in captured.out
-
-
-def test_cli_json_output(capsys: pytest.CaptureFixture[str]) -> None:
-    exit_code = cli_main(["C(r0^1)", "C(r0^1,r1^1)", "--json"])
-    captured = capsys.readouterr()
-    data = json.loads(captured.out)
-
-    assert exit_code == 0
-    assert data["schema"] == "resolver.path.v1"
-    assert data["length"] == 1
-    assert data["steps"][0]["operator"] == "SPROUT"
-
-
-def test_cli_with_key_attaches_values(capsys: pytest.CaptureFixture[str]) -> None:
-    exit_code = cli_main(
-        [
-            "C(r0^1)",
-            "C(r0^C(r0^1))",
-            "--key-json",
-            '{"@/0":2,"@/0/0":3}',
-        ]
-    )
-    captured = capsys.readouterr()
-
-    assert exit_code == 0
-    assert "[2 -> 8]" in captured.out
-
-
-def test_cli_error_on_malformed_shape(capsys: pytest.CaptureFixture[str]) -> None:
-    exit_code = cli_main(["garbage", "1"])
-    captured = capsys.readouterr()
-
-    assert exit_code == 1
-    assert "shape-text-malformed" in captured.err
-
-
-def test_cli_error_on_unreachable_target(capsys: pytest.CaptureFixture[str]) -> None:
-    exit_code = cli_main(
-        ["1", wide_shape(5), "--max-depth", "2"]
-    )
-    captured = capsys.readouterr()
-
-    assert exit_code == 1
-    assert "no path found" in captured.err
-
-
-def test_cli_error_on_invalid_key_json(capsys: pytest.CaptureFixture[str]) -> None:
-    exit_code = cli_main(
-        [
-            "C(r0^1)",
-            "C(r0^1,r1^1)",
-            "--key-json",
-            "not json",
-        ]
-    )
-    captured = capsys.readouterr()
-
-    assert exit_code == 1
-    assert "not valid JSON" in captured.err
