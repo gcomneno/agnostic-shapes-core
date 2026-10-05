@@ -107,23 +107,24 @@ PIP does not define SHAPES.
 
 ## Current migration state
 
-The repository still contains the released pre-separation PETRA runtime.
+The pre-separation structural `petra` runtime has been retired.
 
-Today that compatibility surface includes:
+The maintained structural runtime is now `shapes`, implementing the agnostic
+SHAPES core defined by `docs/reference/SPEC.md`.
 
-- Python distribution/package `petra`;
-- CLI `petra`;
-- `Leaf`, `Container`, `Term`, and `Root`;
-- positional ranks and addresses;
-- textual `1` / `C(r0^...)` serialization;
-- `petra.operator-*` JSON schemas;
-- `SPROUT`, `SHED`, `GRAFT`, and `PRUNE`;
-- result/witness contracts;
-- Resolver code importing from `petra`.
+The maintained Resolver satellite depends on SHAPES through:
 
-Those interfaces remain executable during migration, but they do **not** define the new SHAPES ontology merely because they currently exist.
+```text
+resolver.shapes_search
+resolver.shapes_distance
+resolver.shapes_verify
+```
 
-Runtime, package, CLI, serialization, and Resolver migration are separate implementation phases.
+There is currently no executable PETRA interpretation package.
+
+A new PETRA layer may be introduced only in Phase 3 from an explicit
+prime/exponent interpretation contract over SHAPES. The removed historical
+runtime is not a compatibility template for that future layer.
 
 ## Canonical sources
 
@@ -132,49 +133,47 @@ Runtime, package, CLI, serialization, and Resolver migration are separate implem
 3. [Implementation roadmap](ROADMAP.md)
 4. [Documentation map](docs/README.md)
 5. [Current project status](docs/reports/STATUS.md)
-6. [Current PETRA compatibility CLI reference](docs/reference/CLI.md)
 
 `docs/reference/SPEC.md` is the sole normative source for SHAPES core semantics.
 
 Historical and research documents retain the terminology appropriate to the architecture or experiment they originally described.
 
-## Current PETRA compatibility CLI
+## PETRA runtime status
 
-The currently released runtime exposes:
+The pre-separation PETRA CLI and its `petra.*` schemas are no longer part of
+the maintained executable runtime.
 
-```bash
-petra '1' '{"schema":"petra.operator-invocation.v1","operator":"SPROUT","target":{"mode":"default"}}'
-```
+Their historical contracts remain available through repository history,
+release artifacts, and historical documentation.
 
-This command and the `petra.*` schemas belong to the pre-separation compatibility runtime.
-
-They are not silently renamed into SHAPES contracts.
-
-A future SHAPES CLI or serialization contract must be specified independently before becoming public API.
+No SHAPES CLI, parser, serializer, or schema namespace has been admitted by
+the current specification.
 
 ## Resolver
 
-The repository also hosts `resolver/`.
+Resolver is a satellite over SHAPES.
 
-Resolver currently imports the `petra` package and contains both structural and arithmetic/projection-oriented capabilities.
+Its maintained structural runtime consists of:
 
-During the SHAPES migration:
+```text
+resolver.shapes_search
+resolver.shapes_distance
+resolver.shapes_verify
+```
 
-- structure-only capabilities may migrate to SHAPES;
-- numeric projection, prime assignment, `int_to_shape`, factorization-based construction, and other arithmetic interpretation behavior must not be pulled into SHAPES;
-- Resolver remains a satellite until its responsibilities can be classified cleanly.
+The pre-separation PETRA-coupled Resolver runtime has been retired.
 
 ## Tests
 
-The current default test gate remains:
+The maintained test gate is:
 
 ```bash
-pytest tests/ -q -m "not slow"
+pytest -q -m "not slow"
 ```
 
-Until runtime migration begins, existing PETRA compatibility tests remain valid tests of the currently released implementation.
-
-New SHAPES tests will be introduced separately when the SHAPES runtime package is created.
+The suite now validates the SHAPES runtime, maintained satellites, and active
+documentation/report contracts. Historical PETRA compatibility behavior is no
+longer kept executable solely for continuity.
 
 ## Historical releases
 

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "petra"
 version = "2.1.0"
-description = "PETRA — structural algebra for finite rooted non-plane forms with intrinsic ADD/REMOVE semantics"
+description = "SHAPES agnostic structural core with satellite structural tooling"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -22,12 +22,9 @@ classifiers = [
 Repository = "https://github.com/gcomneno/petra"
 Issues = "https://github.com/gcomneno/petra/issues"
 
-[project.scripts]
-petra = "petra.cli:main"
-
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["petra", "shapes"]
+include = ["shapes"]
 
 [tool.pytest]
 pythonpath = ["src"]
@@ -39,7 +36,6 @@ markers = [
 [project.optional-dependencies]
 test = [
     "pytest>=8,<10",
-    "sympy>=1.12,<2",
 ]
 dev = [
     "petra[test]",
@@ -72,7 +68,7 @@ ignore = [
 
 [tool.mypy]
 python_version = "3.10"
-files = ["src/petra", "src/shapes"]
+files = ["src/shapes"]
 warn_unused_ignores = true
 warn_redundant_casts = true
 warn_unreachable = true
