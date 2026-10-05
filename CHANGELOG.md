@@ -3,9 +3,80 @@
 Tutte le modifiche rilevanti di questo progetto saranno documentate qui.
 
 Il formato si ispira a Keep a Changelog.
-Versioning corrente: `2.y.z`.
+Versioning corrente: `3.y.z`.
 
 ## [Unreleased]
+
+## [3.0.0] — 2026-10-05
+
+### Added
+- Added the `shapes` Python package as the maintained SHAPES structural runtime.
+- Added the public SHAPES runtime API: `Shape`, `OccurrencePath`, `size`,
+  `add`, `remove`, `iter_occurrences`, and `validate`.
+- Added `docs/reference/PETRA.md` as the normative PETRA interpretation-layer
+  specification.
+- Added LRPE — Local-Rank Paired-Exponent — as the first maintained executable
+  PETRA interpretation policy.
+- Added SHAPES-native Resolver satellite modules:
+  `resolver.shapes_search`, `resolver.shapes_distance`, and
+  `resolver.shapes_verify`.
+
+### Changed
+- Renamed the maintained distribution from `petra` to
+  `agnostic-shapes-core`.
+- Reframed the maintained project as Agnostic SHAPES Core (ASHES), with SHAPES
+  as the interpretation-agnostic structural core and PETRA as a pluggable
+  prime/exponent interpretation layer over SHAPES.
+- Established the strict dependency boundary `PETRA -> SHAPES`; SHAPES does
+  not depend on PETRA.
+- Moved structure-only Resolver search, distance, and verification onto SHAPES
+  runtime contracts.
+- Established `OccurrencePath` as a state-scoped representation selector,
+  not persistent occurrence identity or structural ordering.
+- Updated repository, distribution, documentation, citation, and release
+  identity to Agnostic SHAPES Core while preserving historical PET/PETRA
+  release terminology.
+
+### Removed
+- Removed the pre-separation structural `petra` runtime.
+- Removed the historical `petra` CLI, parser, serializer, schemas, positional
+  address API, typed `Leaf` / `Container` / `Term` / `Root` model, metrics,
+  result/witness envelopes, and structural compatibility operators.
+- Removed executable `SPROUT`, `SHED`, `GRAFT`, and `PRUNE` compatibility
+  surfaces from the maintained runtime.
+- Removed classic PETRA-coupled Resolver runtime modules and CLI surfaces.
+- Removed executable compatibility tests retained solely for superseded PETRA
+  runtime behavior.
+
+### Breaking Changes
+- v3.0.0 is not backward compatible with v2.1.0.
+- Installing the root distribution no longer provides the historical `petra`
+  CLI or the v2 structural `petra.*` API.
+- Consumers of v2 PETRA serialization, addressing, operators, result types,
+  metrics, or CLI contracts must migrate structural work to `shapes` or use
+  explicit maintained PETRA interpretation APIs where appropriate.
+- The `petra` Python package now denotes the maintained interpretation layer;
+  it is not a compatibility alias for SHAPES.
+
+### Research and architecture
+- SHAPES is the interpretation-agnostic structural substrate.
+- PETRA remains a prime/exponent interpretation-policy space over SHAPES.
+- PIP remains foundational theory inside PETRA and is not SHAPES ontology.
+- LRPE is promoted narrowly as the first maintained PETRA runtime policy;
+  PETRA is not identified with LRPE.
+- Matula–Göbel remains a reference interpretation and comparison object.
+- Resolver remains a separately packaged satellite and does not define SHAPES
+  or PETRA semantics.
+- Historical PET and PETRA releases, terminology, research, and published DOI
+  records remain historical evidence and are not retroactively renamed.
+
+### Release metadata
+- Distribution: `agnostic-shapes-core`.
+- Maintained Python packages: `shapes`, `petra`.
+- Zenodo Concept DOI: `10.5281/zenodo.22741778`.
+- Zenodo Version DOI: pending publication; the PETRA v2.1.0 Version DOI is not
+  reused.
+
 
 ## [2.1.0] — 2026-10-03
 
