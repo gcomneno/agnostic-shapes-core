@@ -905,3 +905,365 @@ In particular, this result does not:
 - promote this research note into the normative PETRA specification;
 - specialize the result to LRPE;
 - continue into additional path meta-theory.
+
+---
+
+## P4 — Local factor law under context-stable prime assignment
+
+P3 established that arbitrary admissible PETRA policies do not support a
+general local multiplicative update law.
+
+The first stronger arithmetic law appears after imposing one additional
+property on the prime-assignment policy.
+
+### P4.1 Context-stable prime assignment
+
+Call a prime-assignment policy context-stable when there exists a function
+
+```text
+a : S -> Primes
+```
+
+such that, whenever `X` occurs in the support of an admissible child multiset
+`M`,
+
+```text
+A(M,X) = a(X).
+```
+
+Thus the prime assigned to a child-form class depends only on that SHAPES form,
+not on the surrounding child multiset.
+
+This is an additional PETRA policy property.
+
+It is not required by the base PETRA contract.
+
+No additional property of the exponent policy `E` is assumed here.
+
+### P4.2 Parent-local interpretation form
+
+Let
+
+```text
+P = Node(M).
+```
+
+Under context-stable prime assignment,
+
+```text
+I(P)
+=
+product over X in supp(M) of
+a(X) ^ E(mult_M(X), I(X)).
+```
+
+Consider one elementary ASHES edit applied directly at the parent occurrence
+represented by `P`.
+
+Because elementary ADD and REMOVE operate on zero-child occurrences, write
+
+```text
+Z := Node(empty multiset)
+```
+
+with
+
+```text
+I(Z) = 1.
+```
+
+For every child-form class
+
+```text
+X != Z,
+```
+
+the direct edit leaves both
+
+```text
+mult_M(X)
+```
+
+and
+
+```text
+I(X)
+```
+
+unchanged.
+
+Context stability also leaves its prime base
+
+```text
+a(X)
+```
+
+unchanged.
+
+Therefore every factor associated with an unchanged child-form class is
+identical before and after the direct edit.
+
+The complete parent-local arithmetic effect is confined to the factor
+associated with `Z`.
+
+### P4.3 ADD when Z is already present
+
+Suppose
+
+```text
+mult_M(Z) = m >= 1.
+```
+
+After one direct ADD at `P`, let
+
+```text
+P' = Node(M + [Z]).
+```
+
+Then
+
+```text
+mult_{M+[Z]}(Z) = m + 1.
+```
+
+All non-`Z` factors cancel in the quotient, so in the positive rationals:
+
+```text
+I(P') / I(P)
+=
+a(Z) ^
+(
+    E(m+1, 1) - E(m, 1)
+).
+```
+
+Equivalently:
+
+```text
+I(P')
+=
+I(P)
+*
+a(Z) ^
+(
+    E(m+1, 1) - E(m, 1)
+).
+```
+
+This signed-exponent identity is an exact arithmetic update law.
+
+It does not imply divisibility because no monotonicity property of `E` has
+been assumed.
+
+### P4.4 ADD when Z is a new support class
+
+Suppose
+
+```text
+Z not in supp(M).
+```
+
+After one direct ADD:
+
+```text
+P' = Node(M + [Z]).
+```
+
+The new class `Z` enters the support with multiplicity one.
+
+Every pre-existing factor is unchanged, and therefore:
+
+```text
+I(P')
+=
+I(P) * a(Z) ^ E(1,1).
+```
+
+Hence:
+
+```text
+I(P') / I(P)
+=
+a(Z) ^ E(1,1).
+```
+
+In this case the ratio is a positive integer and the new local interpretation
+contains exactly one additional prime-powered factor associated with `Z`.
+
+This conclusion was not valid for arbitrary PETRA prime assignment because
+changing `M` could previously reassign bases for already-present classes.
+
+### P4.5 REMOVE when Z remains present
+
+Suppose
+
+```text
+mult_M(Z) = m > 1.
+```
+
+After one direct REMOVE:
+
+```text
+P' = Node(M - [Z]).
+```
+
+Then
+
+```text
+mult_{M-[Z]}(Z) = m - 1.
+```
+
+Again all non-`Z` factors are unchanged, so in the positive rationals:
+
+```text
+I(P') / I(P)
+=
+a(Z) ^
+(
+    E(m-1, 1) - E(m, 1)
+).
+```
+
+Equivalently:
+
+```text
+I(P')
+=
+I(P)
+*
+a(Z) ^
+(
+    E(m-1, 1) - E(m, 1)
+).
+```
+
+No divisibility direction follows without an additional property of `E`.
+
+### P4.6 REMOVE of the last Z occurrence
+
+Suppose
+
+```text
+mult_M(Z) = 1.
+```
+
+After one direct REMOVE, `Z` leaves the support.
+
+If
+
+```text
+P' = Node(M - [Z]),
+```
+
+then:
+
+```text
+I(P)
+=
+I(P') * a(Z) ^ E(1,1).
+```
+
+Equivalently:
+
+```text
+I(P') / I(P)
+=
+a(Z) ^ (-E(1,1))
+```
+
+in the positive rationals.
+
+Thus removal of the last `Z` occurrence removes exactly the corresponding
+prime-powered factor from the parent-local interpretation.
+
+### P4.7 Theorem — local factor law
+
+Let `I` be a PETRA interpretation whose prime-assignment policy is
+context-stable:
+
+```text
+A(M,X) = a(X).
+```
+
+For any elementary ADD or REMOVE applied directly to a parent
+
+```text
+P = Node(M),
+```
+
+every prime-powered factor associated with a child-form class other than `Z`
+is unchanged.
+
+The arithmetic effect at that parent is exactly the change in the `Z` factor.
+
+Therefore context-stable prime assignment is sufficient to upgrade the base
+PETRA rule
+
+```text
+recompute the complete local product
+```
+
+to an exact parent-local factor update law.
+
+### P4.8 Locality boundary
+
+This theorem is local to the directly edited parent.
+
+If `P` is itself a child of an ancestor, changing `I(P)` may alter the exponent
+input used by that ancestor:
+
+```text
+E(mult(P), I(P)).
+```
+
+The resulting arithmetic effect may therefore propagate recursively toward
+the root.
+
+P4 does not imply that only one prime-powered factor changes in the
+interpretation of the complete SHAPES form.
+
+### P4.9 What P4 still does not prove
+
+Context-stable prime assignment alone does not imply:
+
+```text
+ADD => I(P) divides I(P')
+```
+
+or:
+
+```text
+REMOVE => I(P') divides I(P).
+```
+
+It also does not imply numerical monotonicity.
+
+Such conclusions require an additional property of `E`, for example an
+appropriate monotonicity law in the multiplicity argument.
+
+That stronger step is deliberately not taken here.
+
+---
+
+## Boundary after P4
+
+The additional assumption introduced in P4 is exactly:
+
+```text
+A(M,X) = a(X).
+```
+
+Under that assumption PETRA gains an exact parent-local multiplicative update
+law for elementary ADD and REMOVE.
+
+No property of `E` beyond the base PETRA contract is introduced.
+
+In particular, this tranche does not:
+
+- assert divisibility;
+- assert numerical monotonicity;
+- specialize to LRPE;
+- modify ASHES;
+- modify the normative PETRA specification;
+- introduce a new structural primitive;
+- continue into a stronger P5 result.
