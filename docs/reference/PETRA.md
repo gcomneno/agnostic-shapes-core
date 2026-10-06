@@ -41,6 +41,88 @@ explicitly admitted by this specification.
 
 ---
 
+## Operational contract
+
+The PETRA/SHAPES relationship can be summarized as:
+
+```text
+SHAPES form
+    |
+    | selected PETRA interpretation policy
+    v
+positive integer
+```
+
+SHAPES owns the form and its intrinsic structural operations.
+
+PETRA consumes an already-existing SHAPES form and interprets it
+arithmetically.
+
+In particular:
+
+```text
+SHAPES
+=
+structure + structural equality + intrinsic edits
+
+PETRA
+=
+arithmetic interpretation of that structure
+```
+
+For a selected PETRA policy `P`, the forward direction is:
+
+```text
+I_P : S ⇀ N+
+```
+
+where `S` is the SHAPES carrier.
+
+This mapping may be partial.
+
+PETRA does not use the resulting integer to define:
+
+- SHAPES identity;
+- SHAPES equality;
+- SHAPES edit legality;
+- SHAPES canonicalization.
+
+A policy may additionally provide a reverse interpretation:
+
+```text
+R_P : N+ ⇀ S
+```
+
+but reverse interpretation is policy-specific and need not exist for every
+PETRA policy or every positive integer.
+
+When a policy is faithful and has an effective inverse on its reachable image,
+the operational round trip is:
+
+```text
+SHAPES form
+    |
+    | I_P
+    v
+reachable integer
+    |
+    | R_P
+    v
+same SHAPES form
+```
+
+Thus PETRA is not an alternative structural core.
+
+It is an arithmetic interpretation layer over SHAPES.
+
+For the first maintained policy, LRPE, faithfulness and effective reverse
+interpretation on `Image(LRPE)` are established separately in Section 18.
+
+This section is a compact restatement of the contracts defined below. It does
+not introduce additional PETRA semantics.
+
+---
+
 ## 1. Source domain
 
 Let `S` denote the canonical SHAPES carrier.
