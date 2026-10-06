@@ -1267,3 +1267,412 @@ In particular, this tranche does not:
 - modify the normative PETRA specification;
 - introduce a new structural primitive;
 - continue into a stronger P5 result.
+
+---
+
+## P5 — Local divisibility law
+
+P4 established an exact parent-local factor law under context-stable prime
+assignment:
+
+```text
+A(M,X) = a(X).
+```
+
+P5 adds one further property, restricted to exactly the exponent values
+required by elementary ASHES leaf edits.
+
+### P5.1 Leaf-multiplicity monotonicity
+
+Call an exponent policy leaf-multiplicity monotone when:
+
+```text
+m1 <= m2
+=>
+E(m1,1) <= E(m2,1)
+```
+
+for every positive multiplicity pair on which the policy is defined.
+
+Equivalently, the sequence
+
+```text
+E(1,1), E(2,1), E(3,1), ...
+```
+
+is nondecreasing.
+
+This condition concerns only the second argument value
+
+```text
+v = I(Z) = 1.
+```
+
+It does not impose monotonicity of
+
+```text
+E(m,v)
+```
+
+for arbitrary interpreted child values `v`.
+
+Thus P5 does not require a general monotonicity theorem for the complete
+exponent policy.
+
+### P5.2 Assumptions
+
+Throughout P5 assume both:
+
+```text
+A(M,X) = a(X)
+```
+
+and:
+
+```text
+m1 <= m2
+=>
+E(m1,1) <= E(m2,1).
+```
+
+The first is the context-stability property from P4.
+
+The second is leaf-multiplicity monotonicity.
+
+No other property of `A` or `E` is introduced.
+
+### P5.3 ADD when Z is already present
+
+Let
+
+```text
+P = Node(M)
+```
+
+with:
+
+```text
+mult_M(Z) = m >= 1.
+```
+
+After one direct ADD:
+
+```text
+P' = Node(M + [Z]).
+```
+
+By P4:
+
+```text
+I(P') / I(P)
+=
+a(Z) ^
+(
+    E(m+1,1) - E(m,1)
+).
+```
+
+Leaf-multiplicity monotonicity gives:
+
+```text
+E(m+1,1) - E(m,1) >= 0.
+```
+
+Therefore the quotient is a positive integer:
+
+```text
+I(P') / I(P) in N+.
+```
+
+Hence:
+
+```text
+I(P) divides I(P').
+```
+
+### P5.4 ADD when Z is a new support class
+
+If:
+
+```text
+Z not in supp(M),
+```
+
+P4 gives:
+
+```text
+I(P')
+=
+I(P) * a(Z)^E(1,1).
+```
+
+Because the base PETRA exponent contract has:
+
+```text
+E(1,1) in N+,
+```
+
+the multiplier is a positive integer.
+
+Therefore:
+
+```text
+I(P) divides I(P').
+```
+
+No additional monotonicity argument is required for this boundary case.
+
+### P5.5 REMOVE when Z remains present
+
+Let:
+
+```text
+mult_M(Z) = m > 1.
+```
+
+After one direct REMOVE:
+
+```text
+P' = Node(M - [Z]).
+```
+
+P4 gives:
+
+```text
+I(P') / I(P)
+=
+a(Z) ^
+(
+    E(m-1,1) - E(m,1)
+).
+```
+
+Leaf-multiplicity monotonicity gives:
+
+```text
+E(m-1,1) <= E(m,1).
+```
+
+Equivalently:
+
+```text
+I(P) / I(P')
+=
+a(Z) ^
+(
+    E(m,1) - E(m-1,1)
+)
+```
+
+with non-negative exponent.
+
+Therefore:
+
+```text
+I(P') divides I(P).
+```
+
+### P5.6 REMOVE of the last Z occurrence
+
+If:
+
+```text
+mult_M(Z) = 1,
+```
+
+P4 gives:
+
+```text
+I(P)
+=
+I(P') * a(Z)^E(1,1).
+```
+
+Therefore directly:
+
+```text
+I(P') divides I(P).
+```
+
+Again, no additional monotonicity argument is required for this boundary case.
+
+### P5.7 Theorem — local divisibility orientation
+
+Let a PETRA interpretation satisfy:
+
+```text
+A(M,X) = a(X)
+```
+
+and let its exponent policy be leaf-multiplicity monotone:
+
+```text
+m1 <= m2
+=>
+E(m1,1) <= E(m2,1).
+```
+
+For every elementary ADD applied directly to a parent:
+
+```text
+P --ADD--> P',
+```
+
+we have:
+
+```text
+I(P) divides I(P').
+```
+
+For every elementary REMOVE applied directly to a parent:
+
+```text
+P --REMOVE--> P',
+```
+
+we have:
+
+```text
+I(P') divides I(P).
+```
+
+Thus direct elementary leaf addition is locally divisibility-increasing, while
+direct elementary leaf removal is locally divisibility-decreasing.
+
+This is a conditional PETRA arithmetic law.
+
+It is not a SHAPES structural law.
+
+### P5.8 Corollary — local numerical monotonicity
+
+PETRA state values lie in the positive integers.
+
+For positive integers:
+
+```text
+x divides y
+=>
+x <= y.
+```
+
+Therefore P5 implies:
+
+```text
+P --ADD--> P'
+=>
+I(P) <= I(P')
+```
+
+and:
+
+```text
+P --REMOVE--> P'
+=>
+I(P') <= I(P).
+```
+
+So direct ADD is locally nondecreasing in PETRA value and direct REMOVE is
+locally nonincreasing.
+
+The inequalities need not be strict.
+
+If, for example,
+
+```text
+E(m+1,1) = E(m,1),
+```
+
+then an ADD to an already-present `Z` class may leave the parent-local PETRA
+value unchanged.
+
+Strict numerical growth would require a stronger assumption such as:
+
+```text
+E(m+1,1) > E(m,1).
+```
+
+No such stronger assumption is introduced here.
+
+### P5.9 Locality boundary
+
+P5 inherits the locality boundary of P4.
+
+The theorem concerns the interpretation of the parent directly edited by the
+elementary ADD or REMOVE.
+
+If that parent occurs below an ancestor, the changed value
+
+```text
+I(P)
+```
+
+becomes an input to an ancestor exponent:
+
+```text
+E(mult(P), I(P)).
+```
+
+P5 imposes no monotonicity condition on the second argument of `E`.
+
+Therefore P5 does not imply:
+
+```text
+deep ADD
+=>
+root interpretation increases
+```
+
+or:
+
+```text
+deep REMOVE
+=>
+root interpretation decreases.
+```
+
+Nor does it establish a global divisibility relation between the complete
+source and target interpretations for an arbitrary deep edit.
+
+Those claims would require additional assumptions involving the `v` argument
+of `E` and are outside this result.
+
+---
+
+## Boundary after P5
+
+P5 adds exactly one property beyond P4:
+
+```text
+m1 <= m2
+=>
+E(m1,1) <= E(m2,1).
+```
+
+Together with context-stable prime assignment:
+
+```text
+A(M,X) = a(X),
+```
+
+this proves the parent-local divisibility laws:
+
+```text
+ADD:
+I(before) divides I(after)
+
+REMOVE:
+I(after) divides I(before).
+```
+
+Local numerical monotonicity follows as a corollary.
+
+This tranche does not:
+
+- require strict monotonicity;
+- impose monotonicity in the second argument of `E`;
+- derive root-level monotonicity for deep edits;
+- derive global divisibility for arbitrary deep edits;
+- specialize to LRPE;
+- modify ASHES;
+- modify the normative PETRA specification;
+- continue to a P6 result.
