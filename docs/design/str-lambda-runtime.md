@@ -841,21 +841,98 @@ semantics to STR.
 
 ### M6 — shared LAMBDA interface decision
 
-After at least two maintained STR consumers exist, inspect their real runtime
-surfaces.
+Status:
 
-Only then decide whether a shared:
-
-```python
-Protocol
+```text
+DONE
 ```
 
-or other common interface is justified.
+After M5, two maintained STR consumers exist with real runtime surfaces:
 
-The valid outcome may still be:
+```python
+LRPE.interpret_str(
+    value: STR,
+    *,
+    limits: MaterializationLimits | None = None,
+) -> int
+```
+
+and:
+
+```python
+collatz.interpret_str(value: STR) -> int
+```
+
+Their proven architectural commonality is:
+
+```text
+STR input
+    ↓
+interpretation-owned LAMBDA
+    ↓
+interpretation domain
+```
+
+Their runtime surfaces are intentionally not identical.
+
+PETRA/LRPE owns:
+
+- policy identity;
+- optional materialization limits;
+- direct SHAPES interpretation;
+- reverse interpretation;
+- PETRA-specific runtime failures.
+
+COLLATZ currently owns only:
+
+```text
+STR -> structural seed
+```
+
+and has no demonstrated requirement for PETRA-style materialization limits,
+reverse interpretation, policy identity, or a policy object.
+
+No maintained runtime caller currently needs to accept arbitrary LAMBDA
+implementations polymorphically.
+
+Introducing a shared `Protocol`, base class, registry, adapter, or wrapper now
+would therefore encode abstraction before there is a demonstrated consumer for
+that abstraction.
+
+The M6 decision is:
 
 ```text
 NO_SHARED_PROTOCOL_REQUIRED
+```
+
+This decision does not deny the architectural LAMBDA contract:
+
+```text
+Λ_I : STR -> D_I
+```
+
+It means only that the architectural contract does not currently justify a
+shared Python runtime interface.
+
+Each interpretation continues to own its STR-facing API.
+
+The decision should be reconsidered only if concrete runtime pressure appears,
+for example:
+
+- a maintained caller must accept multiple STR interpreters interchangeably;
+- a third maintained interpreter exposes a stable compatible surface;
+- interpretation discovery or registration becomes a real requirement;
+- a shared failure or resource-limit contract emerges independently across
+  interpreters.
+
+Until then:
+
+```text
+INTERPRETER_OWNS_ITS_LAMBDA=YES
+GENERIC_LAMBDA_BASE_CLASS=NO
+SHARED_LAMBDA_PROTOCOL=NO
+INTERPRETATION_REGISTRY=NO
+RUNTIME_CHANGE_M6=NONE
 ```
 
 ---

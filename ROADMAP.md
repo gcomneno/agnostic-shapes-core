@@ -251,17 +251,28 @@ STR
 interpretation domain
 ```
 
-The runtime programme is ordered as:
+The runtime programme is complete:
 
 ```text
-M0  runtime design
-M1  Tensor View / STR runtime
-M2  Tensor View conformance
-M3  PETRA STR consumer
-M4  PETRA equivalence gate
-M5  second runtime interpretation
-M6  shared LAMBDA interface decision
+M0  runtime design                  DONE
+M1  Tensor View / STR runtime       DONE
+M2  Tensor View conformance         DONE
+M3  PETRA STR consumer              DONE
+M4  PETRA equivalence gate          DONE
+M5  second runtime interpretation   DONE
+M6  shared LAMBDA interface         DONE
 ```
+
+The M6 runtime-interface decision is:
+
+```text
+NO_SHARED_PROTOCOL_REQUIRED
+```
+
+Two maintained STR consumers now exist, but no maintained caller requires
+polymorphic dispatch across them. Their shared architectural contract remains
+interpretation-owned LAMBDA over STR; no Python base class, `Protocol`,
+registry, or adapter layer is introduced without concrete consumer pressure.
 
 The design contract is:
 
