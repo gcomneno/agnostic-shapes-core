@@ -1115,7 +1115,723 @@ None of these choices is established by the current probes.
 
 ---
 
-## 14. Architecture boundary
+## 14. Tensor Materialization Probe 0
+
+With recursive-refinement faithfulness established, the next question was
+whether one finite SHAPES form could be converted into a self-contained finite
+numeric representation without retaining recursive signatures as hidden
+decoder metadata.
+
+For a finite form `S`, let `Q(S)` be the finite set of distinct rooted SHAPES
+subforms that occur in `S`.
+
+A local coordinate assignment:
+
+```text
+pi : Q(S) -> {0, ..., k-1}
+```
+
+with:
+
+```text
+k = |Q(S)|
+```
+
+was used to construct:
+
+```text
+T(S)
+=
+(
+    root,
+    M
+)
+```
+
+where:
+
+```text
+root[i] = 1
+```
+
+exactly when coordinate `i` denotes the root structural type `S`, and:
+
+```text
+M[i,j]
+=
+multiplicity of child type j
+under parent type i.
+```
+
+The coordinates are local representation indices only.
+
+They are not:
+
+- SHAPES identity;
+- occurrence identity;
+- sibling order;
+- globally meaningful structural type IDs.
+
+### 14.1 Controlled experiment
+
+The ephemeral Probe 0 enumerated every SHAPES form reachable through intrinsic
+`ADD` up to size 11:
+
+```text
+SIZE=1      1
+SIZE=2      1
+SIZE=3      2
+SIZE=4      4
+SIZE=5      9
+SIZE=6      20
+SIZE=7      48
+SIZE=8      115
+SIZE=9      286
+SIZE=10     719
+SIZE=11     1842
+
+TOTAL_SHAPES=3047
+```
+
+For every form, the probe:
+
+```text
+source SHAPE
+    ↓
+collect local structural types
+    ↓
+assign deterministic local coordinates
+    ↓
+materialize (root, M)
+    ↓
+discard source SHAPE and structural-type vocabulary
+    ↓
+decode using only (root, M)
+    ↓
+compare with source by SHAPES structural equality
+```
+
+Observed:
+
+```text
+ROUNDTRIP_OK=3047
+TOTAL_SHAPES=3047
+DISTINCT_MATERIALIZATIONS=3047
+COLLISION_COUNT=0
+LOCAL_TYPE_REDUNDANCY_COUNT=0
+UNREACHABLE_TYPE_COORDINATE_COUNT=0
+MAX_LOCAL_VOCABULARY=11
+MAX_MATRIX_DIMENSION=11
+```
+
+All experimental gates passed:
+
+```text
+ROUNDTRIP_GATE=PASS
+COLLISION_GATE=PASS
+LOCAL_TYPE_ROW_UNIQUENESS_GATE=PASS
+TYPE_REACHABILITY_GATE=PASS
+```
+
+The decoder required only:
+
+```text
+(root, M)
+```
+
+and did not retain the recursive structural signatures or source `Shape`
+values.
+
+The bounded experimental verdict was:
+
+```text
+TENSOR_MATERIALIZATION_PROBE_0
+=
+MATERIALIZATION_FAITHFUL_ON_BOUND
+```
+
+The probe modified no repository state.
+
+---
+
+## 15. Tensor materialization faithfulness theorem
+
+Probe 0 suggests a general result over the complete finite SHAPES carrier.
+
+Let `S` be any finite SHAPES form.
+
+Define `Q(S)` as the set of distinct structural types among all rooted subforms
+occurring in `S`.
+
+Choose a bijective local coordinate assignment:
+
+```text
+pi : Q(S) -> {0, ..., k-1}
+```
+
+and define:
+
+```text
+root_pi(S)[pi(S)] = 1
+```
+
+with every other root coordinate zero.
+
+Define the child-multiplicity matrix:
+
+```text
+M_pi(S)[pi(U), pi(V)]
+=
+multiplicity of V
+in the child multiset of U.
+```
+
+The coordinate-labelled materialization is:
+
+```text
+T_pi(S)
+=
+(
+    root_pi(S),
+    M_pi(S)
+)
+```
+
+### Theorem
+
+For every finite SHAPES form `S`, `T_pi(S)` is a finite self-contained
+representation from which `S` can be reconstructed uniquely up to SHAPES
+structural equality.
+
+Consequently, the materialization is faithful modulo simultaneous renaming of
+its local type coordinates.
+
+If the local coordinate assignment is chosen by a deterministic canonical
+policy derived solely from structural type, the resulting canonical
+materialization is an injective deterministic encoding of finite SHAPES forms.
+
+This theorem concerns a derived interpretation representation.
+
+It does not redefine SHAPES structural equality or ontology.
+
+---
+
+### 15.1 Finite structural-type quotient
+
+Every finite SHAPES form has finitely many node occurrences.
+
+Every rooted subform occurring in `S` is rooted at some occurrence of `S`.
+
+Therefore the number of distinct structural subform types satisfies:
+
+```text
+1 <= |Q(S)| <= size(S).
+```
+
+Hence `Q(S)` is finite.
+
+Therefore:
+
+```text
+root_pi(S)
+```
+
+is a finite vector and:
+
+```text
+M_pi(S)
+```
+
+is a finite square matrix.
+
+Thus every finite SHAPES form admits a finite materialization.
+
+```text
+FINITE_TYPE_QUOTIENT=PROVED
+FINITE_MATERIALIZATION=PROVED
+```
+
+---
+
+### 15.2 Acyclicity of structural-type dependency
+
+Suppose structural type `V` occurs as an immediate child of structural type
+`U`.
+
+Then:
+
+```text
+height(V) < height(U).
+```
+
+Indeed, every root-to-leaf path in `V` becomes one level deeper when viewed
+from the root of `U`.
+
+Therefore every directed dependency:
+
+```text
+U -> V
+```
+
+strictly decreases height.
+
+A directed cycle would require:
+
+```text
+height(U)
+>
+...
+>
+height(U),
+```
+
+which is impossible.
+
+Hence the structural-type dependency graph represented by the non-zero entries
+of `M_pi(S)` is acyclic.
+
+It therefore admits a bottom-up topological reconstruction order.
+
+```text
+TYPE_DEPENDENCY_ACYCLIC=PROVED
+```
+
+---
+
+### 15.3 Decoder definition and termination
+
+Given only:
+
+```text
+(root, M),
+```
+
+define a decoder on type coordinates recursively.
+
+For coordinate `i`, let:
+
+```text
+D(i)
+=
+Node(
+    multiset {
+        D(j) repeated M[i,j] times
+        for every j
+    }
+)
+```
+
+Rows with no outgoing multiplicities decode immediately as:
+
+```text
+Node(empty multiset)
+=
+Z.
+```
+
+Because the dependency graph is finite and acyclic, recursive decoding always
+reaches zero-child rows.
+
+Therefore decoding terminates.
+
+The one-hot root vector selects one coordinate `r`, and the decoded form is:
+
+```text
+Decode(root, M)
+=
+D(r).
+```
+
+No structural-type vocabulary is required by the decoder.
+
+```text
+DECODER_TERMINATES=PROVED
+DECODER_REQUIRES_STRUCTURAL_VOCABULARY=NO
+```
+
+---
+
+### 15.4 Decoder correctness
+
+We prove that every coordinate reconstructs its corresponding structural type.
+
+Let coordinate `pi(U)` represent structural type `U`.
+
+Proceed by induction on:
+
+```text
+height(U).
+```
+
+#### Base case
+
+If:
+
+```text
+height(U) = 0,
+```
+
+then `U` has no children.
+
+Its matrix row contains only zeroes.
+
+Therefore:
+
+```text
+D(pi(U))
+=
+Node(empty multiset)
+=
+Z
+=
+U.
+```
+
+#### Inductive step
+
+Assume every structural type of height strictly less than `h` is reconstructed
+correctly.
+
+Let:
+
+```text
+height(U) = h > 0.
+```
+
+Every immediate child type `V` of `U` has:
+
+```text
+height(V) < h.
+```
+
+By the induction hypothesis:
+
+```text
+D(pi(V)) = V.
+```
+
+The row:
+
+```text
+M_pi(S)[pi(U), *]
+```
+
+contains exactly the multiplicity with which each child structural type occurs
+under `U`.
+
+Therefore the decoder constructs exactly:
+
+```text
+Node(
+    child multiset of U
+).
+```
+
+By canonical SHAPES recursive structural equality:
+
+```text
+D(pi(U)) = U.
+```
+
+The induction therefore holds for every type in `Q(S)`.
+
+In particular, the root vector selects `pi(S)`, so:
+
+```text
+Decode(T_pi(S))
+=
+S.
+```
+
+Hence:
+
+```text
+ROUNDTRIP_FOR_ALL_FINITE_SHAPES=PROVED
+DECODER_CORRECTNESS=PROVED
+```
+
+---
+
+### 15.5 Faithfulness modulo local-coordinate renaming
+
+The integer coordinate attached to one local structural type has no intrinsic
+meaning.
+
+Let:
+
+```text
+sigma
+```
+
+be any permutation of the `k` local coordinates.
+
+Applying that renaming simultaneously to:
+
+```text
+root
+```
+
+and both axes of:
+
+```text
+M
+```
+
+does not change the represented rooted multiplicity structure.
+
+In matrix notation, if `P` is the corresponding permutation matrix:
+
+```text
+root' = P root
+
+M' = P M P^-1.
+```
+
+Therefore the mathematically natural materialization object is the equivalence
+class:
+
+```text
+[(root, M)]
+```
+
+under simultaneous local-coordinate renaming.
+
+Since every representative decodes to the same SHAPES form:
+
+```text
+[(root, M)]
+    ↦
+S
+```
+
+is well-defined.
+
+If two finite SHAPES forms have the same materialization class, decoding that
+class yields both forms.
+
+Therefore:
+
+```text
+[T(S)] = [T(U)]
+    => S = U.
+```
+
+Hence:
+
+```text
+FAITHFUL_UP_TO_LOCAL_COORDINATE_RENAMING=PROVED
+```
+
+No global type identifiers are required.
+
+---
+
+### 15.6 Canonical local coordinate assignment
+
+For exact deterministic materialization rather than equivalence only, choose a
+fixed total ordering of structural types derived solely from a faithful
+structural signature.
+
+One admissible policy is the policy used in Probe 0:
+
+```text
+(
+    height(type),
+    full_recursive_structural_signature(type)
+)
+```
+
+with deterministic total ordering of the resulting structural signatures.
+
+Because both height and the recursive signature depend only on SHAPES
+structure, structurally equal types receive the same ordering relation
+independently of:
+
+- occurrence identity;
+- construction history;
+- sibling order;
+- object allocation;
+- traversal accidents.
+
+For one finite `S`, ordering all members of `Q(S)` by that policy therefore
+induces a unique local coordinate assignment:
+
+```text
+pi_canonical(S).
+```
+
+This produces:
+
+```text
+C(S)
+=
+T_pi_canonical(S)(S).
+```
+
+If:
+
+```text
+S = U,
+```
+
+then the two forms have the same finite set of structural subform types and the
+same canonical ordering.
+
+Therefore:
+
+```text
+C(S) = C(U).
+```
+
+Conversely, if:
+
+```text
+C(S) = C(U),
+```
+
+then the common numerical representation decodes to one unique SHAPES form.
+
+By decoder correctness:
+
+```text
+S = U.
+```
+
+Thus:
+
+```text
+S = U
+iff
+C(S) = C(U).
+```
+
+So the canonical materialization is an injective deterministic representation
+of finite SHAPES forms.
+
+This establishes exact equality of the mathematical vector/matrix pair.
+
+It does **not** claim byte-for-byte serialization identity, because no tensor
+serialization format is specified by this research result.
+
+```text
+CANONICAL_COORDINATE_ASSIGNMENT=PROVED
+EXACT_CANONICAL_MATERIALIZATION_FAITHFULNESS=PROVED
+BYTE_SERIALIZATION_CONTRACT=NONE
+```
+
+---
+
+### 15.7 Row uniqueness and reachability corollaries
+
+Two distinct structural types in the same local vocabulary cannot have equal
+matrix rows.
+
+If two rows were equal, they would specify equal child-type multisets with
+equal multiplicities.
+
+By SHAPES recursive structural equality, the corresponding parent structural
+types would then be equal.
+
+Therefore:
+
+```text
+LOCAL_TYPE_ROW_UNIQUENESS=PROVED
+```
+
+Every type in `Q(S)` occurs as a rooted subform somewhere inside `S`.
+
+Following the ancestor chain from that occurrence to the root gives a path in
+the type-dependency graph from the root type to that structural type.
+
+Therefore every materialized coordinate is reachable from the root coordinate:
+
+```text
+TYPE_REACHABILITY=PROVED
+```
+
+These general results explain the corresponding Probe-0 observations:
+
+```text
+LOCAL_TYPE_REDUNDANCY_COUNT=0
+UNREACHABLE_TYPE_COORDINATE_COUNT=0.
+```
+
+---
+
+## 16. Tensor materialization proof gate result
+
+The proof gate is closed as:
+
+```text
+FINITE_TYPE_QUOTIENT=PROVED
+FINITE_MATERIALIZATION=PROVED
+
+TYPE_DEPENDENCY_ACYCLIC=PROVED
+
+DECODER_TERMINATES=PROVED
+DECODER_CORRECTNESS=PROVED
+ROUNDTRIP_FOR_ALL_FINITE_SHAPES=PROVED
+
+FAITHFUL_UP_TO_LOCAL_COORDINATE_RENAMING=PROVED
+
+CANONICAL_COORDINATE_ASSIGNMENT=PROVED
+EXACT_CANONICAL_MATERIALIZATION_FAITHFULNESS=PROVED
+
+LOCAL_TYPE_ROW_UNIQUENESS=PROVED
+TYPE_REACHABILITY=PROVED
+
+GLOBAL_TYPE_IDS_REQUIRED=NO
+PERSISTENT_OCCURRENCE_IDENTITY_REQUIRED=NO
+SIBLING_ORDER_REQUIRED=NO
+
+BYTE_SERIALIZATION_CONTRACT=NONE
+
+NEW_SHAPES_SEMANTICS=NONE
+NEW_PETRA_SEMANTICS=NONE
+RUNTIME_CHANGE=NONE
+
+TENSOR_MATERIALIZATION_PROOF_GATE=PASS
+```
+
+The resulting research pipeline is now:
+
+```text
+SHAPES
+    ↓
+recursive structural refinement
+    FAITHFUL — PROVED
+    ↓
+finite structural-type quotient
+    ↓
+(root vector, child-multiplicity matrix)
+    FAITHFUL — PROVED
+```
+
+The matrix does not store node occurrences.
+
+It stores the recursive construction rules of the distinct structural types
+present in one finite SHAPES form.
+
+The next research question is therefore no longer whether a faithful tensor
+materialization exists.
+
+It is:
+
+> How do intrinsic `ADD` and `REMOVE` edits transform this materialization?
+
+In particular, future work may investigate whether such changes are:
+
+- local;
+- sparse;
+- bounded in affected tensor support;
+- compositional;
+- expressible through useful algebraic update rules.
+
+No such edit-dynamics result is established here.
+
+---
+
+## 17. Architecture boundary
 
 The investigation supports only this prospective architecture:
 
@@ -1152,7 +1868,7 @@ structural core.
 
 ---
 
-## 15. Current research verdict
+## 18. Current research verdict
 
 ```text
 TENSOR INTERPRETATION ARCHITECTURALLY POSSIBLE
@@ -1173,8 +1889,17 @@ R_(height-1) FAITHFULNESS PROVED
 R_(height-1) FAITHFULNESS SURVIVES BOUNDED FALSIFICATION
     YES
 
-TENSOR MATERIALIZATION ESTABLISHED
+TENSOR MATERIALIZATION FAITHFULNESS PROVED
+    YES
+
+FINITE SELF-CONTAINED ROOT + MULTIPLICITY MATRIX REPRESENTATION
+    YES
+
+GLOBAL TYPE IDS REQUIRED
     NO
+
+BYTE SERIALIZATION CONTRACT
+    NONE
 
 NEW SHAPES SEMANTICS
     NONE
@@ -1183,5 +1908,5 @@ NEW PETRA SEMANTICS
     NONE
 
 NEXT GATE
-    INVESTIGATE TENSOR MATERIALIZATION
+    INVESTIGATE ADD / REMOVE IN MATERIALIZED SPACE
 ```
