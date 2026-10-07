@@ -11,15 +11,29 @@ PETRA — **Prime Exponent Tower Recursive Algebra** — is reserved for a prime
 
 PIP — the **Prime Interpretation Problem** — is foundational theory inside PETRA.
 
-The architectural dependency is:
+The semantic dependency remains:
 
 ```text
-PETRA -> SHAPES
-future interpretation -> SHAPES
+interpretations -> SHAPES
 
-SHAPES -X-> PETRA
-PETRA -X-> future interpretation
+SHAPES -X-> interpretations
 ```
+
+The promoted architecture additionally provides an optional faithful
+representation path:
+
+```text
+SHAPES
+    ↓ Tensor View
+STR
+    ↓ interpretation-specific LAMBDA
+interpretation domain
+```
+
+STR is not currently mandatory for every interpretation.
+
+Neither Tensor View nor STR changes SHAPES ontology, equality, edit legality,
+or intrinsic semantics.
 
 Historical PET and pre-separation PETRA documents remain historical, research, design, or released-contract evidence. They do not override this SHAPES core specification.
 
