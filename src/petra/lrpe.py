@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from functools import cache
 
 from shapes import Shape, validate
+from tensor_view import STR
 
 
 class ReverseDomainError(ValueError):
@@ -48,6 +49,19 @@ class LRPEPolicy:
 
         validate(shape)
         return _interpret(shape, limits)
+
+    def interpret_str(
+        self,
+        value: STR,
+        *,
+        limits: MaterializationLimits | None = None,
+    ) -> int:
+        """Interpret one STR value under the LRPE LAMBDA."""
+
+        if not isinstance(value, STR):
+            raise TypeError("LRPE STR input must be an STR value")
+
+        return _interpret_str(value, limits)
 
     def reverse(self, value: int) -> Shape:
         """Reverse one positive integer when it belongs to the LRPE image."""
@@ -117,6 +131,115 @@ def _interpret(
         values[current] = result
 
     return values[shape]
+
+
+def _interpret_str(
+    value: STR,
+    limits: MaterializationLimits | None,
+) -> int:
+    """Evaluate LRPE directly from STR without reconstructing Shape values."""
+
+    structural_keys: dict[int, str] = {}
+    interpreted_values: dict[int, int] = {}
+    completed: set[int] = set()
+    visiting: set[int] = set()
+    pending: list[tuple[int, bool]] = [(value.root, False)]
+
+    while pending:
+        current, expanded = pending.pop()
+
+        if current in completed:
+            continue
+
+        row = value.multiplicities[current]
+
+        if expanded:
+            support = [
+                child
+                for child, multiplicity in enumerate(row)
+                if multiplicity
+            ]
+
+            child_keys: list[str] = []
+
+            for child in support:
+                child_keys.extend(
+                    [structural_keys[child]] * row[child]
+                )
+
+            structural_keys[current] = (
+                "(" + "".join(sorted(child_keys)) + ")"
+            )
+
+            if not support:
+                interpreted_values[current] = 1
+            else:
+                result = 1
+
+                ranked_children = sorted(
+                    support,
+                    key=structural_keys.__getitem__,
+                )
+
+                for rank, child in enumerate(
+                    ranked_children,
+                    start=1,
+                ):
+                    exponent = _pair(
+                        row[child],
+                        interpreted_values[child],
+                    )
+
+                    _check_exponent_limit(exponent, limits)
+
+                    prime = _nth_prime(rank)
+
+                    if (
+                        limits is not None
+                        and limits.max_value is not None
+                    ):
+                        factor_limit = (
+                            limits.max_value // result
+                        )
+
+                        if _power_exceeds(
+                            prime,
+                            exponent,
+                            factor_limit,
+                        ):
+                            raise MaterializationLimitError(
+                                "LRPE value exceeds configured "
+                                "max_value"
+                            )
+
+                    result *= prime**exponent
+
+                interpreted_values[current] = result
+
+            visiting.remove(current)
+            completed.add(current)
+            continue
+
+        if current in visiting:
+            raise ValueError("STR dependency graph must be acyclic")
+
+        visiting.add(current)
+        pending.append((current, True))
+
+        for child, multiplicity in reversed(
+            tuple(enumerate(row))
+        ):
+            if not multiplicity or child in completed:
+                continue
+
+            if child in visiting:
+                raise ValueError(
+                    "STR dependency graph must be acyclic"
+                )
+
+            pending.append((child, False))
+
+    return interpreted_values[value.root]
 
 
 def _child_classes(shape: Shape) -> list[tuple[Shape, int]]:

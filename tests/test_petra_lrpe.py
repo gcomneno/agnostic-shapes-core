@@ -183,3 +183,97 @@ def test_lrpe_deep_forward_reports_materialization_limit_not_recursion_error() -
             shape,
             limits=MaterializationLimits(max_exponent=1),
         )
+
+
+def test_lrpe_interpret_str_base_and_recursive_values() -> None:
+    from tensor_view import materialize
+
+    zero = Shape()
+    one_child = Shape(children=(zero,))
+    two_zero_children = Shape(children=(zero, zero))
+    depth_two_chain = Shape(children=(one_child,))
+
+    assert LRPE.interpret_str(materialize(zero)) == 1
+    assert LRPE.interpret_str(materialize(one_child)) == 2
+    assert LRPE.interpret_str(materialize(two_zero_children)) == 4
+    assert LRPE.interpret_str(materialize(depth_two_chain)) == 8
+
+
+def test_lrpe_interpret_str_does_not_require_shape_decoder() -> None:
+    from tensor_view import STR
+
+    value = STR(
+        root=2,
+        multiplicities=(
+            (0, 0, 0),
+            (1, 0, 0),
+            (1, 1, 0),
+        ),
+    )
+
+    assert LRPE.interpret_str(value) == 24
+
+
+def test_lrpe_interpret_str_is_coordinate_renaming_invariant() -> None:
+    from tensor_view import STR
+
+    canonical = STR(
+        root=2,
+        multiplicities=(
+            (0, 0, 0),
+            (1, 0, 0),
+            (1, 1, 0),
+        ),
+    )
+
+    renamed = STR(
+        root=0,
+        multiplicities=(
+            (0, 1, 1),
+            (0, 0, 0),
+            (0, 1, 0),
+        ),
+    )
+
+    assert LRPE.interpret_str(canonical) == 24
+    assert LRPE.interpret_str(renamed) == 24
+
+
+def test_lrpe_interpret_str_preserves_materialization_limits() -> None:
+    from tensor_view import STR
+
+    two_zero_children = STR(
+        root=1,
+        multiplicities=(
+            (0, 0),
+            (2, 0),
+        ),
+    )
+
+    with pytest.raises(MaterializationLimitError):
+        LRPE.interpret_str(
+            two_zero_children,
+            limits=MaterializationLimits(max_exponent=1),
+        )
+
+    depth_two_chain = STR(
+        root=2,
+        multiplicities=(
+            (0, 0, 0),
+            (1, 0, 0),
+            (0, 1, 0),
+        ),
+    )
+
+    assert LRPE.interpret_str(depth_two_chain) == 8
+
+    with pytest.raises(MaterializationLimitError):
+        LRPE.interpret_str(
+            depth_two_chain,
+            limits=MaterializationLimits(max_value=7),
+        )
+
+
+def test_lrpe_interpret_str_rejects_non_str_input() -> None:
+    with pytest.raises(TypeError, match="STR input"):
+        LRPE.interpret_str(object())  # type: ignore[arg-type]
