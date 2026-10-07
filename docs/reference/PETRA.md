@@ -41,6 +41,71 @@ explicitly admitted by this specification.
 
 ---
 
+## Promoted STR / LAMBDA boundary
+
+The project architecture promotes a faithful structural representation path:
+
+```text
+SHAPES
+    ↓ C
+STR
+    ↓ Λ_P
+PETRA semantic domain
+```
+
+where:
+
+```text
+C : SHAPES -> STR
+```
+
+is the faithful Tensor View transduction and, for a PETRA policy `P` whose
+factorization has been established:
+
+```text
+Λ_P : STR ⇀ N+
+```
+
+is its interpretation-specific LAMBDA.
+
+When such a factorization is proved:
+
+```text
+I_P = Λ_P ∘ C
+```
+
+on the declared semantic domain.
+
+This does not change the semantic authority of the direct PETRA map:
+
+```text
+I_P : S ⇀ N+.
+```
+
+Direct SHAPES interpretation remains admissible, and STR is not currently
+mandatory for every PETRA policy.
+
+STR contains structural information only. Prime assignment, exponent policy,
+pairing rules, reachable-image semantics, and PETRA numeric values remain
+inside PETRA.
+
+The maintained LRPE policy has a proved direct STR factorization:
+
+```text
+LRPE = Λ_LRPE ∘ C.
+```
+
+This factorization does not require reconstruction of a runtime `Shape` before
+LRPE evaluation.
+
+The architecture decision is recorded in:
+
+```text
+docs/architecture/0001-str-lambda-interpretation-boundary.md
+```
+
+---
+
 ## Operational contract
 
 The PETRA/SHAPES relationship can be summarized as:
@@ -1015,8 +1080,10 @@ No implicit universal default policy is established by this specification.
 
 The initial PETRA runtime must:
 
-- depend on SHAPES;
-- accept SHAPES forms as interpretation input;
+- preserve SHAPES as the structural authority;
+- preserve explicit interpretation-policy identity;
+- keep its current direct SHAPES-form input unless a separate runtime
+  migration decision introduces an additional or replacement STR-facing API;
 - keep SHAPES independent of PETRA;
 - implement only explicitly selected prime/exponent policies;
 - provide LRPE as the first maintained interpretation policy;

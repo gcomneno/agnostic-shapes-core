@@ -3,18 +3,30 @@
 
 ## Identity
 
-The architecture has two primary layers:
+The architecture separates structural ontology, faithful representation, and interpretation semantics:
 
 ```text
 SHAPES
     agnostic structural substrate
 
-PETRA
-    Prime Exponent Tower Recursive Algebra
-    interpretation layer over SHAPES
+    ↓ faithful Tensor View
+
+STR
+    Structural Tensor Representation
+
+    ↓ interpretation-specific LAMBDA
+
+interpretations
+    PETRA
+    future interpretation layers
 ```
 
 PIP — the Prime Interpretation Problem — belongs inside PETRA.
+
+STR is a promoted common representation boundary, but it is not yet mandatory
+for every interpretation. Direct interpretation from SHAPES remains
+architecturally admissible unless a specific interpretation contract states
+otherwise.
 
 ## Foundational separation
 
@@ -75,30 +87,66 @@ No prime, exponent, integer, factorization, or arithmetic interpretation is requ
 
 PETRA means **Prime Exponent Tower Recursive Algebra**.
 
-PETRA is a pluggable interpretation layer directly over SHAPES.
+PETRA is a pluggable prime/exponent interpretation layer over SHAPES.
 
-Its role is to study and implement prime/exponent interpretations without feeding interpretation-specific meaning back into SHAPES ontology.
+Its role is to study and implement prime/exponent interpretations without feeding interpretation-specific meaning back into SHAPES ontology or STR.
 
-The dependency is:
+The promoted common representation path is:
 
 ```text
-PETRA -> SHAPES
-future interpretation -> SHAPES
+SHAPES
+    ↓
+Tensor View
+    ↓
+STR
+    ↓ Λ_PETRA
+PETRA semantic domain
+```
 
+For the maintained LRPE policy, factorization through STR is proved:
+
+```text
+LRPE = Λ_LRPE ∘ C
+```
+
+where:
+
+```text
+C : SHAPES -> STR
+Λ_LRPE : STR -> N+
+```
+
+This does not yet make STR mandatory for every interpretation. Direct
+interpretation from SHAPES remains admissible.
+
+The architectural dependency remains one-way.
+
+An interpretation may depend directly on SHAPES:
+
+```text
+interpretation -> SHAPES
+```
+
+or may use the promoted representation path:
+
+```text
+interpretation -> STR / Tensor View -> SHAPES
+```
+
+In either case:
+
+```text
+SHAPES -X-> STR
 SHAPES -X-> PETRA
+STR -X-> PETRA
 PETRA -X-> future interpretation
 ```
 
-Future interpretations may sit beside PETRA:
+Future interpretations may sit beside PETRA and may use the promoted STR /
+LAMBDA boundary when appropriate.
 
-```text
-PETRA ----------\
-                 \
-Future X ---------> SHAPES
-Future Y --------/
-```
-
-Sibling interpretation layers do not depend on one another unless a separate future architecture explicitly introduces such a dependency.
+Sibling interpretation layers do not depend on one another unless a separate
+future architecture explicitly introduces such a dependency.
 
 ## PIP
 
@@ -111,6 +159,32 @@ PIP is not the SHAPES carrier.
 PIP is not a sibling plugin beside PETRA.
 
 PIP lives inside PETRA.
+
+## Promoted structural representation boundary
+
+Tensor View is the promoted faithful transduction from SHAPES into STR.
+
+STR carries the finite rooted structural-type quotient and child multiplicity
+relations without interpretation-specific meaning.
+
+LAMBDA is the promoted interpretation contract over STR:
+
+```text
+Λ_I : STR -> D_I
+```
+
+for interpretations using this boundary.
+
+The architecture does not currently require every interpretation to factor
+through STR.
+
+Operational History remains orthogonal to default state interpretation.
+
+The accepted decision is recorded in:
+
+```text
+docs/architecture/0001-str-lambda-interpretation-boundary.md
+```
 
 ## Representation
 
