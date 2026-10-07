@@ -13,8 +13,11 @@ It is **not**:
 - PETRA semantics;
 - a production API contract;
 - a roadmap commitment;
-- a proof of the candidate faithfulness proposition;
 - a commitment to a concrete tensor library or runtime representation.
+
+This note now contains a research-level proof of recursive-refinement
+faithfulness derived from the existing SHAPES carrier and structural-equality
+contract. The proof does not add or modify SHAPES semantics.
 
 The sole normative source for SHAPES semantics remains
 `docs/reference/SPEC.md`.
@@ -641,54 +644,35 @@ It does **not** yet solve the second.
 
 ---
 
-## 10. Candidate theoretical proposition
+## 10. Recursive-refinement faithfulness theorem
 
-The empirical evidence suggests the following proposition.
+The bounded evidence from Probe 5 suggested a stronger general result.
 
-Let `S` be a finite SHAPES form with height `h`.
+For every finite SHAPES form `S`, let:
 
-Define:
+```text
+h(S)
+=
+height(S)
+```
+
+and define the adaptive radius:
 
 ```text
 r(S)
 =
-max(h - 1, 0)
+max(h(S) - 1, 0)
 ```
 
-Candidate proposition:
-
-> `R_r(S)(S)` is sufficient to determine `S` up to SHAPES structural
-> equality.
-
-Equivalently, the map:
+The adaptive recursive-refinement signature is:
 
 ```text
-S
-↦
-R_max(height(S)-1,0)(S)
+A(S)
+=
+R_r(S)(S)
 ```
 
-is conjectured to be faithful over finite SHAPES forms.
-
-This is **not yet a promoted theorem**.
-
-The bounded experiment:
-
-```text
-SIZE <= 11
-TOTAL_SHAPES = 3047
-MAX_HEIGHT = 10
-```
-
-found no counterexample.
-
----
-
-## 11. Why height minus one may be sufficient
-
-The candidate has a direct structural explanation.
-
-At radius zero:
+where:
 
 ```text
 c_0(v)
@@ -696,63 +680,404 @@ c_0(v)
 arity(v)
 ```
 
-Therefore the terminal layer of a radius-`r` refinement does not merely state
-that a node exists.
-
-It still records that node's number of children.
-
-For a form of height `h`, applying radius:
+and:
 
 ```text
-h - 1
+c_(r+1)(v)
+=
+(
+    arity(v),
+    multiset{ c_r(child) }
+)
 ```
 
-reaches nodes one level above the deepest leaves.
+with:
 
-Their `c_0` values record their arities.
+```text
+R_r(S)
+=
+c_r(root(S))
+```
 
-Since no node can exist below depth `h`, those children must be terminal.
+### Theorem
 
-Thus the final child multiplicities may already be determined without one
-additional refinement round.
+For all finite SHAPES forms `S` and `T`:
 
-This is a proof intuition only.
+```text
+A(S) = A(T)
+    => S = T
+```
 
-It must be converted into a proper inductive argument before the proposition
-is considered established.
+where equality on the right is canonical SHAPES structural equality.
+
+Equivalently:
+
+```text
+S
+↦
+R_max(height(S)-1,0)(S)
+```
+
+is faithful over the complete finite SHAPES carrier.
+
+This theorem is a result about a derived research encoding.
+
+It does not redefine SHAPES structural equality.
 
 ---
 
-## 12. Required proof gate
+## 11. Proof
 
-The next research step is not another larger tensor probe.
-
-It is a proof/falsification gate for:
+The proof uses only the canonical SHAPES carrier:
 
 ```text
-Claim A
-
-For every finite SHAPES form S of height h,
-
-R_max(h-1,0)(S)
-
-determines S uniquely up to SHAPES structural equality.
+S ::= Node(M_f(S))
 ```
 
-A suitable proof should be stated directly against the canonical recursive
-carrier and finite child-multiset semantics.
+together with:
 
-The gate must distinguish:
+- finite rooted structure;
+- finite child multisets;
+- intrinsic child multiplicity;
+- non-intrinsic sibling order;
+- recursive structural equality.
+
+### 11.1 Bounded-height faithfulness lemma
+
+For every integer `r >= 0`:
+
+> If finite SHAPES forms `S` and `T` both have height at most `r + 1`,
+> then
+>
+> ```text
+> R_r(S) = R_r(T)
+>     => S = T.
+> ```
+
+#### Base case: `r = 0`
+
+Assume:
 
 ```text
-PROVED
-FALSIFIED
-PROOF_INCOMPLETE
+height(S) <= 1
+height(T) <= 1
 ```
 
-If falsified, the counterexample becomes first-class research evidence.
+and:
 
-If proved, only the structural refinement substrate is established.
+```text
+R_0(S) = R_0(T).
+```
+
+By definition:
+
+```text
+R_0(S) = arity(root(S))
+R_0(T) = arity(root(T)).
+```
+
+Therefore the two roots have the same arity, say `n`.
+
+Because both forms have height at most one, every child of either root is
+zero-child and therefore has the unique SHAPES form:
+
+```text
+Z = Node(empty multiset).
+```
+
+Hence both forms are:
+
+```text
+Node({Z × n})
+```
+
+with the same multiplicity `n`.
+
+Therefore:
+
+```text
+S = T.
+```
+
+The lemma holds for `r = 0`.
+
+#### Inductive step
+
+Assume the lemma holds for some `r >= 0`.
+
+Let:
+
+```text
+height(S) <= r + 2
+height(T) <= r + 2
+```
+
+and suppose:
+
+```text
+R_(r+1)(S) = R_(r+1)(T).
+```
+
+By the recursive definition of the refinement signature, equality implies both:
+
+```text
+arity(root(S))
+=
+arity(root(T))
+```
+
+and:
+
+```text
+multiset{
+    R_r(U)
+    : U is a child form of S
+}
+=
+multiset{
+    R_r(V)
+    : V is a child form of T
+}.
+```
+
+Every child form of `S` and `T` has height at most:
+
+```text
+r + 1.
+```
+
+Therefore the induction hypothesis applies to every matched pair of equal
+radius-`r` child signatures.
+
+For each such pair:
+
+```text
+R_r(U) = R_r(V)
+    => U = V.
+```
+
+Consequently the two roots have equal finite multisets of child SHAPES forms,
+including multiplicity.
+
+By canonical SHAPES recursive structural equality:
+
+```text
+Node(M) = Node(N)
+```
+
+exactly when the child multisets can be matched bijectively while preserving
+multiplicity and recursive structural equality.
+
+Therefore:
+
+```text
+S = T.
+```
+
+The lemma follows for `r + 1`.
+
+By induction, the bounded-height faithfulness lemma holds for every:
+
+```text
+r >= 0.
+```
+
+---
+
+### 11.2 Recoverability of height from the adaptive signature
+
+The adaptive map uses a radius chosen from the input form itself.
+
+Therefore faithfulness also requires ruling out collisions between forms of
+different heights.
+
+The adaptive signature carries enough information to recover its source
+height.
+
+#### Height zero
+
+If:
+
+```text
+height(S) = 0
+```
+
+then `S = Z`, the root has arity zero, and:
+
+```text
+A(S) = R_0(S) = 0.
+```
+
+#### Height one
+
+If:
+
+```text
+height(S) = 1
+```
+
+then the root has at least one child and:
+
+```text
+A(S) = R_0(S) = arity(root(S)) > 0.
+```
+
+Thus heights zero and one are already distinguished by the integer adaptive
+signature.
+
+#### Height at least two
+
+If:
+
+```text
+height(S) = h >= 2,
+```
+
+then:
+
+```text
+A(S) = R_(h-1)(S).
+```
+
+The signature is recursively nested.
+
+Because `S` has height exactly `h`, at least one root-to-leaf path reaches
+depth `h`.
+
+Along that path, recursive refinement therefore reaches nesting depth exactly:
+
+```text
+h - 1.
+```
+
+It cannot reach greater nesting depth because no occurrence exists below
+depth `h`.
+
+Hence the recursive nesting depth of `A(S)` is exactly:
+
+```text
+h - 1.
+```
+
+So the source height is recoverable from the adaptive signature:
+
+```text
+A(S) = 0
+    => height(S) = 0
+
+A(S) is a positive integer
+    => height(S) = 1
+
+A(S) has recursive nesting depth d >= 1
+    => height(S) = d + 1.
+```
+
+Therefore:
+
+```text
+A(S) = A(T)
+    => height(S) = height(T).
+```
+
+---
+
+### 11.3 Adaptive faithfulness
+
+Assume:
+
+```text
+A(S) = A(T).
+```
+
+By height recoverability:
+
+```text
+height(S) = height(T) = h.
+```
+
+If `h = 0`, both forms are `Z`, so:
+
+```text
+S = T.
+```
+
+If `h >= 1`, define:
+
+```text
+r = h - 1.
+```
+
+Then:
+
+```text
+A(S) = R_r(S)
+A(T) = R_r(T)
+```
+
+and both forms have height:
+
+```text
+h = r + 1.
+```
+
+The bounded-height faithfulness lemma therefore gives:
+
+```text
+R_r(S) = R_r(T)
+    => S = T.
+```
+
+Hence:
+
+```text
+A(S) = A(T)
+    => S = T.
+```
+
+This proves the theorem.
+
+```text
+QED
+```
+
+---
+
+## 12. Proof gate result
+
+The proof/falsification gate is closed as:
+
+```text
+RECURSIVE_REFINEMENT_WELL_DEFINED=PROVED
+BOUNDED_HEIGHT_FAITHFULNESS=PROVED
+ADAPTIVE_HEIGHT_RECOVERABILITY=PROVED
+R_(height-1)_FAITHFULNESS=PROVED
+
+COUNTEREXAMPLE=NONE
+PROOF_GATE=PASS
+```
+
+The Probe-5 bounded result is now explained as a finite instance of the
+theorem.
+
+For that corpus:
+
+```text
+MAX_HEIGHT=10
+```
+
+and the first globally collision-free fixed radius was:
+
+```text
+r=9.
+```
+
+This matches:
+
+```text
+MAX_HEIGHT - 1 = 9.
+```
+
+The proof establishes only the faithful recursive structural substrate.
 
 Tensor materialization remains a separate research problem.
 
@@ -760,8 +1085,10 @@ Tensor materialization remains a separate research problem.
 
 ## 13. Possible future tensor interpretation
 
-Only after the proof gate succeeds should the project investigate a pipeline
-such as:
+With recursive-refinement faithfulness established, the next research problem
+is tensor materialization of the faithful structural substrate.
+
+A candidate pipeline is:
 
 ```text
 SHAPES
@@ -837,11 +1164,11 @@ LOCAL TENSOR STATISTICS USEFUL
 LOCAL AGGREGATE STATISTICS OBSERVED FAITHFUL IN GENERAL
     NO
 
-RECURSIVE STRUCTURAL REFINEMENT PROMISING
-    YES
+RECURSIVE STRUCTURAL REFINEMENT FAITHFUL
+    PROVED
 
 R_(height-1) FAITHFULNESS PROVED
-    NO
+    YES
 
 R_(height-1) FAITHFULNESS SURVIVES BOUNDED FALSIFICATION
     YES
@@ -856,5 +1183,5 @@ NEW PETRA SEMANTICS
     NONE
 
 NEXT GATE
-    PROVE OR FALSIFY RECURSIVE-REFINEMENT FAITHFULNESS
+    INVESTIGATE TENSOR MATERIALIZATION
 ```
