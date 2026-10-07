@@ -239,22 +239,58 @@ for:
 
 Historical PETRA runtime APIs are not restored.
 
-## Future sibling interpretations
+## STR / LAMBDA runtime programme
 
-Other interpretation layers may be added directly over SHAPES.
-
-They must not be forced through PETRA.
-
-Example:
+The promoted architecture now admits the optional representation path:
 
 ```text
-PETRA -----------\
-                  \
-Interpretation X ---> SHAPES
-Interpretation Y ---/
+SHAPES
+    ↓ Tensor View
+STR
+    ↓ interpretation-owned LAMBDA
+interpretation domain
 ```
 
-A future meta-layer comparing interpretations is possible but is not part of the current roadmap.
+The runtime programme is ordered as:
+
+```text
+M0  runtime design
+M1  Tensor View / STR runtime
+M2  Tensor View conformance
+M3  PETRA STR consumer
+M4  PETRA equivalence gate
+M5  second runtime interpretation
+M6  shared LAMBDA interface decision
+```
+
+The design contract is:
+
+```text
+docs/design/str-lambda-runtime.md
+```
+
+STR is not mandatory for every interpretation.
+
+Direct interpretation from SHAPES remains admissible.
+
+No interpretation may be forced through PETRA.
+
+Sibling interpretations may therefore use either:
+
+```text
+interpretation -> SHAPES
+```
+
+or the promoted representation path:
+
+```text
+interpretation -> STR / Tensor View -> SHAPES
+```
+
+without depending semantically on one another.
+
+A future meta-layer comparing interpretations is possible but is not part of
+the current roadmap.
 
 ## Historical material
 
