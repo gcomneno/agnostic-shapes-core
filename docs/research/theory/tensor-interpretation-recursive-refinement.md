@@ -1831,7 +1831,685 @@ No such edit-dynamics result is established here.
 
 ---
 
-## 17. Architecture boundary
+## 17. ADD / REMOVE materialized-space Probe 0
+
+After establishing faithful tensor materialization, the next research question
+was how intrinsic SHAPES edits transform the finite structural-type quotient.
+
+The probe separated two notions that must not be conflated:
+
+```text
+STRUCTURAL / QUOTIENT DELTA
+    which structural types actually appear or disappear
+
+CANONICAL-COORDINATE CHURN
+    which surviving structural types merely receive different
+    local numeric coordinates after canonical reindexing
+```
+
+The hypothesis was:
+
+> An intrinsic `ADD` or `REMOVE` changes structurally only the ancestor spine
+> from the edited parent through the root.
+
+### 17.1 Controlled corpus
+
+The probe reused the complete bounded corpus through size 11:
+
+```text
+SIZE=1      1
+SIZE=2      1
+SIZE=3      2
+SIZE=4      4
+SIZE=5      9
+SIZE=6      20
+SIZE=7      48
+SIZE=8      115
+SIZE=9      286
+SIZE=10     719
+SIZE=11     1842
+
+TOTAL_SHAPES=3047
+```
+
+It then examined:
+
+```text
+ADD:
+    every legal ADD from every form of size <= 10
+
+REMOVE:
+    every legal removal of every non-root leaf
+    from every form of size <= 11
+```
+
+Observed:
+
+```text
+ADD_TRANSITIONS=11210
+MAX_ADD_AFFECTED_SPINE_TYPES=10
+MAX_ADD_REMOVED_TYPES=9
+MAX_ADD_ADDED_TYPES=9
+MAX_ADD_TYPE_SYMMETRIC_DIFFERENCE=18
+MAX_ADD_CANONICAL_COORDINATE_CHURN=6
+
+REMOVE_TRANSITIONS=14594
+MAX_REMOVE_AFFECTED_SPINE_TYPES=10
+MAX_REMOVE_REMOVED_TYPES=9
+MAX_REMOVE_ADDED_TYPES=9
+MAX_REMOVE_TYPE_SYMMETRIC_DIFFERENCE=18
+MAX_REMOVE_CANONICAL_COORDINATE_CHURN=6
+```
+
+Across all:
+
+```text
+25804
+```
+
+tested legal transitions:
+
+```text
+OFF_SPINE_STRUCTURAL_CHANGE=NONE
+ANCESTOR_SPINE_LOCALITY=SUPPORTED_ON_BOUND
+FIRST_FAILURE=NONE
+```
+
+Both locality gates passed.
+
+---
+
+### 17.2 Coordinate churn observation
+
+The probe deliberately measured canonical coordinate churn separately from
+structural-type change.
+
+The worst observed ADD case had:
+
+```text
+WORST_ADD_SPINE_LENGTH=2
+WORST_ADD_COORDINATE_CHURN=6/7
+```
+
+and the inverse REMOVE case had:
+
+```text
+WORST_REMOVE_SPINE_LENGTH=2
+WORST_REMOVE_COORDINATE_CHURN=6/7
+```
+
+Thus an edit affecting a structurally short ancestor spine can cause many
+surviving structural types to receive new canonical coordinate numbers.
+
+This does not imply equally broad structural change.
+
+Canonical coordinates are representation indices.
+
+They are not structural identity.
+
+The bounded experimental conclusion was therefore:
+
+```text
+CANONICAL_COORDINATE_CHURN_IS_REPRESENTATIONAL=YES
+```
+
+---
+
+## 18. Ancestor-spine locality theorem
+
+Let:
+
+```text
+S
+```
+
+be a finite SHAPES form.
+
+Let:
+
+```text
+Q(S)
+```
+
+denote its finite set of distinct rooted structural subform types.
+
+We study separately intrinsic `ADD` and intrinsic `REMOVE`.
+
+The result is stated over structural types, not persistent node identities.
+
+Occurrence paths remain operation-local selectors only.
+
+---
+
+### 18.1 ADD reconstruction spine
+
+Consider a legal:
+
+```text
+ADD(S, p)
+```
+
+where `p` selects a parent occurrence at depth:
+
+```text
+d.
+```
+
+Let the selected rooted subform be:
+
+```text
+U_d.
+```
+
+Let its ancestors toward the root be:
+
+```text
+U_d,
+U_(d-1),
+...
+U_0
+```
+
+with:
+
+```text
+U_0 = S.
+```
+
+Intrinsic ADD first constructs:
+
+```text
+U'_d
+=
+Node(
+    children(U_d) multiset-union {Z}
+)
+```
+
+and then rebuilds each ancestor by replacing exactly the selected child
+incidence with its rebuilt successor:
+
+```text
+U'_(d-1),
+...
+U'_0.
+```
+
+The target form is:
+
+```text
+S' = U'_0.
+```
+
+Therefore exactly:
+
+```text
+d + 1
+```
+
+ancestor occurrences are rebuilt.
+
+No other pre-existing occurrence is structurally edited.
+
+Its position in a canonical tuple may change because sibling order is
+representational, but its rooted SHAPES value remains unchanged.
+
+Hence:
+
+```text
+ADD_ANCESTOR_SPINE_RECONSTRUCTION=PROVED
+```
+
+---
+
+### 18.2 ADD off-spine preservation
+
+Every old occurrence outside the rebuilt ancestor spine lies either:
+
+1. below the selected parent as an unchanged pre-existing descendant; or
+2. inside an untouched sibling subtree of some rebuilt ancestor.
+
+Intrinsic ADD changes neither such rooted subform.
+
+Therefore every old structural type that has an occurrence outside the old
+ancestor spine still occurs in the target.
+
+Consequently:
+
+```text
+Q(S) \ Q(S')
+    ⊆
+OldSpineTypes.
+```
+
+Likewise, every genuinely new rooted structural type in the target must arise
+from one of the rebuilt ancestor occurrences:
+
+```text
+Q(S') \ Q(S)
+    ⊆
+NewSpineTypes.
+```
+
+Thus:
+
+```text
+ADD_OFF_SPINE_TYPE_PRESERVATION=PROVED
+```
+
+---
+
+### 18.3 ADD quotient-delta bound
+
+The old ADD spine contains:
+
+```text
+d + 1
+```
+
+occurrences.
+
+Therefore it contains at most:
+
+```text
+d + 1
+```
+
+distinct structural types.
+
+The new spine has the same occurrence count and therefore also at most:
+
+```text
+d + 1
+```
+
+distinct structural types.
+
+Since all disappearing types come from the old spine and all appearing types
+come from the new spine:
+
+```text
+|Q(S) \ Q(S')| <= d + 1
+
+|Q(S') \ Q(S)| <= d + 1.
+```
+
+Hence:
+
+```text
+|Q(S) △ Q(S')|
+<=
+2(d + 1).
+```
+
+The bound is on distinct quotient types.
+
+Repeated equal structural types along or outside the spine may make the actual
+delta strictly smaller.
+
+Therefore:
+
+```text
+ADD_QUOTIENT_DELTA_BOUND=PROVED
+```
+
+---
+
+### 18.4 REMOVE reconstruction spine
+
+Consider a legal:
+
+```text
+REMOVE(S, p)
+```
+
+where `p` selects a non-root zero-child occurrence at depth:
+
+```text
+d >= 1.
+```
+
+The removed leaf itself is not rebuilt.
+
+Its parent, at depth:
+
+```text
+d - 1,
+```
+
+is rebuilt with one selected zero-child incidence removed.
+
+Every ancestor from that parent through the root is then rebuilt.
+
+Therefore the rebuilt occurrence spine contains exactly:
+
+```text
+d
+```
+
+occurrences.
+
+No other surviving occurrence is structurally edited.
+
+Hence:
+
+```text
+REMOVE_ANCESTOR_SPINE_RECONSTRUCTION=PROVED
+```
+
+---
+
+### 18.5 REMOVE off-spine preservation
+
+Every surviving occurrence outside the rebuilt ancestor spine retains exactly
+the same rooted SHAPES value.
+
+The deleted occurrence has type:
+
+```text
+Z.
+```
+
+But every finite rooted tree has at least one zero-child occurrence.
+
+Since REMOVE cannot delete the root, its finite target still contains a
+zero-child occurrence.
+
+Therefore:
+
+```text
+Z
+```
+
+does not disappear from the structural-type quotient merely because one leaf
+occurrence was removed.
+
+Every structural type that actually disappears must therefore be one of the
+old rebuilt ancestor types:
+
+```text
+Q(S) \ Q(S')
+    ⊆
+OldAncestorSpineTypes.
+```
+
+Every new type must be one of the rebuilt target ancestor types:
+
+```text
+Q(S') \ Q(S)
+    ⊆
+NewAncestorSpineTypes.
+```
+
+Thus:
+
+```text
+REMOVE_OFF_SPINE_TYPE_PRESERVATION=PROVED
+```
+
+---
+
+### 18.6 REMOVE quotient-delta bound
+
+The old and new rebuilt ancestor spines each contain:
+
+```text
+d
+```
+
+occurrences and therefore at most:
+
+```text
+d
+```
+
+distinct structural types.
+
+Hence:
+
+```text
+|Q(S) \ Q(S')| <= d
+
+|Q(S') \ Q(S)| <= d.
+```
+
+Therefore:
+
+```text
+|Q(S) △ Q(S')|
+<=
+2d.
+```
+
+Again, equality is not required because repeated structural types can reduce
+the distinct quotient delta.
+
+Thus:
+
+```text
+REMOVE_QUOTIENT_DELTA_BOUND=PROVED
+```
+
+---
+
+### 18.7 Preservation of surviving quotient rules
+
+Let:
+
+```text
+U ∈ Q(S) ∩ Q(S').
+```
+
+Since `U` is the same SHAPES structural type in both states, its intrinsic
+child multiset is identical in both states.
+
+If structural type `V` is a child type of `U`, then an occurrence of `U`
+contains an occurrence of `V`.
+
+Therefore, because `U` occurs in both `S` and `S'`:
+
+```text
+V ∈ Q(S) ∩ Q(S').
+```
+
+Thus no surviving structural type can depend on a quotient type that exists
+only on one side of the transition.
+
+Its complete multiplicity rule is preserved.
+
+Therefore the quotient substructure carried by:
+
+```text
+Q(S) ∩ Q(S')
+```
+
+is identical before and after the edit.
+
+Only old spine types may be deleted and only new spine types may be inserted.
+
+Hence intrinsic ADD and REMOVE induce a:
+
+```text
+LOCAL STRUCTURAL-TYPE QUOTIENT REWRITE
+```
+
+modulo local-coordinate renaming.
+
+Therefore:
+
+```text
+SURVIVING_QUOTIENT_RULES_PRESERVED=PROVED
+COMMON_QUOTIENT_SUBGRAPH_PRESERVED=PROVED
+LOCAL_QUOTIENT_REWRITE=PROVED
+```
+
+---
+
+### 18.8 Structural delta versus canonical reindexing
+
+Canonical tensor materialization assigns local coordinates by ordering the
+current finite type vocabulary.
+
+An ADD or REMOVE may insert or remove structural types from that ordered
+vocabulary.
+
+Therefore a surviving structural type can receive a different numeric
+coordinate even though:
+
+- the structural type itself is unchanged;
+- its child-multiplicity rule is unchanged;
+- its role in the common quotient subgraph is unchanged.
+
+Consequently:
+
+```text
+canonical coordinate index
+```
+
+is not a valid intrinsic measure of edit locality.
+
+The correct structural object is the quotient representation modulo
+simultaneous coordinate renaming.
+
+Canonical matrix churn must therefore be separated from structural quotient
+delta.
+
+```text
+CANONICAL_REINDEXING_IS_REPRESENTATIONAL=PROVED
+COORDINATE_CHURN_IS_NOT_STRUCTURAL_DELTA=PROVED
+```
+
+No general bound on canonical-coordinate churn is claimed here.
+
+---
+
+### 18.9 Materialized-space edit theorem
+
+Combining the preceding results:
+
+For every legal intrinsic ADD:
+
+```text
+SHAPES edit
+    ↓
+rebuild one ancestor spine
+    ↓
+delete at most d+1 old quotient types
+    ↓
+insert at most d+1 new quotient types
+    ↓
+preserve every surviving quotient construction rule
+```
+
+and:
+
+```text
+|Q(S) △ Q(S')|
+<=
+2(d+1).
+```
+
+For every legal intrinsic REMOVE of a leaf at depth `d >= 1`:
+
+```text
+SHAPES edit
+    ↓
+rebuild parent-to-root ancestor spine
+    ↓
+delete at most d old quotient types
+    ↓
+insert at most d new quotient types
+    ↓
+preserve every surviving quotient construction rule
+```
+
+and:
+
+```text
+|Q(S) △ Q(S')|
+<=
+2d.
+```
+
+Therefore intrinsic SHAPES edits are structurally local in the faithful
+materialized representation when locality is measured over structural types
+rather than canonical coordinate numbers.
+
+This proves:
+
+```text
+ADD_MATERIALIZED_LOCALITY=PROVED
+REMOVE_MATERIALIZED_LOCALITY=PROVED
+MATERIALIZED_EDIT_LOCALITY=PROVED
+```
+
+---
+
+## 19. ADD / REMOVE edit-dynamics proof gate result
+
+The edit-dynamics gate is closed as:
+
+```text
+ADD_ANCESTOR_SPINE_RECONSTRUCTION=PROVED
+REMOVE_ANCESTOR_SPINE_RECONSTRUCTION=PROVED
+
+ADD_OFF_SPINE_TYPE_PRESERVATION=PROVED
+REMOVE_OFF_SPINE_TYPE_PRESERVATION=PROVED
+
+ADD_QUOTIENT_DELTA_BOUND=PROVED
+REMOVE_QUOTIENT_DELTA_BOUND=PROVED
+
+SURVIVING_QUOTIENT_RULES_PRESERVED=PROVED
+COMMON_QUOTIENT_SUBGRAPH_PRESERVED=PROVED
+LOCAL_QUOTIENT_REWRITE=PROVED
+
+CANONICAL_REINDEXING_IS_REPRESENTATIONAL=PROVED
+COORDINATE_CHURN_IS_NOT_STRUCTURAL_DELTA=PROVED
+
+ADD_MATERIALIZED_LOCALITY=PROVED
+REMOVE_MATERIALIZED_LOCALITY=PROVED
+MATERIALIZED_EDIT_LOCALITY=PROVED
+
+NEW_SHAPES_SEMANTICS=NONE
+NEW_PETRA_SEMANTICS=NONE
+RUNTIME_CHANGE=NONE
+
+ADD_REMOVE_EDIT_DYNAMICS_PROOF_GATE=PASS
+```
+
+The resulting research chain is now:
+
+```text
+SHAPES
+    ↓
+faithful recursive structural refinement
+    ↓
+faithful finite tensor materialization
+    ↓
+local structural-type quotient rewrite under ADD / REMOVE
+```
+
+This closes the question raised after tensor materialization:
+
+> Do intrinsic SHAPES edits remain local in materialized structural space?
+
+Answer:
+
+```text
+YES
+```
+
+provided locality is evaluated structurally modulo coordinate renaming rather
+than by raw canonical matrix indices.
+
+The next research question is no longer ADD / REMOVE locality.
+
+A future tranche may investigate incremental maintenance algorithms or
+architecture promotion, but neither is established by this proof.
+
+---
+
+## 20. Architecture boundary
 
 The investigation supports only this prospective architecture:
 
@@ -1868,7 +2546,7 @@ structural core.
 
 ---
 
-## 18. Current research verdict
+## 21. Current research verdict
 
 ```text
 TENSOR INTERPRETATION ARCHITECTURALLY POSSIBLE
@@ -1907,6 +2585,18 @@ NEW SHAPES SEMANTICS
 NEW PETRA SEMANTICS
     NONE
 
+ADD / REMOVE MATERIALIZED LOCALITY
+    PROVED
+
+LOCAL QUOTIENT REWRITE
+    PROVED
+
+CANONICAL COORDINATE CHURN
+    REPRESENTATIONAL, NOT STRUCTURAL
+
+ADD / REMOVE EDIT-DYNAMICS GATE
+    CLOSED
+
 NEXT GATE
-    INVESTIGATE ADD / REMOVE IN MATERIALIZED SPACE
+    ARCHITECTURE PROMOTION DECISION OR INCREMENTAL STR MAINTENANCE
 ```
