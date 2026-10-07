@@ -45,7 +45,13 @@ jobs:
           pip install -e ./resolver
 
       - name: Lint (ruff)
-        run: ruff check src/shapes/ tests/test_shapes_*.py tests/test_report_contracts.py
+        run: >-
+          ruff check
+          src/shapes/
+          src/tensor_view/
+          tests/test_shapes_*.py
+          tests/test_tensor_view.py
+          tests/test_report_contracts.py
 
       - name: Type check (mypy)
         run: mypy

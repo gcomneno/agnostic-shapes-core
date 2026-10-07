@@ -24,7 +24,7 @@ Issues = "https://github.com/gcomneno/agnostic-shapes-core/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["shapes", "petra"]
+include = ["shapes", "tensor_view", "petra"]
 
 [tool.pytest]
 pythonpath = ["src"]
@@ -68,7 +68,7 @@ ignore = [
 
 [tool.mypy]
 python_version = "3.10"
-files = ["src/shapes", "src/petra"]
+files = ["src/shapes", "src/tensor_view", "src/petra"]
 warn_unused_ignores = true
 warn_redundant_casts = true
 warn_unreachable = true
