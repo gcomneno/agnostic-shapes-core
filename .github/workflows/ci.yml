@@ -50,8 +50,10 @@ jobs:
           src/shapes/
           src/tensor_view/
           src/petra/
+          src/collatz/
           tests/test_shapes_*.py
           tests/test_petra_*.py
+          tests/test_collatz_*.py
           tests/test_tensor_view*.py
           tests/test_report_contracts.py
 
