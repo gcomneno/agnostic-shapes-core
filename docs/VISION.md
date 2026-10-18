@@ -28,6 +28,12 @@ for every interpretation. Direct interpretation from SHAPES remains
 architecturally admissible unless a specific interpretation contract states
 otherwise.
 
+## Independent projects
+
+ASHES owns the agnostic SHAPES and Tensor View/STR substrate. PETRA and COLLATZ are independent external consumers with their own semantic authority and future release lifecycles. Their current coexistence in this distribution is transitional, not evidence of shared project ownership.
+
+See `docs/architecture/0002-project-ownership-boundaries.md`.
+
 ## Foundational separation
 
 The research programme originally discovered its structural carrier while working under the PETRA name.

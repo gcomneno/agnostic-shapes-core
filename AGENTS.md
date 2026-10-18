@@ -17,6 +17,10 @@ Do not duplicate SHAPES semantics in this file. When a structural semantic quest
 
 Historical PETRA research terminology must not be interpreted automatically as future PETRA interpretation semantics.
 
+## Independent project ownership
+
+ASHES, PETRA, and COLLATZ are separate projects even while their implementations share this repository. Follow `docs/architecture/0002-project-ownership-boundaries.md` for ownership and physical-extraction constraints.
+
 ## Core / interpretation boundary
 
 SHAPES is the agnostic structural core.
