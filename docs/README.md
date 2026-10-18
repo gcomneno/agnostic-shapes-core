@@ -20,6 +20,12 @@ The specification is the only normative source.
 - `../ROADMAP.md` — dependency-ordered implementation plan.
 - `reports/STATUS.md` — current transition status.
 
+## Didactic guides
+
+- [SHAPES → STR → PETRA, passo per passo](guides/shapes-str-petra-explained.md)
+  — non-normative walkthrough of the optional STR representation path and
+  explicit PETRA LRPE interpretation.
+
 ## Historical and research material
 
 The repository still contains documents produced during PET, PET/PEG 2.0,
