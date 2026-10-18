@@ -43,25 +43,27 @@ jobs:
         run: |
           pip install -e ".[dev]"
           pip install -e ./resolver
+          pip install -e ./packages/petra
 
       - name: Lint (ruff)
         run: >-
           ruff check
           src/shapes/
           src/tensor_view/
-          src/petra/
-          src/collatz/
+          packages/petra/src/petra/
           tests/test_shapes_*.py
-          tests/test_petra_*.py
-          tests/test_collatz_*.py
+          packages/petra/tests/test_petra_*.py
           tests/test_tensor_view*.py
           tests/test_report_contracts.py
 
       - name: Type check (mypy)
-        run: mypy
+        run: |
+          mypy
+          mypy packages/petra/src/petra
 
       - name: Run maintained tests
-        run: pytest -q -m "not slow" --durations=30 --durations-min=1.0
+        run: |
+          pytest -q -m "not slow" tests/ packages/petra/tests/ --durations=30 --durations-min=1.0
 
   docs:
     runs-on: ubuntu-latest

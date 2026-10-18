@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agnostic-shapes-core"
-version = "3.0.0"
+version = "4.0.0"
 description = "Agnostic SHAPES structural core with pluggable interpretation layers"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -24,7 +24,7 @@ Issues = "https://github.com/gcomneno/agnostic-shapes-core/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["shapes", "tensor_view", "petra", "collatz"]
+include = ["shapes", "tensor_view"]
 
 [tool.pytest]
 pythonpath = ["src"]
@@ -68,7 +68,7 @@ ignore = [
 
 [tool.mypy]
 python_version = "3.10"
-files = ["src/shapes", "src/tensor_view", "src/petra", "src/collatz"]
+files = ["src/shapes", "src/tensor_view"]
 warn_unused_ignores = true
 warn_redundant_casts = true
 warn_unreachable = true

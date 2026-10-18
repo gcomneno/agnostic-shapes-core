@@ -146,8 +146,8 @@ ne registra tipi e molteplicità; l'**interpretazione** LRPE gli assegna un
 intero positivo secondo una policy esplicita.
 
 L'API STR di LRPE è coperta dai test M3 in
-[test_petra_lrpe.py](../../tests/test_petra_lrpe.py). Il gate M4 in
-[test_petra_str_equivalence.py](../../tests/test_petra_str_equivalence.py)
+[test_petra_lrpe.py](../../packages/petra/tests/test_petra_lrpe.py). Il gate M4 in
+[test_petra_str_equivalence.py](../../packages/petra/tests/test_petra_str_equivalence.py)
 confronta il percorso diretto e quello via STR su tutte le 3047 forme fino
 a 11 nodi, anche con limiti di materializzazione. Questo controllo finito
 corrobora il runtime; la fattorizzazione generale di LRPE attraverso STR è
