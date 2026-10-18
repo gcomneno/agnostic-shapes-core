@@ -1,11 +1,11 @@
 import pytest
-
 from petra import (
     LRPE,
     MaterializationLimitError,
     MaterializationLimits,
     ReverseDomainError,
 )
+
 from shapes import Shape, add, iter_occurrences, size
 
 
