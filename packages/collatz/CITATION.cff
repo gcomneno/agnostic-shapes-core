@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use COLLATZ Interpretation in academic work, please cite this software."
+title: "COLLATZ Interpretation"
+abstract: >
+  An independent research consumer of the agnostic SHAPES structural
+  core, providing a structural seed interpretation over STR.
+  The implemented seed is not the Collatz 3n+1 iteration and does
+  not establish the Collatz conjecture.
+type: software
+authors:
+  - family-names: "Cicellyn Comneno"
+    given-names: "Giancarlo"
+    alias: "gcomneno"
+repository-code: "https://github.com/gcomneno/agnostic-shapes-core"
+url: "https://github.com/gcomneno/agnostic-shapes-core"
+license: MIT
+version: 0.1.0
+keywords:
+  - "COLLATZ"
+  - "SHAPES"
+  - "structural seed"
+  - "STR"
+  - "research software"

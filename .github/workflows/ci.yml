@@ -44,6 +44,7 @@ jobs:
           pip install -e ".[dev]"
           pip install -e ./resolver
           pip install -e ./packages/petra
+          pip install -e ./packages/collatz
 
       - name: Lint (ruff)
         run: >-
@@ -51,6 +52,8 @@ jobs:
           src/shapes/
           src/tensor_view/
           packages/petra/src/petra/
+          packages/collatz/src/collatz/
+          packages/collatz/tests/test_collatz_str.py
           tests/test_shapes_*.py
           packages/petra/tests/test_petra_*.py
           tests/test_tensor_view*.py
@@ -60,10 +63,11 @@ jobs:
         run: |
           mypy
           mypy packages/petra/src/petra
+          mypy packages/collatz/src/collatz
 
       - name: Run maintained tests
         run: |
-          pytest -q -m "not slow" tests/ packages/petra/tests/ --durations=30 --durations-min=1.0
+          pytest -q -m "not slow" tests/ packages/petra/tests/ packages/collatz/tests/ --durations=30 --durations-min=1.0
 
   docs:
     runs-on: ubuntu-latest
