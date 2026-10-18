@@ -17,9 +17,7 @@ authors:
 repository-code: "https://github.com/gcomneno/agnostic-shapes-core"
 url: "https://github.com/gcomneno/agnostic-shapes-core"
 license: MIT
-version: 3.0.0
-doi: 10.5281/zenodo.23161216
-date-released: "2026-10-05"
+version: 4.0.0
 keywords:
   - "SHAPES"
   - "agnostic structural core"

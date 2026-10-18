@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use PETRA in academic work, please cite this software."
+title: "PETRA — Prime Exponent Tower Recursive Algebra"
+abstract: >
+  PETRA is an independent prime/exponent interpretation layer over
+  the agnostic SHAPES structural core. It includes the Prime
+  Interpretation Problem (PIP) and the LRPE interpretation policy.
+type: software
+authors:
+  - family-names: "Cicellyn Comneno"
+    given-names: "Giancarlo"
+    alias: "gcomneno"
+repository-code: "https://github.com/gcomneno/agnostic-shapes-core"
+url: "https://github.com/gcomneno/agnostic-shapes-core"
+license: MIT
+version: 0.1.0
+keywords:
+  - "PETRA"
+  - "prime exponent tower"
+  - "prime interpretation problem"
+  - "LRPE"
+  - "research software"

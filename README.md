@@ -30,6 +30,36 @@ SHAPES does not depend on PETRA.
 
 Other future interpretation layers may depend directly on SHAPES without depending on PETRA.
 
+## Distribution packages
+
+ASHES and PETRA are independently packaged in this repository.
+
+Install the SHAPES structural core:
+
+```bash
+pip install agnostic-shapes-core
+```
+
+Install PETRA, which depends on a compatible ASHES release:
+
+```bash
+pip install petra-interpretation
+```
+
+For development from this repository:
+
+```bash
+pip install -e ".[dev]"
+pip install -e ./packages/petra
+```
+
+ASHES 4.0.0 and PETRA 0.1.0 are candidate distribution versions.
+Their publication as independent releases is governed by
+[`docs/releases/independent-distributions.md`](docs/releases/independent-distributions.md).
+
+A package version declared in source metadata does not prove that
+the corresponding artifact is published on a package index.
+
 ## SHAPES core
 
 The canonical carrier is the class of finite rooted non-plane forms:
