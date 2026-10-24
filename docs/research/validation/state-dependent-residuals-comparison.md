@@ -83,9 +83,9 @@ Trace theory and residual theory remain distinct in the validation matrix: trace
 
 PETRA is currently closer to the second pattern.
 
-## 9. Completeness remains open
+## 9. Completeness resolved subsequently
 
-The internal question whether inverse cancellation plus independent commutation is complete for equal witnessed path effects is still **OPEN**.
+The question was open at the time of this comparison. The subsequent proof in `docs/research/theory/local-edit-path-completeness.md` establishes endpoint completeness for witnessed paths. This does not restore the missing total residual operation on automorphism-quotiented edge classes.
 
 Residual-theory completeness/permutation-equivalence results require specific axioms and conflict assumptions that have not been established for PETRA as a whole.
 
@@ -98,7 +98,7 @@ generic trace commutation                   KNOWN
 generic residual theory                     KNOWN
 PETRA residual-system membership            TO-VERIFY
 PETRA exact independence criterion          PETRA-INTERNAL
-local-presentation completeness             OPEN
+local-presentation completeness             PETRA-INTERNAL (subsequent proof)
 ```
 
 The formal axiom audit is recorded in `residual-system-axiom-audit.md`. It identifies a concrete witness-quotient obstruction rather than merely a missing literature reference. No Phase-7 promotion follows automatically.

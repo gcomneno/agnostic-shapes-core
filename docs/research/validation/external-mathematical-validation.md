@@ -66,7 +66,7 @@ No row labeled `PETRA-INTERNAL` is a novelty claim. No row labeled `TO-VERIFY` m
 | PETRA witnessed residual transport as a full residual system | **PETRA-INTERNAL** | Bruggink 2003 residual-system axioms; PETRA axiom audit #303 | The audit gives a negative result for the current `W_P` witness quotient: residual transport is only defined on a restricted realization-level independence domain, and automorphism-quotiented edge classes can conflate self and distinct symmetric occurrences. A total well-defined projection on all coinitial witnessed edges is therefore not currently available. |
 | Independent edits commute under PETRA's explicit criterion | **PETRA-INTERNAL** | residual theory and trace theory supply generic analogues | The exact PETRA structural criterion remains internally proved; no theorem has yet identified it with a standard residual-system independence condition. |
 | Reduced path need not be geodesic | **PETRA-INTERNAL** | explicit PETRA counterexample | No novelty claim. |
-| Completeness of cancellation + independent commutation | **OPEN** | none | Explicitly unresolved. |
+| Completeness of cancellation + independent commutation | **PETRA-INTERNAL** | Subsequent SHAPES-structural proof: `docs/research/theory/local-edit-path-completeness.md` | Endpoint completeness is internally proved; external novelty and priority remain unverified. |
 | Depth / leaf / root-degree / width / max-degree 1-Lipschitz under PETRA edits | **PETRA-INTERNAL** | standard statistics, PETRA-specific edit bound | Internal proofs are direct; external novelty unresolved. |
 | Degree-profile `L1 <= 3` one-step bound | **PETRA-INTERNAL** | no exact external match recorded | Sharp internally and bounded-corroborated. |
 | Level-profile `L1 = 1` per edit | **PETRA-INTERNAL** | direct from PETRA leaf edit | No novelty claim. |
@@ -119,7 +119,7 @@ The following remain legitimate future research questions, but **do not block Ph
 1. non-meet property of the REMOVE poset under the PETRA reduction relation;
 2. automorphism group of the global PETRA edit graph;
 3. stronger graph-theoretic neighbourhood signatures for global rigidity, if pursued;
-4. completeness or incompleteness of the local witnessed-path presentation;
+4. external comparison and potential novelty of the now-internally-proved local witnessed-path completeness theorem;
 5. PETRA-specific Lipschitz/profile bounds under leaf-only edits;
 6. structural-congruence versus edit-compatibility separation in this exact algebra.
 
@@ -153,6 +153,6 @@ The closure audit for #311 confirms:
 
 Therefore Phase 6 is **COMPLETE**.
 
-Future work on global rigidity, stronger residual semantics, path-completeness, or candidate-specific novelty review may be undertaken if needed, but none is a prerequisite for closing Phase 6.
+Subsequent to this Phase-6 closure, local witnessed-path endpoint completeness was proved internally (`docs/research/theory/local-edit-path-completeness.md`). Future work on global rigidity, stronger residual semantics, or candidate-specific novelty review may be undertaken if needed; none was a prerequisite for Phase-6 closure.
 
 Phase 7 may now begin as a separate normative-promotion phase. This document itself makes no SPEC, runtime, API, CLI, serialization, or Resolver change.

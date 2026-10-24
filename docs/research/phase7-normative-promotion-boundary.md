@@ -122,7 +122,7 @@ These candidates are supported by the completed research/validation programme. P
 The following remain research-level and are **not** normative requirements:
 
 - global `Aut(E_P)` triviality;
-- completeness of cancellation plus independent commutation;
+- internally proved completeness of cancellation plus independent commutation (`docs/research/theory/local-edit-path-completeness.md`), which remains research-only;
 - full residual-system / DRS / SDRS membership;
 - witnessed-path presentation machinery;
 - global edit-graph reconstruction questions;

@@ -42,7 +42,7 @@ The Phase-5 independent-edit theorem is proved at level 1 and then yields equal 
 | A7 iterated residual coherence | **PARTIAL** | The cube law holds for triples of pairwise compatible distinct original targets by order-independence; it is not established on all coinitial witnessed-edge classes. |
 | A8 DRS / SDRS membership | **FAIL** for current `W_P` | A total well-defined residual relation is already missing, so stronger deterministic/stable residual-structure labels are not justified. |
 | A9 permutation equivalence | **PARTIAL** | PETRA `≡comm` matches the residual-style swap generator on the verified independent realization-level fragment only. |
-| A10 local-presentation completeness | **OPEN** | Nothing in this audit proves completeness of cancellation + commutation for equal endpoint effects. |
+| A10 local-presentation completeness | **PETRA-INTERNAL (subsequent proof)** | This audit did not prove completeness; `docs/research/theory/local-edit-path-completeness.md` subsequently establishes it without a total residual operator. |
 
 ## 4. A1 — coinitiality domain
 
@@ -170,7 +170,7 @@ However PETRA `≡comm` is not yet the full permutation equivalence of a standar
 
 Result: **PARTIAL**.
 
-## 12. A10 — completeness remains open
+## 12. A10 — completeness established subsequently
 
 The audit does not prove
 
@@ -181,7 +181,7 @@ is complete for all equal witnessed path effects.
 
 In fact, the witness-quotient obstruction strengthens the reason for caution: endpoint equality and local commutation may lose pairwise occurrence information under symmetry.
 
-Classification remains **OPEN**.
+Historical audit classification: **OPEN**. Current research classification: **PETRA-INTERNAL**, by `docs/research/theory/local-edit-path-completeness.md`. The witness-quotient obstruction remains valid and does not contradict endpoint completeness.
 
 ## 13. Phase-6 consequence
 
@@ -193,7 +193,7 @@ independent realization-level residual square   SPECIALIZED shape / PETRA-INTERN
 current W_P as full residual system              FAIL
 current W_P as DRS / SDRS                        FAIL
 permutation-equivalence match                    PARTIAL
-local-presentation completeness                  OPEN
+local-presentation completeness                  PETRA-INTERNAL (subsequent proof)
 ```
 
 The negative result concerns the **current witness quotient**, not the mathematical possibility of a richer PETRA residual semantics.

@@ -61,17 +61,17 @@ Two quotients must remain distinct. Paths modulo inverse cancellation give the f
 
 Standard free-groupoid reduction removes immediate inverse pairs. That is an algebraic normal-form operation, not a metric shortest-path theorem. PETRA's internally proved fact that a reduced path need not be geodesic is therefore compatible with the standard free-groupoid picture.
 
-## 8. Completeness remains open
+## 8. Completeness resolved by subsequent internal proof
 
 The Phase-5 question whether inverse cancellation plus independent commutation is complete for all equal witnessed path effects is **not** answered by free-category, free-groupoid, or classical trace-monoid theory.
 
-The state-dependent witness / residual structure is precisely the remaining mismatch. Hence completeness of `≡loc` remains **OPEN**.
+This comparison originally left completeness unresolved. The subsequent proof in `docs/research/theory/local-edit-path-completeness.md` establishes endpoint completeness of `≡loc` using inverse cancellation and independent REMOVE/REMOVE squares, without requiring a total residual system.
 
 ## 9. Phase-6 result
 
 This slice resolves two previous `TO-VERIFY` rows: witnessed paths as free category and inverse-cancellation quotient as groupoid are now **SPECIALIZED**.
 
-It also sharpens the commutation boundary: generic partial commutation is **KNOWN**; PETRA's exact commuting criterion remains **PETRA-INTERNAL**; literal trace-monoid identification is not established; completeness remains **OPEN**.
+It also sharpens the commutation boundary: generic partial commutation is **KNOWN**; PETRA's exact commuting criterion remains **PETRA-INTERNAL**; literal trace-monoid identification is not established; endpoint completeness is now **PETRA-INTERNAL** (subsequent SHAPES-structural proof).
 
 The remaining external question is narrower: find a rewriting/concurrency framework with state-dependent residuals and commuting squares close enough to PETRA to classify the exact independence criterion more strongly.
 
