@@ -905,16 +905,73 @@ implementation because the Phase 3 research establishes that it is:
 
 ### 18.1 LRPE structural ranking
 
-For every finite child multiset `M`, distinct child-form classes are ordered by
-a deterministic total order depending only on SHAPES structure.
+LRPE uses the single structural total order defined in this section.
 
-For:
+Let `<_lex` be lexicographic order on finite strings over the alphabet
+consisting of `(` and `)`, with:
 
 ```text
-T ∈ supp(M),
+"(" < ")".
 ```
 
-define:
+Strings are compared at their first differing symbol. A proper prefix
+precedes the longer string.
+
+Define the comparison key `K` recursively on SHAPES forms.
+
+For every finite child multiset `M`, form a list containing `K(T)`
+exactly `mult_M(T)` times for each `T ∈ supp(M)`. Sort this list in
+nondecreasing `<_lex` order, obtaining:
+
+```text
+k_1, ..., k_n
+```
+
+where:
+
+```text
+n = Σ[T ∈ supp(M)] mult_M(T).
+```
+
+Then define:
+
+```text
+K(Node(M))
+=
+"(" + k_1 + ... + k_n + ")".
+```
+
+Here `+` denotes string concatenation. The list elements are complete
+child keys: they are sorted before concatenation. All repetitions are
+retained.
+
+For the empty child multiset, the concatenation is empty, so:
+
+```text
+K(Z) = "()".
+```
+
+This recursion is well-founded on finite SHAPES forms. The key depends
+only on structure and preserves intrinsic multiplicity. Balanced
+parentheses uniquely delimit the complete child keys, and:
+
+```text
+K(S) = K(T)
+iff
+S = T
+```
+
+under SHAPES structural equality.
+
+Define the LRPE structural order by:
+
+```text
+U ≺ T
+iff
+K(U) <_lex K(T).
+```
+
+For every finite child multiset `M` and every `T ∈ supp(M)`, define:
 
 ```text
 rank_M(T)
@@ -922,16 +979,33 @@ rank_M(T)
 1 + |{ U ∈ supp(M) : U ≺ T }|.
 ```
 
-The order used by the runtime must be:
+Ranks therefore range from `1` through `|supp(M)|`. Ranking counts
+distinct child-form classes, not child occurrences. Equal child copies
+share one rank; their multiplicity remains explicit in the exponent
+policy.
 
-- deterministic;
-- structural;
-- independent of sibling occurrence position;
-- independent of `OccurrencePath`;
-- independent of object identity and construction history.
+The same order must determine local ranks in direct interpretation,
+interpretation through STR, and structural-rank validation during
+reverse interpretation.
 
-The runtime representation used to compute this order is an implementation
-detail and does not become SHAPES identity or serialization.
+The order and resulting ranks must be independent of sibling occurrence
+position, occurrence indices, `OccurrencePath`, STR coordinates,
+traversal order, object identity, memory allocation, insertion order,
+and construction history.
+
+Implementations may use any internal representation or comparison
+algorithm that induces exactly this order. Neither a runtime
+child-tuple order nor an implementation-specific key or serialization
+may replace this definition.
+
+This order is part of the LRPE interpretation contract. An alternative
+structural order identifies a distinct interpretation variant, not an
+implicit parameter of LRPE.
+
+The comparison key is a mathematical device for specifying LRPE
+ranking. It does not establish a public serialization format, redefine
+SHAPES equality, or introduce intrinsic sibling order, occurrence
+identity, or ranks into SHAPES ontology.
 
 ### 18.2 LRPE prime assignment
 
