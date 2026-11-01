@@ -147,3 +147,39 @@ Limitations:
   concurrency correctness or normative SHAPES behavior is claimed.
 
 Outcome for the executed frozen checks: PASS.
+
+## EXP-004 — Observed evidence
+
+Protocol: `EXP004_PROTOCOL.md` (frozen before execution).
+
+Implementation:
+- Reuses the existing `ste_classify()` C11 classifier.
+- Adds only `test_exp004.c` for controlled C3 fixtures.
+- Historical association alternatives are supplied by the caller.
+- No new classifier or historical identity inference was introduced.
+
+Observed strict C11 execution:
+- EXP-001 classifier: 6/6 PASS.
+- EXP-001 structural C1: 8/8 PASS.
+- EXP-002 permutation controls: 12/12 PASS.
+- EXP-003 state-based C2: 10/10 PASS.
+- EXP-004 C3 executable controls: 9/9 PASS.
+- Combined regression: 45/45 PASS across five executables.
+
+The classifier reports AMBIGUOUS when supplied admissible
+alternatives imply materially different classifications.
+Reversing their order does not affect that classification.
+
+For the harmless-multiplicity fixture, identical material
+outcomes are a caller assumption, not independently verified.
+
+Research evidence limitation:
+- C3_INCOMPLETE_EVIDENCE: INCONCLUSIVE.
+- HISTORICAL_COMPLETENESS: NOT_ESTABLISHED.
+- MATERIAL_OUTCOME_EQUIVALENCE: CALLER_ASSUMPTION.
+- Candidate enumeration does not prove completeness.
+- No autonomous reconstruction of historical associations.
+- No general merge or normative SHAPES claim.
+
+Outcome for the nine executable frozen controls: PASS.
+Overall historical completeness remains INCONCLUSIVE.
