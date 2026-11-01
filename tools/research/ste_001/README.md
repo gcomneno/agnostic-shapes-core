@@ -85,3 +85,32 @@ global semantic consistency.
 
 The original six classifier tests and this C1 realization are
 separate experimental results.
+
+## EXP-002 — Observed evidence
+
+Protocol: `EXP002_PROTOCOL.md` (frozen before implementation).
+
+Implementation:
+- Historical IDs are resolved independently of local array indices.
+- The unique root is identified through `NO_PARENT`.
+- Parent incidences are compared through historical parent IDs.
+- The C1 result retains LEFT's local ordering.
+
+Observed strict C11 regression results:
+- EXP-001 classifier: 6/6 PASS.
+- EXP-001 structural C1: 8/8 PASS.
+- EXP-002 permutation and negative controls: 12/12 PASS.
+- Combined regression: 26/26 PASS.
+
+The tested independent permutations preserve the same historical
+identities, parent incidences, and contents. Invalid inputs and
+unsupported edits are rejected within the bounded C1 contract.
+
+Limitations:
+- MAX_NODES remains 16.
+- Historical identities must be supplied by the caller.
+- No automatic identity discovery or general merge is established.
+- No exhaustive proof for all permutations or input states is claimed.
+- No SHAPES normative semantics or runtime changes are implied.
+
+Outcome for the executed frozen checks: PASS.

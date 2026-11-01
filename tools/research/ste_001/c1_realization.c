@@ -28,21 +28,41 @@ typedef enum {
 
 typedef int (*C1Policy)(const State *, void *);
 
-static int same_history(const State *a, const State *b)
+/* Historical identity is supplied, not inferred from structure. */
+static int find_id(const State *s, uint32_t id)
+{
+    size_t i;
+
+    for (i = 0; i < s->count; ++i)
+        if (s->nodes[i].historical_id == id)
+            return (int)i;
+
+    return -1;
+}
+
+static int unique_ids(const State *s)
 {
     size_t i, j;
 
-    if (a->count != b->count)
+    for (i = 0; i < s->count; ++i)
+        for (j = 0; j < i; ++j)
+            if (s->nodes[i].historical_id == s->nodes[j].historical_id)
+                return 0;
+
+    return 1;
+}
+
+static int same_history(const State *a, const State *b)
+{
+    size_t i;
+
+    if (a->count != b->count ||
+        !unique_ids(a) || !unique_ids(b))
         return 0;
 
-    for (i = 0; i < a->count; ++i) {
-        if (a->nodes[i].historical_id != b->nodes[i].historical_id)
+    for (i = 0; i < a->count; ++i)
+        if (find_id(b, a->nodes[i].historical_id) < 0)
             return 0;
-
-        for (j = 0; j < i; ++j)
-            if (a->nodes[i].historical_id == a->nodes[j].historical_id)
-                return 0;
-    }
 
     return 1;
 }
@@ -50,31 +70,53 @@ static int same_history(const State *a, const State *b)
 static int valid_tree(const State *s)
 {
     size_t i, steps;
+    int root = -1;
     int current;
 
     if (s->count == 0 || s->count > MAX_NODES)
         return 0;
 
-    if (s->nodes[0].parent != NO_PARENT)
-        return 0;
+    for (i = 0; i < s->count; ++i) {
+        int parent = s->nodes[i].parent;
 
-    for (i = 1; i < s->count; ++i) {
-        if (s->nodes[i].parent < 0 ||
-            (size_t)s->nodes[i].parent >= s->count)
+        if (parent == NO_PARENT) {
+            if (root >= 0)
+                return 0;
+            root = (int)i;
+        } else if (parent < 0 || (size_t)parent >= s->count) {
             return 0;
+        }
     }
+
+    if (root < 0)
+        return 0;
 
     for (i = 0; i < s->count; ++i) {
         current = (int)i;
 
-        for (steps = 0; steps < s->count && current != 0; ++steps)
+        for (steps = 0; steps < s->count &&
+             current != root; ++steps)
             current = s->nodes[current].parent;
 
-        if (current != 0)
+        if (current != root)
             return 0;
     }
 
     return 1;
+}
+
+/* Compare parent identities, never parent-array positions. */
+static int same_parent(const State *a, int ai,
+                       const State *b, int bi)
+{
+    int ap = a->nodes[ai].parent;
+    int bp = b->nodes[bi].parent;
+
+    if (ap == NO_PARENT || bp == NO_PARENT)
+        return ap == NO_PARENT && bp == NO_PARENT;
+
+    return a->nodes[ap].historical_id ==
+           b->nodes[bp].historical_id;
 }
 
 /*
@@ -92,8 +134,9 @@ static C1Result reconcile_c1(
 )
 {
     size_t i;
-    size_t moved = 0, edited = 0;
     size_t move_count = 0, edit_count = 0;
+    int edited_left = -1;
+    int edited_right = -1;
     State candidate;
 
     if (!base || !left || !right || !merged || !policy)
@@ -106,26 +149,33 @@ static C1Result reconcile_c1(
         return C1_INVALID;
 
     for (i = 0; i < base->count; ++i) {
-        if (left->nodes[i].content != base->nodes[i].content ||
-            right->nodes[i].parent != base->nodes[i].parent)
+        uint32_t id = base->nodes[i].historical_id;
+        int li = find_id(left, id);
+        int ri = find_id(right, id);
+
+        if (left->nodes[li].content != base->nodes[i].content ||
+            !same_parent(base, (int)i, right, ri))
             return C1_UNSUPPORTED;
 
-        if (left->nodes[i].parent != base->nodes[i].parent) {
-            moved = i;
+        if (!same_parent(base, (int)i, left, li)) {
+            if (base->nodes[i].parent == NO_PARENT)
+                return C1_UNSUPPORTED;
             ++move_count;
         }
 
-        if (right->nodes[i].content != base->nodes[i].content) {
-            edited = i;
+        if (right->nodes[ri].content != base->nodes[i].content) {
+            edited_left = li;
+            edited_right = ri;
             ++edit_count;
         }
     }
 
-    if (move_count != 1 || edit_count != 1 || moved == 0)
+    if (move_count != 1 || edit_count != 1)
         return C1_UNSUPPORTED;
 
     candidate = *left;
-    candidate.nodes[edited].content = right->nodes[edited].content;
+    candidate.nodes[edited_left].content =
+        right->nodes[edited_right].content;
 
     if (!valid_tree(&candidate))
         return C1_INVALID;
