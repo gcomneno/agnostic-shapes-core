@@ -237,3 +237,58 @@ Research limitations:
 Outcome for the fourteen frozen C4 controls: PASS.
 Additional presence-domain control: PASS.
 Combined C11 regression: 59/59 PASS.
+
+## EXP-006 — Observed evidence
+
+Protocol: `EXP006_PROTOCOL.md` (frozen before implementation).
+
+Implementation:
+- `two_moves.c` evaluates joint realizability of two historical
+  MOVE intentions on bounded rooted trees.
+- Reuses the existing C1 historical-tree representation and
+  structural validators without modifying their sources.
+- Historical identities are supplied explicitly by the caller.
+- Parent incidences are compared by historical identity.
+- A positive classification requires a concrete valid tree.
+- Explicit SELECT_LEFT or SELECT_RIGHT policy authorizes
+  dropping the opposite MOVE intention.
+- Non-COMPATIBLE results leave the output state unchanged.
+- `test_two_moves.c` executes ten frozen controls.
+
+Observed strict C11 execution:
+- EXP-001 classifier: 6/6 PASS.
+- EXP-001 structural C1: 8/8 PASS.
+- EXP-002 permutation controls: 12/12 PASS.
+- EXP-003 state-based C2: 10/10 PASS.
+- EXP-004 C3 executable controls: 9/9 PASS.
+- EXP-005 state-based C4: 14/14 PASS.
+- EXP-006 joint MOVE controls: 10/10 PASS.
+- Additional EXP-005 presence-domain control: PASS.
+- Combined regression: 69/69 PASS across seven executables.
+
+Scientific observations:
+- Individually valid MOVEs can produce a structural cycle
+  when both historical parent-incidence requirements are imposed.
+- PRESERVE_BOTH rejects the cyclic primary fixture: CONFLICT.
+- Explicit selection of either individual valid branch yields
+  COMPATIBLE with a verified structural witness.
+- An acyclic two-MOVE combination yields COMPATIBLE with
+  a verified witness preserving both intended incidences.
+- Missing or undecided policy yields UNSUPPORTED.
+- Invalid tree input, inconsistent historical identities
+  and missing state input yield UNSUPPORTED.
+- No silent selection occurs under PRESERVE_BOTH.
+
+Research limitations:
+- Exactly two declared historical MOVE intentions.
+- Bounded rooted trees of at most sixteen vertices.
+- Historical correspondence completeness is NOT_ESTABLISHED.
+- These finite tests do not prove universal algorithmic soundness.
+- No general three-way merge, arbitrary intention consistency,
+  concurrency guarantee, production API or normative SHAPES
+  semantic extension is established.
+- EXP-004 historical completeness remains INCONCLUSIVE.
+
+Outcome for ten frozen EXP-006 controls: PASS.
+Combined C11 regression: 69/69 PASS.
+Global merge correctness: NOT_ESTABLISHED.
