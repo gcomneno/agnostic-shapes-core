@@ -183,3 +183,57 @@ Research evidence limitation:
 
 Outcome for the nine executable frozen controls: PASS.
 Overall historical completeness remains INCONCLUSIVE.
+
+## EXP-005 — Observed evidence
+
+Protocol: `EXP005_PROTOCOL.md` (frozen before implementation).
+
+Implementation:
+- `c4_state.c` classifies one explicitly identified historical
+  leaf across BASE, LEFT and RIGHT.
+- Presence and opaque content changes are derived relative to BASE.
+- A supplied absent state represents historical DELETE in this
+  bounded model; absence is not inferred from SHAPES equality.
+- DELETE versus content EDIT invokes interpretation-owned policy
+  exactly once; other valid combinations require no policy call.
+- Deleted-state content is ignored, including residual tombstone data.
+- `test_c4_state.c` exercises the fourteen frozen C4 fixtures
+  and an additional invalid-presence control.
+- No merged value, tree or document is constructed.
+
+Observed strict C11 execution:
+- EXP-001 classifier: 6/6 PASS.
+- EXP-001 structural C1: 8/8 PASS.
+- EXP-002 permutation controls: 12/12 PASS.
+- EXP-003 state-based C2: 10/10 PASS.
+- EXP-004 C3 executable controls: 9/9 PASS.
+- EXP-005 state-based C4: 14/14 PASS.
+- Additional presence-domain validation: PASS.
+- Combined regression: 59/59 PASS across six executables.
+
+For competing historical DELETE and EDIT intentions:
+- Restrictive policy: CONFLICT.
+- Explicit deletion-wins authorization: COMPATIBLE.
+- Missing or undecided policy: UNSUPPORTED.
+- Reversing LEFT and RIGHT preserves the tested restrictive result.
+
+One-sided changes, duplicate deletion, identical edits and
+unchanged states are COMPATIBLE without a policy callback.
+Invalid historical identities, missing states and invalid BASE
+are UNSUPPORTED.
+
+Research limitations:
+- Exactly one historical leaf and one opaque content property.
+- Historical identity and existence are caller-supplied.
+- The verifier does not discover historical correspondences.
+- Subtree DELETE, reinsertion, MOVE and general merge are excluded.
+- COMPATIBLE under deletion-wins does not prove preservation
+  of both original intentions or construct a reconciled result.
+- Historical completeness remains NOT_ESTABLISHED.
+- No general three-way merge, concurrency correctness, production
+  API or normative SHAPES behavior is established.
+- EXP-004 historical completeness remains INCONCLUSIVE.
+
+Outcome for the fourteen frozen C4 controls: PASS.
+Additional presence-domain control: PASS.
+Combined C11 regression: 59/59 PASS.
