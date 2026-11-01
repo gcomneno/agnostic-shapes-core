@@ -114,3 +114,36 @@ Limitations:
 - No SHAPES normative semantics or runtime changes are implied.
 
 Outcome for the executed frozen checks: PASS.
+
+## EXP-003 — Observed evidence
+
+Protocol: `EXP003_PROTOCOL.md` (frozen before implementation).
+
+Implementation:
+- `c2_state.c` compares BASE, LEFT and RIGHT for one opaque
+  property belonging to one explicitly identified subject.
+- Actual changes are derived relative to BASE.
+- Equal, one-sided and absent changes require no policy callback.
+- Divergent updates are delegated to interpretation-owned policy.
+- The result is a classification, not a merged property value.
+
+Observed strict C11 execution:
+- EXP-001 classifier: 6/6 PASS.
+- EXP-001 structural C1: 8/8 PASS.
+- EXP-002 permutation controls: 12/12 PASS.
+- EXP-003 state-based C2: 10/10 PASS.
+- Combined regression: 36/36 PASS across four executables.
+
+For divergent changes, the supplied policy is called once.
+Under rejection the result is CONFLICT; under acceptance it is
+COMPATIBLE; absent or undecided policy yields UNSUPPORTED.
+Invalid state input and mismatched historical IDs yield UNSUPPORTED.
+
+Limitations:
+- Exactly one scalar property and one historical subject.
+- Historical identifiers and values are caller-supplied.
+- Policy acceptance does not construct or validate a merge.
+- No autonomous identity discovery, general structural merge,
+  concurrency correctness or normative SHAPES behavior is claimed.
+
+Outcome for the executed frozen checks: PASS.
