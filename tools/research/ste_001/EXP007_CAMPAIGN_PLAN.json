@@ -1,0 +1,1195 @@
+{
+  "schema": "ste-exp007-campaign-plan-v1",
+  "artifact": {
+    "id": "ASHES/STE/EXP-007/PHASE-C/OPERATIONAL-PLAN/V1",
+    "path": "tools/research/ste_001/EXP007_CAMPAIGN_PLAN.json",
+    "kind": "OPERATIONAL_EXECUTION_PLAN",
+    "owner": "ASHES STE",
+    "issue": 415,
+    "issue_url": "https://github.com/gcomneno/agnostic-shapes-core/issues/415",
+    "phase": "C",
+    "status": "PLANNED_NOT_EXECUTED",
+    "authority": "Nonnormative operational manifest subordinate to frozen protocol V1; no new scientific or core contract.",
+    "results_present": false,
+    "implementation_or_execution_authorized_by_this_file": false,
+    "self_identity": "Future runner must record SHA256 of the exact manifest bytes externally in run metadata; no self-referential checksum is embedded."
+  },
+  "protocol": {
+    "version": "V1",
+    "status": "FROZEN",
+    "path": "tools/research/ste_001/EXP007_PROTOCOL.md",
+    "freeze_commit": "101eb2c5df29c1e65d8ccea2b9ea8be510c32315",
+    "sha256": "61a586c706cf5e3cfb78ffbfd835dcbdc060c4c46f6cc427fbf2379a095664f1",
+    "foundations": [
+      "R01",
+      "R02",
+      "R03",
+      "R04"
+    ],
+    "expectations": "Use sections 7 and 11 and the pinned fixture expected fields without modification; expectations are not observations.",
+    "precedence": "Stop on protocol/input drift or disagreement. Do not repair expectations or promote research to SHAPES/PETRA/TPI semantics."
+  },
+  "implementation_identity": {
+    "repository": "https://github.com/gcomneno/agnostic-shapes-core",
+    "baseline_revision": "0011890014b4223bc0eabd0863e8ca94ae97d720",
+    "tested_implementation_revision": "0011890014b4223bc0eabd0863e8ca94ae97d720",
+    "reference_revision": "1c695ea957e22dd9773fd44709e0e08b441da9b0",
+    "campaign_driver": {
+      "status": "NOT_IMPLEMENTED_BY_THIS_MANIFEST",
+      "revision": null,
+      "sha256": null
+    },
+    "read_only_artifacts": [
+      {
+        "path": "tools/research/ste_001/EXP007_PROTOCOL.md",
+        "role": "FROZEN_SCIENTIFIC_AUTHORITY",
+        "sha256": "61a586c706cf5e3cfb78ffbfd835dcbdc060c4c46f6cc427fbf2379a095664f1",
+        "bytes": 28718,
+        "last_change_commit": "101eb2c5df29c1e65d8ccea2b9ea8be510c32315",
+        "access": "READ_ONLY"
+      },
+      {
+        "path": "tools/research/ste_001/EXP007_FIXTURES.json",
+        "role": "DECLARATIVE_INPUTS_AND_FROZEN_EXPECTATIONS",
+        "sha256": "79ed7bb6b3cbb01c82b690d17a426a9453bbe52808cbadd8ca1385e3cfaf2e21",
+        "bytes": 75997,
+        "last_change_commit": "1c695ea957e22dd9773fd44709e0e08b441da9b0",
+        "access": "READ_ONLY"
+      },
+      {
+        "path": "tools/research/ste_001/exp007_reference.py",
+        "role": "INDEPENDENT_RELATION_AND_MATERIAL_ORACLE",
+        "sha256": "c974be353aa1fb92dd4847e8f0e01e5606b6ccb953db9a1766b03729bba0a9b6",
+        "bytes": 51419,
+        "last_change_commit": "1c695ea957e22dd9773fd44709e0e08b441da9b0",
+        "access": "READ_ONLY"
+      },
+      {
+        "path": "tools/research/ste_001/historical_associations.c",
+        "role": "TESTED_C11_COMPONENT_AND_NAMED_CLI",
+        "sha256": "0ade79ad8d6465d1988f674f521a7d09585b7b3ac0ebc0b2abc7e0a69a0b63ce",
+        "bytes": 56943,
+        "last_change_commit": "0011890014b4223bc0eabd0863e8ca94ae97d720",
+        "access": "READ_ONLY"
+      },
+      {
+        "path": "tools/research/ste_001/test_exp007.c",
+        "role": "BOUNDED_REGRESSION_AND_PROCESS_DRIVER",
+        "sha256": "0767f47d2085b42b1cd703eadcfb48520758ce21b7c9af3ee8c1bce7567818f5",
+        "bytes": 60007,
+        "last_change_commit": "0011890014b4223bc0eabd0863e8ca94ae97d720",
+        "access": "READ_ONLY"
+      }
+    ],
+    "future_run_required_fields": [
+      "run_id",
+      "plan_id",
+      "plan_sha256",
+      "protocol_version",
+      "protocol_freeze_commit",
+      "protocol_sha256",
+      "fixture_sha256",
+      "repository_head",
+      "dirty_tracked_diff_sha256",
+      "driver_revision",
+      "driver_sha256",
+      "tested_source_sha256",
+      "reference_sha256",
+      "test_source_sha256",
+      "compiler_path",
+      "compiler_version",
+      "compiler_sha256",
+      "c11_flags",
+      "build_argv",
+      "tested_executable_path",
+      "tested_executable_sha256",
+      "reference_python_path",
+      "reference_python_version",
+      "reference_python_sha256",
+      "comparison_driver_sha256",
+      "executed_argv",
+      "working_directory",
+      "environment_overrides",
+      "platform",
+      "started_at_utc",
+      "finished_at_utc",
+      "exit_statuses"
+    ],
+    "future_driver_binding": "Bind the separately implemented driver and both executables before running. Baseline source hashes stay mandatory; source changes require explicit review and a new operational identity, never silent drift."
+  },
+  "scope": {
+    "only_file_created_now": "tools/research/ste_001/EXP007_CAMPAIGN_PLAN.json",
+    "existing_files_mutable_now": false,
+    "campaign_implemented_now": false,
+    "campaign_executed_now": false,
+    "repository_local_caches_allowed": false,
+    "staging_commit_push_allowed": false,
+    "preserve": [
+      "Unrelated SDO files",
+      "Unrelated TPI files",
+      "Frozen scientific expectations",
+      "STE ownership boundary"
+    ],
+    "EXP004": {
+      "historical_completeness": "INCONCLUSIVE",
+      "material_equivalence": "CALLER_ASSUMPTION"
+    }
+  },
+  "execution": {
+    "order_authority": "The suite array below is the operational execution order. Preserve fixture declaration order, the star then F09 matrix order, and the five transformation suites in protocol section 9 table order. The protocol does not declare a global scheduler.",
+    "suite_order": [
+      "named_candidates",
+      "f12_sensitivity",
+      "auxiliary_m04_association",
+      "named_materials",
+      "matrix_star_s_free",
+      "matrix_f09_s_inc",
+      "record_orders",
+      "record_duplications",
+      "candidate_relabelings",
+      "material_relabelings",
+      "vertex_layouts",
+      "association_orders",
+      "material_outcome_orders",
+      "derived_observable_equivalence_laws"
+    ],
+    "ordering": {
+      "suite_order_is_significant": true,
+      "fixture_order": "Explicit fixture_ids arrays; no unordered-map iteration.",
+      "matrix_config_order": "Ascending integer config_id, inclusive 0 through 262143, within each instance.",
+      "permutations": "Zero-based lexicographic permutations of integer position tuples relative to the original declared array, including identity.",
+      "independent_permutation_nesting": "Left permutation rank outer, right rank inner; combined rank = left_rank * right_permutation_count + right_rank.",
+      "record_orders": "Fixture outer, permutation rank inner; duplication cases are a later separate suite.",
+      "parallel_execution": "A future implementation may batch within a suite, but must assign stable ordinals in this order and persist/compare by ordinal. Do not reorder suites."
+    },
+    "case_identity": {
+      "format": "EXP007/C/V1/{suite_id}/{fixture_or_instance_id}/{variant_rank:06d}",
+      "rank_base": 0,
+      "named_variant_rank": 0,
+      "matrix_variant_rank": "config_id",
+      "transformation_variant_rank": "Lexicographic or combined permutation rank as specified above.",
+      "global_ordinal": "Zero-based prefix sum of required_cases in suite array plus local fixture/rank ordinal; auxiliary case participates; derived gate has separate law-check IDs.",
+      "run_binding": "case_id is stable across replay; run_id and attempt_id separately identify executions. Never replace case_id with a content hash.",
+      "unique": "Every suite obligation has a distinct case_id even when its effective input equals another obligation. Duplicate result case IDs are errors."
+    },
+    "transformation_isolation": {
+      "start_from_own_original_fixture": true,
+      "fresh_deep_copy_per_case": true,
+      "compose_transformations": false,
+      "cross_with_evidence_matrix": false,
+      "rule": "Resolve each selected candidate or material fixture directly from the pinned fixture catalog. For materials resolve its original candidate_fixture too. Apply exactly the current suite transformation once; never mutate a previous transformed case or use matrix-generated evidence.",
+      "baseline_reuse": "Immutable original outputs may serve as transported comparison baselines, with content hashes and traceable dependencies; reuse adds no execution work and does not discharge the transformed-case execution."
+    },
+    "preflight": [
+      "Verify protocol V1 bytes against freeze commit and SHA256, all five read-only artifact hashes and plan identity.",
+      "Verify exact fixture IDs, independent oracle design and serialization bounds; reject duplicate JSON keys.",
+      "Bind future driver, compiler, flags and executable hashes; build products, evidence staging and Python bytecode stay outside the repository.",
+      "Require separate implementation/execution authorization; this manifest alone supplies neither.",
+      "Run the separately identified dry-run only after driver implementation and authorization; validate input decoding, unique IDs, ledger and replay/storage paths before full execution."
+    ],
+    "build_plan": {
+      "language": "ISO C11",
+      "flags": [
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-O2"
+      ],
+      "products_directory": "Fresh external run directory, for example /tmp/ste-exp007-<run_id>; never repository-local.",
+      "python": [
+        "python3",
+        "-B"
+      ],
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "baseline_regressions": [
+        "Compile and run test_exp007.c --self-test.",
+        "Compile historical_associations.c; use the emitted --cli-test-script process regression driver for existing named-CLI/oracle checks.",
+        "Run exp007_reference.py --self-test as bounded regression only."
+      ],
+      "regressions_count_as_full_campaign": false
+    }
+  },
+  "suites": [
+    {
+      "id": "named_candidates",
+      "required_cases": 17,
+      "in_frozen_suite_total": true,
+      "fixture_ids": [
+        "F01",
+        "F02",
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F07",
+        "F08",
+        "F09",
+        "F10",
+        "F11",
+        "F12",
+        "F13-duplicated_handle",
+        "F13-foreign_handle",
+        "F13-invalid_tree",
+        "F13-invalid_root",
+        "F14"
+      ],
+      "valid_named_fixtures": 13,
+      "invalid_f13_variants": 4,
+      "ordering": "Expand F13 at its declaration position before F14; do not enumerate invalid inputs.",
+      "comparison": "Exact candidate results and frozen section 7 expectations; F12 remains conditional."
+    },
+    {
+      "id": "f12_sensitivity",
+      "required_cases": 2,
+      "in_frozen_suite_total": true,
+      "fixture_ids": [
+        "F12-ACCEPTED",
+        "F12-REJECTED"
+      ],
+      "comparison": "Exact candidate sets with original fixed snapshots, universe and S_free; accepted gives 012,021 and rejected adds no negation."
+    },
+    {
+      "id": "auxiliary_m04_association",
+      "required_cases": 1,
+      "in_frozen_suite_total": false,
+      "fixture_ids": [
+        "M04-association"
+      ],
+      "count_class": "AUXILIARY_NAMED_INPUT",
+      "comparison": "U_H has six; C_E and A_E are exactly 012. Auxiliary standalone check, also used within M04/M05-P."
+    },
+    {
+      "id": "named_materials",
+      "required_cases": 7,
+      "in_frozen_suite_total": true,
+      "fixture_ids": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05-P",
+        "M05-O",
+        "M05-I"
+      ],
+      "comparison": "Exact per-association/per-decision outcomes, intention retention/loss, witnesses, rejection certificates, then observable classes; preserve all negative/inconclusive expectations."
+    },
+    {
+      "id": "matrix_star_s_free",
+      "required_cases": 262144,
+      "in_frozen_suite_total": true,
+      "instance_id": "star/S_free",
+      "original_candidate_fixture": "F01",
+      "profile": "S_free",
+      "config_id_min": 0,
+      "config_id_max_inclusive": 262143,
+      "candidate_obligations_per_case_per_side": 6,
+      "candidate_evaluations_per_side": 1572864,
+      "comparison": "Exact U_H, C_E, A_E, predicates, diagnostics, assessment counts and emitted evidence; no material Cartesian product."
+    },
+    {
+      "id": "matrix_f09_s_inc",
+      "required_cases": 262144,
+      "in_frozen_suite_total": true,
+      "instance_id": "F09-geometry/S_inc",
+      "original_candidate_fixture": "F09",
+      "profile": "S_inc",
+      "assumes_unchanged_incidence": true,
+      "config_id_min": 0,
+      "config_id_max_inclusive": 262143,
+      "candidate_obligations_per_case_per_side": 6,
+      "candidate_evaluations_per_side": 1572864,
+      "comparison": "Use original F09 geometry on both sides; compare exact sets and predicates, preserving evidence/structure distinction."
+    },
+    {
+      "id": "record_orders",
+      "required_cases": 23,
+      "in_frozen_suite_total": true,
+      "fixture_ids": [
+        "F02",
+        "F03",
+        "F06",
+        "F07",
+        "F08",
+        "F10",
+        "F11",
+        "F14"
+      ],
+      "record_counts_in_fixture_order": [
+        1,
+        2,
+        2,
+        2,
+        3,
+        2,
+        3,
+        2
+      ],
+      "cases_per_fixture": [
+        1,
+        2,
+        2,
+        2,
+        6,
+        2,
+        6,
+        2
+      ],
+      "transformation": "All permutations of original record positions.",
+      "comparison": "Original exact C_E/A_E and candidate semantics; retain the presented records and their provenance for audit."
+    },
+    {
+      "id": "record_duplications",
+      "required_cases": 8,
+      "in_frozen_suite_total": true,
+      "fixture_ids": [
+        "F02",
+        "F03",
+        "F06",
+        "F07",
+        "F08",
+        "F10",
+        "F11",
+        "F14"
+      ],
+      "cases_per_fixture": 1,
+      "transformation": "From original declared evidence [e0,e1,...], present [e0,e0,e1,e1,...] using byte-equivalent records with the same stable ID. No reordering.",
+      "comparison": "Effective U_H/C_E/A_E unchanged. Presented record list and assessment counts reflect the doubled presentation, not the original record count."
+    },
+    {
+      "id": "candidate_relabelings",
+      "required_cases": 468,
+      "in_frozen_suite_total": true,
+      "fixture_ids": [
+        "F01",
+        "F02",
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F07",
+        "F08",
+        "F09",
+        "F10",
+        "F11",
+        "F12",
+        "F14"
+      ],
+      "left_permutations": 6,
+      "right_permutations": 6,
+      "cases_per_fixture": 36,
+      "transformation": "Independent S3 handle renamings from each original fixture; roots and snapshot identities stay designated.",
+      "comparison": "H, evidence satisfaction, S and exact transported U_H/C_E/A_E, records, provenance scopes, diagnostics and predicates."
+    },
+    {
+      "id": "material_relabelings",
+      "required_cases": 144,
+      "in_frozen_suite_total": true,
+      "fixture_ids": [
+        "M01",
+        "M02",
+        "M03",
+        "M04"
+      ],
+      "left_permutations": 6,
+      "right_permutations": 6,
+      "cases_per_fixture": 36,
+      "transformation": "Independent S3 handle renamings of each original material/candidate pair, including initial maps, update selectors and all provenance references.",
+      "comparison": "Exact transported outcome sets by association and decision, all intention authorizations and witness/certificate conjuncts, then transported class observables AND membership; counts alone cannot pass."
+    },
+    {
+      "id": "vertex_layouts",
+      "required_cases": 2304,
+      "in_frozen_suite_total": true,
+      "fixture_ids": [
+        "F01",
+        "F09",
+        "F10",
+        "F11"
+      ],
+      "left_permutations": 24,
+      "right_permutations": 24,
+      "cases_per_fixture": 576,
+      "transformation": "Independently permute the original four-element vertices storage arrays; preserve concrete handles, designated root objects, occurrence selectors and incidence/evidence references.",
+      "comparison": "Exact original candidate result; roots may occupy any storage index, including nonzero."
+    },
+    {
+      "id": "association_orders",
+      "required_cases": 2160,
+      "in_frozen_suite_total": true,
+      "fixture_ids": [
+        "M01",
+        "M02",
+        "M03"
+      ],
+      "cases_per_fixture": 720,
+      "association_order_basis": [
+        "012",
+        "021",
+        "102",
+        "120",
+        "201",
+        "210"
+      ],
+      "transformation": "Feed all 6! orders of the six original admissible associations to the material consumer BEFORE it constructs/aggregates outcomes. Include M03 rejected alternatives; do not quotient classes first.",
+      "comparison": "Exact per-association/per-decision sets and partitions independent of actually consumed order. Output-only shuffling is insufficient."
+    },
+    {
+      "id": "material_outcome_orders",
+      "required_cases": 2,
+      "in_frozen_suite_total": true,
+      "fixture_ids": [
+        "M04"
+      ],
+      "cases_per_fixture": 2,
+      "outcome_order_basis": [
+        "d_lambda/ACCEPT(lambda,0,0)",
+        "d_rho/ACCEPT(rho,0,0)"
+      ],
+      "transformation": "Feed both original authorized outcomes in both orders to the observable/partition consumer, retaining both decisions and authorizations.",
+      "comparison": "Both distinct concrete material maps and both classes remain; no first-outcome selection. M04 has one association, not a 6! association-order suite."
+    },
+    {
+      "id": "derived_observable_equivalence_laws",
+      "required_cases": null,
+      "in_frozen_suite_total": false,
+      "count_class": "DERIVED_LAW_GATE",
+      "gate_definition": "derived_gates.observable_equivalence",
+      "comparison": "Separate derived section 10 law checks; never add them to 529423 or 529424."
+    }
+  ],
+  "required_totals": {
+    "configurations_star_s_free": 262144,
+    "configurations_f09_geometry_s_inc": 262144,
+    "instance_configuration_pairs": 524288,
+    "candidates_per_configuration": 6,
+    "matrix_candidate_evaluations_tested": 3145728,
+    "matrix_candidate_evaluations_reference": 3145728,
+    "matrix_candidate_evaluations_both_sides": 6291456,
+    "reference_binary_relations_per_instance": 512,
+    "reference_relation_classifications_minimal_two_instance_scan": 1024,
+    "valid_named_candidate_fixtures": 13,
+    "invalid_f13_variants": 4,
+    "named_candidate_suite_cases": 17,
+    "f12_sensitivity_variants": 2,
+    "material_cases": 7,
+    "record_presentation_orders": 23,
+    "duplicate_record_presentations": 8,
+    "candidate_relabelings": 468,
+    "material_relabelings": 144,
+    "layouts": 2304,
+    "association_orders": 2160,
+    "material_outcome_orders": 2,
+    "record_presentation_cases_combined": 31,
+    "transformation_table_cases": 5078,
+    "frozen_suite_cases": 529423,
+    "auxiliary_m04_association_cases": 1,
+    "suite_cases_including_auxiliary": 529424,
+    "unique_experimental_inputs": null,
+    "count_interpretation": "Overlapping logical suite cases, NOT unique experimental inputs and NOT total CPU operations. Identity permutations, named fixtures and matrix configurations can describe equivalent inputs. Never globally deduplicate coverage obligations.",
+    "frozen_suite_sum": "17 + 2 + 7 + 262144 + 262144 + 23 + 8 + 468 + 144 + 2304 + 2160 + 2 = 529423",
+    "excluded_from_these_totals": [
+      "Dry-run repetitions",
+      "Derived law checks",
+      "Build/preflight/regression checks",
+      "Replay/retries",
+      "Additional actual reference scans",
+      "Comparison-baseline recomputation"
+    ]
+  },
+  "input_encoding": {
+    "structural_instances": [
+      {
+        "id": "star/S_free",
+        "fixture_id": "F01",
+        "profile": "S_free",
+        "assumes_unchanged_incidence": false
+      },
+      {
+        "id": "F09-geometry/S_inc",
+        "fixture_id": "F09",
+        "profile": "S_inc",
+        "assumes_unchanged_incidence": true
+      }
+    ],
+    "source_occurrences": [
+      "l0",
+      "l1",
+      "l2"
+    ],
+    "target_occurrences": [
+      "r0",
+      "r1",
+      "r2"
+    ],
+    "roots": {
+      "left": "root_L",
+      "right": "root_R",
+      "external_pairing_assumed": true,
+      "included_in_relation": false
+    },
+    "source_index_range_inclusive": [
+      0,
+      2
+    ],
+    "target_index_range_inclusive": [
+      0,
+      2
+    ],
+    "pair_index_formula": "i = 3*source_index + target_index",
+    "pair_order": [
+      [
+        "l0",
+        "r0"
+      ],
+      [
+        "l0",
+        "r1"
+      ],
+      [
+        "l0",
+        "r2"
+      ],
+      [
+        "l1",
+        "r0"
+      ],
+      [
+        "l1",
+        "r1"
+      ],
+      [
+        "l1",
+        "r2"
+      ],
+      [
+        "l2",
+        "r0"
+      ],
+      [
+        "l2",
+        "r1"
+      ],
+      [
+        "l2",
+        "r2"
+      ]
+    ],
+    "state_formula": "state = (config_id // 4**i) % 4",
+    "inverse_formula": "config_id = sum(state[i] * 4**i for i in range(9))",
+    "least_significant_digit_pair": [
+      "l0",
+      "r0"
+    ],
+    "states": [
+      {
+        "value": 0,
+        "name": "NONE",
+        "emitted_polarities": []
+      },
+      {
+        "value": 1,
+        "name": "REQUIRE",
+        "emitted_polarities": [
+          "REQUIRE"
+        ]
+      },
+      {
+        "value": 2,
+        "name": "EXCLUDE",
+        "emitted_polarities": [
+          "EXCLUDE"
+        ]
+      },
+      {
+        "value": 3,
+        "name": "REQUIRE_AND_EXCLUDE",
+        "emitted_polarities": [
+          "REQUIRE",
+          "EXCLUDE"
+        ]
+      }
+    ],
+    "record_emission": {
+      "ordering": "Ascending pair index i; for state 3 emit REQUIRE first, then EXCLUDE.",
+      "assessment": "ACCEPTED",
+      "id_format": "EXP007/C/V1/matrix/{instance_token}/{config_id:06d}/pair/{i}/{polarity}",
+      "instance_tokens": {
+        "star/S_free": "star-s-free",
+        "F09-geometry/S_inc": "f09-s-inc"
+      },
+      "id_rule": "Deterministic unique ID per emitted record, unique across matrix cases; unchanged on replay. No ID collisions between opposite polarities.",
+      "record_count_range_inclusive": [
+        0,
+        18
+      ],
+      "NONE_is_record": false,
+      "provenance": {
+        "origin": "EXP-007 synthetic accepted-polarity matrix",
+        "source_format": "EXP007_PROTOCOL.md section 6 / {instance_token} / config/{config_id:06d} / pair/{i}",
+        "scope": {
+          "snapshots": [
+            "snapshot_L",
+            "snapshot_R"
+          ],
+          "source": "Concrete source handle for this pair",
+          "target": "Concrete target handle for this pair"
+        },
+        "assessment_rule": "External synthetic assessment is ACCEPTED for every matrix REQUIRE/EXCLUDE, by frozen section 6 declaration.",
+        "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+      },
+      "fixture_record_identity": "Named fixtures keep original IDs, source texts, assessment and provenance. Record permutations preserve IDs; intentional duplicate presentations repeat identical content/ID and have separate presentation-position audit indices."
+    },
+    "transport": {
+      "association": "T(phi) = sigma_R o phi o inverse(sigma_L)",
+      "material": "M_prime = M o inverse(sigma_L)",
+      "accept": "T_out(ACCEPT(M)) = ACCEPT(M_prime)",
+      "reject": "T_out(REJECT) = REJECT",
+      "required_references": [
+        "vertices",
+        "occurrences",
+        "incidence",
+        "evidence source/target",
+        "provenance scope handles",
+        "initial material map keys",
+        "update selectors",
+        "retained/waived intention references",
+        "preserve:<handle> conjunct IDs",
+        "association pairs",
+        "witness/certificate maps",
+        "observable class maps/membership"
+      ],
+      "rule": "Use explicit left/right maps and inverses; preserve snapshot source/target orientation and designated roots. Transport references structurally, never blindly replace arbitrary substrings or infer identity from indices."
+    }
+  },
+  "dry_run": {
+    "mode": "PLANNED_ONLY_NOT_EXECUTED",
+    "instance_order": [
+      "star/S_free",
+      "F09-geometry/S_inc"
+    ],
+    "config_ids": [
+      0,
+      1,
+      2,
+      3,
+      5,
+      63,
+      64,
+      65,
+      272,
+      262143
+    ],
+    "matrix_cases_per_instance": 10,
+    "matrix_cases_total": 20,
+    "candidate_obligations_per_side": 120,
+    "namespace": "EXP007/C/V1/DRY-RUN/{instance_token}/{config_id:06d}",
+    "credit_to_full_suite_total": false,
+    "checks": [
+      "Decode/re-encode every chosen config",
+      "Record polarity order, unique IDs, ACCEPTED assessment and complete synthetic provenance",
+      "Exact paired outputs and bounded serialization",
+      "Incremental ledger/storage and replay field completeness",
+      "Report actual partial work without full qualification"
+    ],
+    "limitation": "A successful dry-run does not establish any unexecuted frozen obligation."
+  },
+  "oracle_independence": {
+    "tested_candidate_construction": "C11 distinct-destination triples, six bijections, separate evidence and structure predicates.",
+    "reference_candidate_construction": "Independently classify all 512 binary relations by row/column occupancy per structural instance; may retain the six recognized bijections for the matrix only.",
+    "tested_material_construction": "Construct complete outcomes directly from equality updates, preservation rules and explicit intention losses, for every admissible association and authorized decision.",
+    "reference_material_construction": "Enumerate all 27 maps in V^L per association/decision against the complete predicate; separately check OR over the whole declared decision set on all 27 maps.",
+    "shared_allowed": [
+      "Declarative fixture inputs",
+      "Value symbols",
+      "Serialization contract"
+    ],
+    "shared_forbidden": [
+      "Candidate generator",
+      "Candidate filtering logic",
+      "Material solver",
+      "Expected result tables as solver inputs",
+      "Oracle output as tested-side input"
+    ],
+    "matrix_scan_accounting": "1024 relation classifications describes two independently scanned instances if each is scanned once. Any re-scan adds measured work, never another suite case or invented coverage."
+  },
+  "comparison_design": {
+    "result_envelope_schema": "ste-exp007-reference-v1",
+    "required_sets": [
+      "U_H",
+      "C_E",
+      "A_E"
+    ],
+    "extensional_relation_identity": "Concrete ordered [source,target] pairs; collections may be ordered differently but pair orientation is significant.",
+    "duplicate_check_before_set_normalization": true,
+    "duplicates_forbidden_in": [
+      "candidate sets",
+      "associations",
+      "policy decisions",
+      "outcomes within their association/decision",
+      "witnesses",
+      "rejection certificate assignments",
+      "observable classes",
+      "class members",
+      "result case IDs"
+    ],
+    "allowed_record_duplicates": "Explicit repeated evidence presentations are valid and auditable; do not confuse them with duplicate vertices or emitted candidates.",
+    "candidate_fields": [
+      "status",
+      "diagnostics",
+      "conditional",
+      "counts",
+      "candidate_sets",
+      "predicates",
+      "evidence_records",
+      "assessment_counts"
+    ],
+    "material_fields": [
+      "policy_status",
+      "observable_status",
+      "scientific_claim",
+      "independent_comparison",
+      "diagnostics",
+      "associations",
+      "decisions",
+      "authorizations",
+      "retained_intentions",
+      "waived_intentions",
+      "obligations",
+      "W_phi_d",
+      "W_phi",
+      "witnesses",
+      "rejection_certificate",
+      "rejected_under_all_decisions",
+      "outcomes",
+      "observable_classes"
+    ],
+    "metadata_rule": "Validate identities separately. Compare exact result fields using existing serialization semantics; metadata is implementation-owned. Unsupported reason strings remain retained and compared by the existing named comparison.",
+    "excluded_work_fields": [
+      "relations_examined",
+      "assignments_examined",
+      "union_assignments_examined"
+    ],
+    "work_rule": "These fields describe each implementation actual work; never copy reference work counts into C output to obtain equality.",
+    "record_transform_comparison": "Compare C and reference on the same transformed input. Compare semantic invariants with original baseline separately; evidence_records and assessment_counts must match the actual transformed presentation.",
+    "material_comparison_order": [
+      "Exact per-association/per-decision sets",
+      "Retained/waived intentions and authorizations",
+      "Valid witnesses and exhaustive rejection certificates",
+      "Exact observable partitions and members"
+    ],
+    "acceptance_witness": "Every ACCEPT has a full concrete map satisfying all retained update equalities and all untouched-cell preservation conjuncts.",
+    "rejection_certificate": "Every decision REJECT requires all 27 distinct maps, each with exactly its violated declared conjuncts. Association rejection requires emptiness under every authorized decision; preserve all accepting alternatives.",
+    "normalization": "Retain raw outputs first. Normalize only collection presentation; preserve source/target orientation, provenance snapshot ordering, distinct concrete materials and association/decision bindings. Never use class counts or SteResult alone."
+  },
+  "coverage_ledger": {
+    "status": "DESIGN_ONLY_NO_OBSERVED_COUNTERS",
+    "unit": "Distinct planned case IDs; separate side-specific receipt/attempt counters and a paired comparison ledger.",
+    "partition_keys": [
+      "run_id",
+      "suite_id",
+      "fixture_or_instance_id",
+      "side_or_paired",
+      "measurement_unit"
+    ],
+    "counter_names": [
+      "required",
+      "generated",
+      "attempted",
+      "received",
+      "compared",
+      "passed",
+      "failed",
+      "skipped",
+      "missing",
+      "duplicate"
+    ],
+    "counter_definitions": {
+      "required": "Immutable obligations from this manifest, even for correctly negative/inconclusive fixtures.",
+      "generated": "Distinct required case IDs with validated deterministic input materialized and input hash recorded.",
+      "attempted": "Distinct generated IDs actually submitted to a side; paired attempted means at least one side submitted. Invocation/retry counts live in measured_work.",
+      "received": "Distinct attempted IDs with complete parseable, identity-bound output from that side. Paired received requires both sides; malformed/truncated output is an operational incident, not a received scientific result.",
+      "compared": "Distinct paired IDs whose entire required exact comparison and suite-specific transport/order checks completed. Side ledgers reference this paired result.",
+      "passed": "Compared IDs satisfying every expected obligation, including correct unsupported/invalid/conditional/inconclusive handling. Not positive scientific claims.",
+      "failed": "Compared IDs with at least one exact or invariant discrepancy. Preserve for replay and scientific-versus-operational triage; do not automatically call every comparison failure a counterexample.",
+      "skipped": "Distinct required IDs explicitly left unexecuted, with reason. Expected unsupported fixture results are executed negative tests, never skipped.",
+      "missing": "At snapshot/closure, required IDs without complete paired comparison, including skipped IDs, never-generated IDs, missing side output and interrupted cases; keep per-ID reason and side.",
+      "duplicate": "Excess output receipts with an already-seen (run_id,case_id,side) identity, excluding separately indexed explicit retry attempts. Duplicate candidate/outcome rows have additional semantic counters."
+    },
+    "invariants": [
+      "All counters are nonnegative integers; no observed values are populated by this plan.",
+      "compared = passed + failed",
+      "paired_compared <= paired_received <= generated <= required",
+      "For each side: received <= attempted <= generated <= required",
+      "missing = required - compared; skipped <= missing; skipped and missing overlap and must not be added together.",
+      "Duplicate receipts, retries, reused baselines and identity transformations cannot increment passed or compared twice for one obligation.",
+      "Auxiliary M04-association, dry-run, derived gates and regressions have separate ledgers and total classes."
+    ],
+    "measurement_units": [
+      "suite_case",
+      "candidate_evaluation_obligation",
+      "relation_classification",
+      "material_assignment_predicate_check",
+      "union_assignment_check",
+      "certificate_row_verification",
+      "process_invocation",
+      "comparison",
+      "law_check"
+    ],
+    "logical_obligations": {
+      "matrix_candidate_evaluations_per_side": 3145728,
+      "rule": "Six candidate membership/predicate obligations per matrix case, including evidence/structure-failing candidates. This is not the total candidate work for all other suites."
+    },
+    "measured_work_required_fields": [
+      "side",
+      "process_invocations",
+      "input_conversions",
+      "actual_candidate_generations",
+      "actual_candidate_evaluations",
+      "actual_binary_relation_classifications",
+      "actual_decision_assignment_checks",
+      "actual_union_assignment_checks",
+      "actual_rejection_certificate_rows_generated",
+      "actual_certificate_rows_verified",
+      "baseline_reuses",
+      "baseline_recomputations",
+      "retry_invocations",
+      "bytes_written"
+    ],
+    "measured_work_rule": "Increment only where computation actually happens, independently on each side. Report unavailable instrumentation as unavailable, never as guessed work. Logical counters cannot be relabeled as measured work. Cached oracle bijections account for their actual recognition once; reused results add no new computation.",
+    "suite_receipt_required_fields": [
+      "case_id",
+      "ordinal",
+      "input_sha256",
+      "attempt_id",
+      "side",
+      "executable_sha256",
+      "stdout_sha256",
+      "stderr_sha256",
+      "exit_status",
+      "comparison_status",
+      "failure_class",
+      "evidence_offsets"
+    ]
+  },
+  "first_mismatch_replay": {
+    "status": "DESIGN_ONLY",
+    "selection": "First semantic mismatch by deterministic suite/case ordinal, not process arrival time. Keep the earliest operational incident separately. Persist every later failure incrementally too.",
+    "required_fields": [
+      "run_id",
+      "case_id",
+      "global_ordinal",
+      "suite_id",
+      "fixture_id",
+      "instance_id",
+      "config_id",
+      "variant_rank",
+      "protocol_version",
+      "protocol_freeze_commit",
+      "protocol_sha256",
+      "plan_sha256",
+      "fixture_manifest_sha256",
+      "original_untransformed_fixture_input",
+      "original_input_sha256",
+      "fully_materialized_transformed_input",
+      "transformed_input_sha256",
+      "raw_tested_stdout_bytes",
+      "raw_tested_stderr_bytes",
+      "raw_reference_stdout_bytes",
+      "raw_reference_stderr_bytes",
+      "unnormalized_tested_output",
+      "unnormalized_reference_output",
+      "normalization_and_transport_steps",
+      "exact_discrepancy_json_path",
+      "exact_discrepancy_kind",
+      "expected_field_value",
+      "actual_field_value",
+      "false_positive_concrete_relations",
+      "false_negative_concrete_relations",
+      "duplicate_positions_and_values",
+      "association_pairs",
+      "policy_decision_id",
+      "retained_and_waived_intentions",
+      "witness_or_certificate_discrepancy",
+      "observable_class_map_and_membership_discrepancy",
+      "left_transport_map",
+      "right_transport_map",
+      "inverse_transport_maps",
+      "left_vertex_layout",
+      "right_vertex_layout",
+      "designated_root_handles",
+      "record_presentation_order_with_positions_and_ids",
+      "association_presentation_order",
+      "material_outcome_presentation_order",
+      "consumed_record_order",
+      "consumed_association_order",
+      "consumed_outcome_order",
+      "consumption_hook_identity",
+      "implementation_revision",
+      "driver_revision",
+      "source_hashes",
+      "tested_executable_path",
+      "tested_executable_sha256",
+      "reference_executable_path",
+      "reference_executable_sha256",
+      "reference_script_sha256",
+      "compiler_identity",
+      "compiler_flags",
+      "build_argv",
+      "execution_argv",
+      "cwd",
+      "environment_overrides",
+      "exit_statuses",
+      "signals",
+      "attempt_ids",
+      "ledger_snapshot",
+      "evidence_offsets_and_hashes",
+      "standalone_replay_argv",
+      "triage_status"
+    ],
+    "null_rule": "Fields not applicable to a particular suite use explicit null with a reason; identity transports use explicit identity maps. Raw bytes must be retained losslessly even if JSON parsing fails.",
+    "replay_rule": "Replay uses the saved exact original and materialized input, frozen symbols, executable hashes, transport maps and observed consumed order. Do not regenerate from a different revision or only a normalized output.",
+    "consumption_rule": "Capture actual order at input/consumer hooks before sorting, deduplication or partitioning. Requested order alone cannot demonstrate that a consumer used it.",
+    "falsification_rule": "A valid replay-confirmed semantic omission, inclusion, duplicate, wrong diagnostic, invalid witness/certificate or transport/order violation is a scientific counterexample to the corresponding bounded obligation."
+  },
+  "evidence_storage": {
+    "status": "REQUIREMENTS_ONLY_NO_ARTIFACTS_WRITTEN",
+    "future_root": "Fresh external run directory; no repository-local caches or execution products.",
+    "format": "Incremental UTF-8 JSON Lines journals and bounded raw input/output blobs, with a separate index and final evidence summary.",
+    "records_required": [
+      "Run metadata",
+      "Per-case input and output receipts",
+      "Per-suite/per-side coverage ledgers",
+      "Actual work counters",
+      "Comparison deltas",
+      "First-mismatch replay",
+      "Every negative and inconclusive case",
+      "Operational incidents and coverage gaps"
+    ],
+    "incremental_rule": "Persist complete case inputs, raw outputs, identity hashes and comparison/ledger deltas before advancing the durable checkpoint. Flush and synchronize completed chunks; never depend on retaining the entire campaign in memory.",
+    "integrity": {
+      "algorithm": "SHA256",
+      "raw_byte_hashes": [
+        "Manifest",
+        "Frozen protocol",
+        "Fixtures",
+        "Driver and source artifacts",
+        "Executables/interpreter",
+        "Inputs",
+        "stdout",
+        "stderr",
+        "Completed journal chunks"
+      ],
+      "journal_chain": "Each indexed chunk records its sequence, ordinal range, byte length, SHA256 and preceding chunk SHA256; first predecessor is null. Bind final index digest to the run/plan/protocol identity.",
+      "canonical_input_hash": "SHA256 of UTF-8 json.dumps(input, sort_keys=True, separators=(comma,colon), ensure_ascii=True, allow_nan=False), without newline. Preserve raw serialized input separately with its own hash.",
+      "validation": "Reject duplicate JSON keys, truncated records, invalid lengths/hashes and missing ordinals; never silently repair or discard failures.",
+      "collision_policy": "A repeated case ID with different input/output content is an integrity failure; never overwrite the earlier receipt."
+    },
+    "serialization_limits": {
+      "max_envelope_bytes": 2000000,
+      "max_cases_per_envelope": 64
+    },
+    "chunking": "Split into deterministic bounded envelopes and indexed raw blobs. These are per-envelope limits, not permission to skip cases or a campaign-wide evidence-size limit.",
+    "resume": "Resume only after verifying every durable chunk/hash and exact input/executable identities; reconstruct completed case IDs from receipts. Preserve interrupted/retry attempts separately; never double-credit coverage.",
+    "completion": "Atomically finalize the index/summary after all durable checks; retain partial evidence if interrupted. No incomplete journal may be labeled complete.",
+    "future_reporting": "On separately authorized execution, retain negative/inconclusive evidence in EXP007_RESULTS.md and reference exp007_evidence.json plus raw indexed evidence. Neither results file is created by this task."
+  },
+  "negative_and_inconclusive": {
+    "test_verdict_vs_scientific_claim": "Correctly diagnosing a negative or inconclusive fixture may PASS its test; that does not assert material equivalence, COMPATIBLE, CONFLICT or historical completeness.",
+    "F13": {
+      "fixture_ids": [
+        "F13-duplicated_handle",
+        "F13-foreign_handle",
+        "F13-invalid_tree",
+        "F13-invalid_root"
+      ],
+      "status": "UNSUPPORTED",
+      "diagnostics": [
+        "INVALID_INPUT"
+      ],
+      "enumeration_allowed": false,
+      "candidate_sets": null,
+      "counts": null,
+      "invalid_tree": "Complete final source incidence is root_L->l2, l0->l1, l1->l0: disconnected cycle. Reject before any candidate generation."
+    },
+    "F12": {
+      "conditional": true,
+      "diagnostics": [
+        "ASSESSMENT_UNRESOLVED"
+      ],
+      "expected_C_E_and_A_E": [
+        "012",
+        "021",
+        "102",
+        "120",
+        "201",
+        "210"
+      ],
+      "accepted_resolution": [
+        "012",
+        "021"
+      ],
+      "rejected_resolution": [
+        "012",
+        "021",
+        "102",
+        "120",
+        "201",
+        "210"
+      ],
+      "claim": "Conditional candidate enumeration only; no unspecified-query robustness or unconditional historical conclusion."
+    },
+    "M05-P": {
+      "policy_status": "UNSUPPORTED",
+      "observable_status": "NOT_EVALUATED",
+      "scientific_claim": "INCONCLUSIVE",
+      "rule": "Missing total retention/loss policy and complete D provides no W_phi, no empty-set proof and no REJECT."
+    },
+    "M05-O": {
+      "policy_status": "SUPPORTED",
+      "observable_status": "OBSERVABLE_UNDEFINED",
+      "scientific_claim": "INCONCLUSIVE",
+      "rule": "Retain valid M01 material witnesses; do not invent an observable, equality class or discarded material."
+    },
+    "M05-I": {
+      "policy_status": "SUPPORTED",
+      "observable_status": "DEFINED",
+      "independent_comparison": "INCOMPLETE",
+      "scientific_claim": "INCONCLUSIVE",
+      "rule": "Deliberately incomplete comparison remains this fixture property even if its diagnostic handling is fully tested. Never relabel it unsupported policy or REJECT."
+    },
+    "supported_material_serialization": "Current M01-M04 outputs also carry scientific_claim INCONCLUSIVE and independent_comparison PENDING. Preserve these original result fields; future campaign qualification is a separate evidence assessment, not a rewrite of frozen serialized expectations.",
+    "diagnostic_order": "For well-formed input, test C_E empty first (EVIDENCE_INCONSISTENT); only if nonempty may empty A_E mean STRUCTURALLY_UNSATISFIABLE. INVALID_INPUT has no enumerated sets. Other supported independent diagnostics may coexist.",
+    "missing_rejected_unresolved": "No evidence is not EXCLUDE; REJECTED does not negate polarity; UNRESOLVED stays visible and yields conditional results.",
+    "MOVE": "F11 identity 012 remains allowed by S_free despite parent change. Do not substitute an incidence-preserving alternative or add TPI validity as historical evidence.",
+    "EXP004": {
+      "historical_completeness": "INCONCLUSIVE",
+      "material_equivalence": "CALLER_ASSUMPTION"
+    }
+  },
+  "derived_gates": {
+    "observable_equivalence": {
+      "id": "DERIVED_OBSERVABLE_EQUIVALENCE_LAWS_GATE",
+      "authority": "Operational derivation of protocol section 10 reflexivity/symmetry/transitivity; no new fixture expectations.",
+      "in_frozen_suite_total": false,
+      "domain": "Defined Q on the finite tagged observable carrier: REJECT plus ACCEPT(M) for every M in {0,lambda,rho}^L, with original concrete source handles.",
+      "order": "REJECT first, then ACCEPT maps in lexicographic product order of (0,lambda,rho) on (l0,l1,l2).",
+      "defined_observable_count": 28,
+      "checks": [
+        {
+          "law": "REFLEXIVITY",
+          "formula": "eq(a,a) is true",
+          "required": 28
+        },
+        {
+          "law": "SYMMETRY",
+          "formula": "eq(a,b) == eq(b,a)",
+          "required": 784
+        },
+        {
+          "law": "TRANSITIVITY",
+          "formula": "not (eq(a,b) and eq(b,c)) or eq(a,c)",
+          "required": 21952
+        }
+      ],
+      "required_law_checks": 22764,
+      "check_id_format": "EXP007/C/V1/derived-observable-laws/{law}/{a_rank}/{b_rank_or_na}/{c_rank_or_na}",
+      "execution": "Evaluate each side observable-equivalence behavior independently; compare exact law verdicts against tag and extensional concrete-map equality. Record logical law checks and actual calls separately; adapter hooks are required because C ha_same_outcome is an internal helper.",
+      "undefined_guard": "M05-O is outside this defined carrier; preserve its unsupported comparison and INCONCLUSIVE status in its named case, never count undefined as an equality class.",
+      "qualification": "Law success does not establish material outcome completeness or authorize a scientific result by itself."
+    }
+  },
+  "failure_classification": {
+    "categories": [
+      {
+        "id": "OPERATIONAL_FAILURE",
+        "examples": [
+          "Build/invocation failure",
+          "Crash or signal",
+          "Timeout",
+          "Transport failure",
+          "Malformed/truncated envelope",
+          "Storage/hash/identity failure",
+          "Missing consumption instrumentation"
+        ],
+        "scientific_effect": "Affected claim INCONCLUSIVE; retain incident. Not a scientific counterexample without a valid semantic replay."
+      },
+      {
+        "id": "COVERAGE_GAP",
+        "examples": [
+          "Skipped/missing case or side",
+          "Interrupted suite",
+          "Missing independent comparison",
+          "Unexecuted transformation",
+          "Only output order changed instead of consumed order"
+        ],
+        "scientific_effect": "Affected claim INCONCLUSIVE, never PASS; do not confuse expected M05-I coverage-incompleteness diagnosis with completing unperformed work."
+      },
+      {
+        "id": "SCIENTIFIC_COUNTEREXAMPLE",
+        "examples": [
+          "Replayed admissible omission/inadmissible inclusion",
+          "Duplicated emitted candidate",
+          "Wrong candidate/diagnostic distinction",
+          "Accepted F13 input",
+          "Invalid witness/certificate",
+          "Lost authorized outcome",
+          "Equivariance or actual consumed-order dependence"
+        ],
+        "scientific_effect": "FAIL of the specific bounded experimental obligation after input, oracle independence, executable identity and replay validity are established."
+      },
+      {
+        "id": "EXPECTED_NEGATIVE_OR_INCONCLUSIVE",
+        "examples": [
+          "F13 INVALID_INPUT/UNSUPPORTED",
+          "F12 conditional",
+          "M03 certified rejections",
+          "M05-P/O/I INCONCLUSIVE"
+        ],
+        "scientific_effect": "Handling test may PASS; preserve the original scientific limitation."
+      }
+    ],
+    "triage": "Retain exact discrepancy first. Verify fixture/input transport, executable identities, complete independent output and replay before scientific labeling; harness/serialization defects are operational failures. Do not suppress failed-case evidence when triage changes its category.",
+    "continuation": "On a semantic mismatch persist replay and continue independent cases in declared order where inputs and evidence remain trustworthy. Stop dependent execution on integrity or operational failure, recording the unexecuted tail as missing; never report a partial campaign as complete."
+  },
+  "full_acceptance": {
+    "exit_status_zero_is_sufficient": false,
+    "required": [
+      "Frozen protocol/fixture/source and executable identities verified, with complete reproducible commands and strict C11 build metadata.",
+      "All 529423 overlapping frozen suite cases compared and passed, plus the separately counted M04-association auxiliary check; no missing/skipped/failed cases or duplicate receipts.",
+      "Both 262144-configuration instances complete; all six candidate obligations per configuration per side discharged, giving 3145728 candidate evaluation obligations per side.",
+      "All named, assessment, provenance, record, relabeling, layout and actual-consumption order obligations checked exactly; no composed transformations or untested cross-product claims.",
+      "Exact U_H/C_E/A_E sets, per-candidate predicates, diagnostic distinctions and assessment counts agree; no false positives, false negatives or duplicate emitted candidates.",
+      "Exact per-association/per-decision material outcomes and authorizations agree; every acceptance witness verified and every rejection backed by the complete independently checked 27-map certificate.",
+      "Observable partitions match exact concrete maps and association/decision members after outcome agreement; equality of counts/classification alone is insufficient.",
+      "Separately identified derived observable-equivalence law gate complete and passing, with its own ledger and no inflation of frozen suite totals.",
+      "F13 remains unsupported before enumeration, F12 conditional, M05-P/O/I scientifically INCONCLUSIVE; EXP-004 remains INCONCLUSIVE/CALLER_ASSUMPTION.",
+      "No unresolved operational/integrity failures or coverage gaps; all negative/inconclusive evidence, raw outputs and replay information durably retained and hash-verified.",
+      "Future results/evidence reporting explicitly states bounded model-relative qualification and limitations; no actual-history identity/completeness, general merge/TPI soundness or normative promotion."
+    ],
+    "scientific_claim_scope": "At most completeness/soundness and representation/order obligations relative to this declared finite model, supported policy and defined observable; negative/inconclusive fixtures retain their own claims.",
+    "partial_execution": "Report partial counts and INCONCLUSIVE for affected claims even if every invoked process exits zero."
+  },
+  "next_implementation_step": {
+    "status": "FUTURE_SEPARATE_WORK",
+    "action": "After review and separate authorization, implement a minimal STE-owned campaign driver against these pinned inputs, with deterministic generation, paired comparison, consumption hooks, ledgers, incremental evidence and standalone replay; then qualify the specified dry-run before the full campaign.",
+    "existing_interfaces": {
+      "c11": "historical_associations.c accepts named --fixture selections only; HA_NO_MAIN exposes the bounded types and functions to a future standalone C driver.",
+      "reference": "exp007_reference.py CLI accepts named selections only; Python evaluation/transport/comparison functions exist for an independent reference adapter.",
+      "limits": "Neither current CLI is a generic polarity-matrix or complete transformation runner. Do not describe existing self-tests/process probes as the campaign."
+    },
+    "missing_hooks": [
+      "Arbitrary bounded synthetic input delivery to both sides",
+      "Six-association order at material consumption",
+      "M04 outcome order at partition consumption",
+      "Concrete-map observable-law adapter",
+      "Measured work and consumed-order tracing",
+      "Incremental storage and replay writer"
+    ],
+    "independence": "Adapters may transport declarative input and serialize results; they must not share candidate/filter/material solving procedures or feed expected/oracle results to the tested side.",
+    "execute_now": false
+  }
+}
