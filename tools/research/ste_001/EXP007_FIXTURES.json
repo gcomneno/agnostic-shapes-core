@@ -1,0 +1,3166 @@
+{
+  "schema": "ste-exp007-fixtures-v1",
+  "authority": "Nonnormative frozen finite research model; expectations are not execution results.",
+  "protocol": {
+    "path": "tools/research/ste_001/EXP007_PROTOCOL.md",
+    "sha256": "61a586c706cf5e3cfb78ffbfd835dcbdc060c4c46f6cc427fbf2379a095664f1",
+    "freeze_commit": "101eb2c5df29c1e65d8ccea2b9ea8be510c32315",
+    "issue": 415
+  },
+  "foundations": {
+    "R01": "HISTORICAL_EVIDENCE_MODEL.md",
+    "R02": "FINITE_ASSOCIATION_MODEL.md",
+    "R03": "MATERIAL_OUTCOME_EQUIVALENCE.md",
+    "R04": "TPI_HISTORY_BOUNDARY.md"
+  },
+  "domain": {
+    "occurrences_per_side": 3,
+    "relation_count": 512,
+    "association_class": "TOTAL_BIJECTION",
+    "root_pairing": "External assumption; designated root handles are excluded from every association.",
+    "canonical_encodings": [
+      "012",
+      "021",
+      "102",
+      "120",
+      "201",
+      "210"
+    ],
+    "encoding_rule": "abc maps the three declared left occurrences to named right occurrences a,b,c; presentation only."
+  },
+  "profiles": {
+    "S_free": "PRESERVED_OCCURRENCES: true on well-formed input and U_H.",
+    "S_inc": "UNCHANGED_INCIDENCE: transport all direct incidence with designated roots; explicit unchanged-incidence assumption required."
+  },
+  "evidence_contract": {
+    "polarities": [
+      "REQUIRE",
+      "EXCLUDE"
+    ],
+    "assessments": [
+      "ACCEPTED",
+      "REJECTED",
+      "UNRESOLVED"
+    ],
+    "accepted_only": true,
+    "rejection_is_negation": false,
+    "repeated_records_allowed": true
+  },
+  "material_contract": {
+    "values": [
+      "0",
+      "lambda",
+      "rho"
+    ],
+    "initial": "0",
+    "roots_have_cells": false,
+    "assignments_per_association_decision": 27,
+    "right_update_transport": "inverse(phi)",
+    "preservation": "Every source cell not targeted by a retained update preserves 0.",
+    "observable": "Q observes REJECT or ACCEPT of the full extensional source map.",
+    "equivalence": "Equal tags and, for ACCEPT, equal maps on concrete source occurrences.",
+    "rejection_certificate": "All 27 assignments with violated conjuncts, for every rejected decision.",
+    "unsupported_is_reject": false
+  },
+  "candidate_fixtures": [
+    {
+      "id": "F01",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "A_E": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "diagnostics": [
+          "MISSING_EVIDENCE"
+        ],
+        "conditional": false
+      }
+    },
+    {
+      "id": "F02",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "F02/E01",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F02",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [
+          "012",
+          "021"
+        ],
+        "A_E": [
+          "012",
+          "021"
+        ],
+        "diagnostics": [],
+        "conditional": false
+      }
+    },
+    {
+      "id": "F03",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "F03/E01",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F03",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        },
+        {
+          "id": "F03/E02",
+          "source": "l1",
+          "target": "r1",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F03",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l1",
+              "target": "r1"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [
+          "012"
+        ],
+        "A_E": [
+          "012"
+        ],
+        "diagnostics": [],
+        "conditional": false
+      }
+    },
+    {
+      "id": "F04",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "F04/E01",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "EXCLUDE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F04",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "A_E": [
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "diagnostics": [],
+        "conditional": false
+      }
+    },
+    {
+      "id": "F05",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "F05/E01",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "REQUIRE",
+          "assessment": "REJECTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F05",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "A_E": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "diagnostics": [],
+        "conditional": false
+      }
+    },
+    {
+      "id": "F06",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "F06/E01",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F06",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        },
+        {
+          "id": "F06/E02",
+          "source": "l0",
+          "target": "r1",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F06",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r1"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [],
+        "A_E": [],
+        "diagnostics": [
+          "EVIDENCE_INCONSISTENT"
+        ],
+        "conditional": false
+      }
+    },
+    {
+      "id": "F07",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "F07/E01",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F07",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        },
+        {
+          "id": "F07/E02",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "EXCLUDE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F07",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [],
+        "A_E": [],
+        "diagnostics": [
+          "EVIDENCE_INCONSISTENT"
+        ],
+        "conditional": false
+      }
+    },
+    {
+      "id": "F08",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "F08/E01",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "EXCLUDE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F08",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        },
+        {
+          "id": "F08/E02",
+          "source": "l0",
+          "target": "r1",
+          "polarity": "EXCLUDE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F08",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r1"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        },
+        {
+          "id": "F08/E03",
+          "source": "l0",
+          "target": "r2",
+          "polarity": "EXCLUDE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F08",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r2"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [],
+        "A_E": [],
+        "diagnostics": [
+          "EVIDENCE_INCONSISTENT"
+        ],
+        "conditional": false
+      }
+    },
+    {
+      "id": "F09",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "l0",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "r0",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_inc",
+      "assumes_unchanged_incidence": true,
+      "evidence": [],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "A_E": [
+          "012"
+        ],
+        "diagnostics": [
+          "MISSING_EVIDENCE"
+        ],
+        "conditional": false
+      }
+    },
+    {
+      "id": "F10",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "l0",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "r0",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_inc",
+      "assumes_unchanged_incidence": true,
+      "evidence": [
+        {
+          "id": "F10/E01",
+          "source": "l0",
+          "target": "r2",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F10",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r2"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        },
+        {
+          "id": "F10/E02",
+          "source": "l1",
+          "target": "r1",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F10",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l1",
+              "target": "r1"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [
+          "210"
+        ],
+        "A_E": [],
+        "diagnostics": [
+          "STRUCTURALLY_UNSATISFIABLE"
+        ],
+        "conditional": false
+      }
+    },
+    {
+      "id": "F11",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "a_L",
+            "p_L",
+            "q_L"
+          ],
+          "occurrences": [
+            "a_L",
+            "p_L",
+            "q_L"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "a_L"
+            ],
+            [
+              "a_L",
+              "p_L"
+            ],
+            [
+              "root_L",
+              "q_L"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "a_R",
+            "p_R",
+            "q_R"
+          ],
+          "occurrences": [
+            "a_R",
+            "p_R",
+            "q_R"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "a_R"
+            ],
+            [
+              "root_R",
+              "q_R"
+            ],
+            [
+              "q_R",
+              "p_R"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "F11/E01",
+          "source": "a_L",
+          "target": "a_R",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F11",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "a_L",
+              "target": "a_R"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        },
+        {
+          "id": "F11/E02",
+          "source": "p_L",
+          "target": "p_R",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F11",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "p_L",
+              "target": "p_R"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        },
+        {
+          "id": "F11/E03",
+          "source": "q_L",
+          "target": "q_R",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F11",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "q_L",
+              "target": "q_R"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [
+          "012"
+        ],
+        "A_E": [
+          "012"
+        ],
+        "diagnostics": [],
+        "conditional": false
+      }
+    },
+    {
+      "id": "F12",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "F12/E01",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "REQUIRE",
+          "assessment": "UNRESOLVED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F12",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "A_E": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "diagnostics": [
+          "ASSESSMENT_UNRESOLVED"
+        ],
+        "conditional": true
+      }
+    },
+    {
+      "id": "F13",
+      "variants": [
+        {
+          "id": "F13-duplicated_handle",
+          "snapshots": {
+            "left": {
+              "id": "snapshot_L",
+              "root": "root_L",
+              "vertices": [
+                "root_L",
+                "l0",
+                "l0",
+                "l2"
+              ],
+              "occurrences": [
+                "l0",
+                "l1",
+                "l2"
+              ],
+              "incidence": [
+                [
+                  "root_L",
+                  "l0"
+                ],
+                [
+                  "root_L",
+                  "l1"
+                ],
+                [
+                  "root_L",
+                  "l2"
+                ]
+              ]
+            },
+            "right": {
+              "id": "snapshot_R",
+              "root": "root_R",
+              "vertices": [
+                "root_R",
+                "r0",
+                "r1",
+                "r2"
+              ],
+              "occurrences": [
+                "r0",
+                "r1",
+                "r2"
+              ],
+              "incidence": [
+                [
+                  "root_R",
+                  "r0"
+                ],
+                [
+                  "root_R",
+                  "r1"
+                ],
+                [
+                  "root_R",
+                  "r2"
+                ]
+              ]
+            }
+          },
+          "profile": "S_free",
+          "assumes_unchanged_incidence": false,
+          "evidence": [],
+          "expected": {
+            "status": "UNSUPPORTED",
+            "diagnostics": [
+              "INVALID_INPUT"
+            ],
+            "candidate_sets": null,
+            "conditional": null
+          }
+        },
+        {
+          "id": "F13-foreign_handle",
+          "snapshots": {
+            "left": {
+              "id": "snapshot_L",
+              "root": "root_L",
+              "vertices": [
+                "root_L",
+                "l0",
+                "l1",
+                "l2"
+              ],
+              "occurrences": [
+                "l0",
+                "l1",
+                "l2"
+              ],
+              "incidence": [
+                [
+                  "root_L",
+                  "l0"
+                ],
+                [
+                  "root_L",
+                  "l1"
+                ],
+                [
+                  "root_L",
+                  "l2"
+                ]
+              ]
+            },
+            "right": {
+              "id": "snapshot_R",
+              "root": "root_R",
+              "vertices": [
+                "root_R",
+                "r0",
+                "r1",
+                "r2"
+              ],
+              "occurrences": [
+                "r0",
+                "r1",
+                "r2"
+              ],
+              "incidence": [
+                [
+                  "root_R",
+                  "r0"
+                ],
+                [
+                  "root_R",
+                  "r1"
+                ],
+                [
+                  "root_R",
+                  "r2"
+                ]
+              ]
+            }
+          },
+          "profile": "S_free",
+          "assumes_unchanged_incidence": false,
+          "evidence": [
+            {
+              "id": "F13-foreign_handle/E01",
+              "source": "l_foreign",
+              "target": "r0",
+              "polarity": "REQUIRE",
+              "assessment": "ACCEPTED",
+              "provenance": {
+                "origin": "EXP-007 fixture declaration",
+                "source": "EXP007_PROTOCOL.md section 7 / F13-foreign_handle",
+                "scope": {
+                  "snapshots": [
+                    "snapshot_L",
+                    "snapshot_R"
+                  ],
+                  "source": "l_foreign",
+                  "target": "r0"
+                },
+                "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+                "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+              }
+            }
+          ],
+          "expected": {
+            "status": "UNSUPPORTED",
+            "diagnostics": [
+              "INVALID_INPUT"
+            ],
+            "candidate_sets": null,
+            "conditional": null
+          }
+        },
+        {
+          "id": "F13-invalid_tree",
+          "snapshots": {
+            "left": {
+              "id": "snapshot_L",
+              "root": "root_L",
+              "vertices": [
+                "root_L",
+                "l0",
+                "l1",
+                "l2"
+              ],
+              "occurrences": [
+                "l0",
+                "l1",
+                "l2"
+              ],
+              "incidence": [
+                [
+                  "root_L",
+                  "l2"
+                ],
+                [
+                  "l0",
+                  "l1"
+                ],
+                [
+                  "l1",
+                  "l0"
+                ]
+              ]
+            },
+            "right": {
+              "id": "snapshot_R",
+              "root": "root_R",
+              "vertices": [
+                "root_R",
+                "r0",
+                "r1",
+                "r2"
+              ],
+              "occurrences": [
+                "r0",
+                "r1",
+                "r2"
+              ],
+              "incidence": [
+                [
+                  "root_R",
+                  "r0"
+                ],
+                [
+                  "root_R",
+                  "r1"
+                ],
+                [
+                  "root_R",
+                  "r2"
+                ]
+              ]
+            }
+          },
+          "profile": "S_free",
+          "assumes_unchanged_incidence": false,
+          "evidence": [],
+          "expected": {
+            "status": "UNSUPPORTED",
+            "diagnostics": [
+              "INVALID_INPUT"
+            ],
+            "candidate_sets": null,
+            "conditional": null
+          }
+        },
+        {
+          "id": "F13-invalid_root",
+          "snapshots": {
+            "left": {
+              "id": "snapshot_L",
+              "root": "outside_snapshot",
+              "vertices": [
+                "root_L",
+                "l0",
+                "l1",
+                "l2"
+              ],
+              "occurrences": [
+                "l0",
+                "l1",
+                "l2"
+              ],
+              "incidence": [
+                [
+                  "root_L",
+                  "l0"
+                ],
+                [
+                  "root_L",
+                  "l1"
+                ],
+                [
+                  "root_L",
+                  "l2"
+                ]
+              ]
+            },
+            "right": {
+              "id": "snapshot_R",
+              "root": "root_R",
+              "vertices": [
+                "root_R",
+                "r0",
+                "r1",
+                "r2"
+              ],
+              "occurrences": [
+                "r0",
+                "r1",
+                "r2"
+              ],
+              "incidence": [
+                [
+                  "root_R",
+                  "r0"
+                ],
+                [
+                  "root_R",
+                  "r1"
+                ],
+                [
+                  "root_R",
+                  "r2"
+                ]
+              ]
+            }
+          },
+          "profile": "S_free",
+          "assumes_unchanged_incidence": false,
+          "evidence": [],
+          "expected": {
+            "status": "UNSUPPORTED",
+            "diagnostics": [
+              "INVALID_INPUT"
+            ],
+            "candidate_sets": null,
+            "conditional": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "F14",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "F14/E01",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F14",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        },
+        {
+          "id": "F14/E02",
+          "source": "l1",
+          "target": "r0",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F14",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l1",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [],
+        "A_E": [],
+        "diagnostics": [
+          "EVIDENCE_INCONSISTENT"
+        ],
+        "conditional": false
+      }
+    }
+  ],
+  "sensitivity_cases": [
+    {
+      "id": "F12-ACCEPTED",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "F12-ACCEPTED/E01",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F12-ACCEPTED",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [
+          "012",
+          "021"
+        ],
+        "A_E": [
+          "012",
+          "021"
+        ],
+        "diagnostics": [],
+        "conditional": false
+      }
+    },
+    {
+      "id": "F12-REJECTED",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "F12-REJECTED/E01",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "REQUIRE",
+          "assessment": "REJECTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 7 / F12-REJECTED",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "A_E": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "diagnostics": [],
+        "conditional": false
+      }
+    }
+  ],
+  "material_association_fixtures": [
+    {
+      "id": "M04-association",
+      "snapshots": {
+        "left": {
+          "id": "snapshot_L",
+          "root": "root_L",
+          "vertices": [
+            "root_L",
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "occurrences": [
+            "l0",
+            "l1",
+            "l2"
+          ],
+          "incidence": [
+            [
+              "root_L",
+              "l0"
+            ],
+            [
+              "root_L",
+              "l1"
+            ],
+            [
+              "root_L",
+              "l2"
+            ]
+          ]
+        },
+        "right": {
+          "id": "snapshot_R",
+          "root": "root_R",
+          "vertices": [
+            "root_R",
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "occurrences": [
+            "r0",
+            "r1",
+            "r2"
+          ],
+          "incidence": [
+            [
+              "root_R",
+              "r0"
+            ],
+            [
+              "root_R",
+              "r1"
+            ],
+            [
+              "root_R",
+              "r2"
+            ]
+          ]
+        }
+      },
+      "profile": "S_free",
+      "assumes_unchanged_incidence": false,
+      "evidence": [
+        {
+          "id": "M04-association/E01",
+          "source": "l0",
+          "target": "r0",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 11 / M04",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l0",
+              "target": "r0"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        },
+        {
+          "id": "M04-association/E02",
+          "source": "l1",
+          "target": "r1",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 11 / M04",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l1",
+              "target": "r1"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        },
+        {
+          "id": "M04-association/E03",
+          "source": "l2",
+          "target": "r2",
+          "polarity": "REQUIRE",
+          "assessment": "ACCEPTED",
+          "provenance": {
+            "origin": "EXP-007 fixture declaration",
+            "source": "EXP007_PROTOCOL.md section 11 / M04",
+            "scope": {
+              "snapshots": [
+                "snapshot_L",
+                "snapshot_R"
+              ],
+              "source": "l2",
+              "target": "r2"
+            },
+            "assessment_rule": "External synthetic assessment uses the declared status; no inference of historical truth.",
+            "assumed_trust": "Assumed solely for this finite model; provenance truth is not independently verified."
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUPPORTED",
+        "U_H": [
+          "012",
+          "021",
+          "102",
+          "120",
+          "201",
+          "210"
+        ],
+        "C_E": [
+          "012"
+        ],
+        "A_E": [
+          "012"
+        ],
+        "diagnostics": [],
+        "conditional": false
+      }
+    }
+  ],
+  "material_fixtures": [
+    {
+      "id": "M01",
+      "candidate_fixture": "F01",
+      "values": [
+        "0",
+        "lambda",
+        "rho"
+      ],
+      "initial": {
+        "left": {
+          "l0": "0",
+          "l1": "0",
+          "l2": "0"
+        },
+        "right": {
+          "r0": "0",
+          "r1": "0",
+          "r2": "0"
+        }
+      },
+      "updates": [
+        {
+          "id": "left_lambda",
+          "side": "left",
+          "target": "l0",
+          "value": "lambda",
+          "mandatory": true
+        }
+      ],
+      "policy": {
+        "complete": true,
+        "decisions": [
+          {
+            "id": "strict",
+            "retained": [
+              "left_lambda"
+            ],
+            "waived": [],
+            "authorization": "All updates mandatory; no intention loss authorized."
+          }
+        ]
+      },
+      "query": "Q",
+      "independent_comparison": "PENDING",
+      "expected": {
+        "policy_status": "SUPPORTED",
+        "observable_status": "DEFINED",
+        "scientific_claim": "INCONCLUSIVE",
+        "outcomes": {
+          "012": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "lambda",
+                  "0",
+                  "0"
+                ]
+              }
+            ]
+          },
+          "021": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "lambda",
+                  "0",
+                  "0"
+                ]
+              }
+            ]
+          },
+          "102": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "lambda",
+                  "0",
+                  "0"
+                ]
+              }
+            ]
+          },
+          "120": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "lambda",
+                  "0",
+                  "0"
+                ]
+              }
+            ]
+          },
+          "201": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "lambda",
+                  "0",
+                  "0"
+                ]
+              }
+            ]
+          },
+          "210": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "lambda",
+                  "0",
+                  "0"
+                ]
+              }
+            ]
+          }
+        },
+        "observable_class_count": 1
+      }
+    },
+    {
+      "id": "M02",
+      "candidate_fixture": "F01",
+      "values": [
+        "0",
+        "lambda",
+        "rho"
+      ],
+      "initial": {
+        "left": {
+          "l0": "0",
+          "l1": "0",
+          "l2": "0"
+        },
+        "right": {
+          "r0": "0",
+          "r1": "0",
+          "r2": "0"
+        }
+      },
+      "updates": [
+        {
+          "id": "right_rho",
+          "side": "right",
+          "target": "r0",
+          "value": "rho",
+          "mandatory": true
+        }
+      ],
+      "policy": {
+        "complete": true,
+        "decisions": [
+          {
+            "id": "strict",
+            "retained": [
+              "right_rho"
+            ],
+            "waived": [],
+            "authorization": "All updates mandatory; no intention loss authorized."
+          }
+        ]
+      },
+      "query": "Q",
+      "independent_comparison": "PENDING",
+      "expected": {
+        "policy_status": "SUPPORTED",
+        "observable_status": "DEFINED",
+        "scientific_claim": "INCONCLUSIVE",
+        "outcomes": {
+          "012": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "rho",
+                  "0",
+                  "0"
+                ]
+              }
+            ]
+          },
+          "021": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "rho",
+                  "0",
+                  "0"
+                ]
+              }
+            ]
+          },
+          "102": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "0",
+                  "rho",
+                  "0"
+                ]
+              }
+            ]
+          },
+          "120": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "0",
+                  "0",
+                  "rho"
+                ]
+              }
+            ]
+          },
+          "201": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "0",
+                  "rho",
+                  "0"
+                ]
+              }
+            ]
+          },
+          "210": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "0",
+                  "0",
+                  "rho"
+                ]
+              }
+            ]
+          }
+        },
+        "observable_class_count": 3
+      }
+    },
+    {
+      "id": "M03",
+      "candidate_fixture": "F01",
+      "values": [
+        "0",
+        "lambda",
+        "rho"
+      ],
+      "initial": {
+        "left": {
+          "l0": "0",
+          "l1": "0",
+          "l2": "0"
+        },
+        "right": {
+          "r0": "0",
+          "r1": "0",
+          "r2": "0"
+        }
+      },
+      "updates": [
+        {
+          "id": "left_lambda",
+          "side": "left",
+          "target": "l0",
+          "value": "lambda",
+          "mandatory": true
+        },
+        {
+          "id": "right_rho",
+          "side": "right",
+          "target": "r0",
+          "value": "rho",
+          "mandatory": true
+        }
+      ],
+      "policy": {
+        "complete": true,
+        "decisions": [
+          {
+            "id": "strict",
+            "retained": [
+              "left_lambda",
+              "right_rho"
+            ],
+            "waived": [],
+            "authorization": "All updates mandatory; no intention loss authorized."
+          }
+        ]
+      },
+      "query": "Q",
+      "independent_comparison": "PENDING",
+      "expected": {
+        "policy_status": "SUPPORTED",
+        "observable_status": "DEFINED",
+        "scientific_claim": "INCONCLUSIVE",
+        "outcomes": {
+          "012": {
+            "strict": [
+              {
+                "tag": "REJECT"
+              }
+            ]
+          },
+          "021": {
+            "strict": [
+              {
+                "tag": "REJECT"
+              }
+            ]
+          },
+          "102": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "lambda",
+                  "rho",
+                  "0"
+                ]
+              }
+            ]
+          },
+          "120": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "lambda",
+                  "0",
+                  "rho"
+                ]
+              }
+            ]
+          },
+          "201": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "lambda",
+                  "rho",
+                  "0"
+                ]
+              }
+            ]
+          },
+          "210": {
+            "strict": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "lambda",
+                  "0",
+                  "rho"
+                ]
+              }
+            ]
+          }
+        },
+        "observable_class_count": 3
+      }
+    },
+    {
+      "id": "M04",
+      "candidate_fixture": "M04-association",
+      "values": [
+        "0",
+        "lambda",
+        "rho"
+      ],
+      "initial": {
+        "left": {
+          "l0": "0",
+          "l1": "0",
+          "l2": "0"
+        },
+        "right": {
+          "r0": "0",
+          "r1": "0",
+          "r2": "0"
+        }
+      },
+      "updates": [
+        {
+          "id": "left_lambda",
+          "side": "left",
+          "target": "l0",
+          "value": "lambda",
+          "mandatory": true
+        },
+        {
+          "id": "right_rho",
+          "side": "right",
+          "target": "r0",
+          "value": "rho",
+          "mandatory": true
+        }
+      ],
+      "policy": {
+        "complete": true,
+        "decisions": [
+          {
+            "id": "d_lambda",
+            "retained": [
+              "left_lambda"
+            ],
+            "waived": [
+              "right_rho"
+            ],
+            "authorization": "M04 explicitly authorizes waiving rho while retaining lambda."
+          },
+          {
+            "id": "d_rho",
+            "retained": [
+              "right_rho"
+            ],
+            "waived": [
+              "left_lambda"
+            ],
+            "authorization": "M04 explicitly authorizes waiving lambda while retaining rho."
+          }
+        ]
+      },
+      "query": "Q",
+      "independent_comparison": "PENDING",
+      "expected": {
+        "policy_status": "SUPPORTED",
+        "observable_status": "DEFINED",
+        "scientific_claim": "INCONCLUSIVE",
+        "outcomes": {
+          "012": {
+            "d_lambda": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "lambda",
+                  "0",
+                  "0"
+                ]
+              }
+            ],
+            "d_rho": [
+              {
+                "tag": "ACCEPT",
+                "values": [
+                  "rho",
+                  "0",
+                  "0"
+                ]
+              }
+            ]
+          }
+        },
+        "observable_class_count": 2
+      }
+    },
+    {
+      "id": "M05",
+      "variants": [
+        {
+          "id": "M05-P",
+          "candidate_fixture": "M04-association",
+          "values": [
+            "0",
+            "lambda",
+            "rho"
+          ],
+          "initial": {
+            "left": {
+              "l0": "0",
+              "l1": "0",
+              "l2": "0"
+            },
+            "right": {
+              "r0": "0",
+              "r1": "0",
+              "r2": "0"
+            }
+          },
+          "updates": [
+            {
+              "id": "left_lambda",
+              "side": "left",
+              "target": "l0",
+              "value": "lambda",
+              "mandatory": true
+            },
+            {
+              "id": "right_rho",
+              "side": "right",
+              "target": "r0",
+              "value": "rho",
+              "mandatory": true
+            }
+          ],
+          "policy": null,
+          "query": "Q",
+          "independent_comparison": "PENDING",
+          "expected": {
+            "policy_status": "UNSUPPORTED",
+            "observable_status": "NOT_EVALUATED",
+            "scientific_claim": "INCONCLUSIVE",
+            "outcomes": null,
+            "observable_class_count": null
+          }
+        },
+        {
+          "id": "M05-O",
+          "candidate_fixture": "F01",
+          "values": [
+            "0",
+            "lambda",
+            "rho"
+          ],
+          "initial": {
+            "left": {
+              "l0": "0",
+              "l1": "0",
+              "l2": "0"
+            },
+            "right": {
+              "r0": "0",
+              "r1": "0",
+              "r2": "0"
+            }
+          },
+          "updates": [
+            {
+              "id": "left_lambda",
+              "side": "left",
+              "target": "l0",
+              "value": "lambda",
+              "mandatory": true
+            }
+          ],
+          "policy": {
+            "complete": true,
+            "decisions": [
+              {
+                "id": "strict",
+                "retained": [
+                  "left_lambda"
+                ],
+                "waived": [],
+                "authorization": "All updates mandatory; no intention loss authorized."
+              }
+            ]
+          },
+          "query": "Q_with_undeclared_extra_property",
+          "independent_comparison": "PENDING",
+          "expected": {
+            "policy_status": "SUPPORTED",
+            "observable_status": "OBSERVABLE_UNDEFINED",
+            "scientific_claim": "INCONCLUSIVE",
+            "outcomes": {
+              "012": {
+                "strict": [
+                  {
+                    "tag": "ACCEPT",
+                    "values": [
+                      "lambda",
+                      "0",
+                      "0"
+                    ]
+                  }
+                ]
+              },
+              "021": {
+                "strict": [
+                  {
+                    "tag": "ACCEPT",
+                    "values": [
+                      "lambda",
+                      "0",
+                      "0"
+                    ]
+                  }
+                ]
+              },
+              "102": {
+                "strict": [
+                  {
+                    "tag": "ACCEPT",
+                    "values": [
+                      "lambda",
+                      "0",
+                      "0"
+                    ]
+                  }
+                ]
+              },
+              "120": {
+                "strict": [
+                  {
+                    "tag": "ACCEPT",
+                    "values": [
+                      "lambda",
+                      "0",
+                      "0"
+                    ]
+                  }
+                ]
+              },
+              "201": {
+                "strict": [
+                  {
+                    "tag": "ACCEPT",
+                    "values": [
+                      "lambda",
+                      "0",
+                      "0"
+                    ]
+                  }
+                ]
+              },
+              "210": {
+                "strict": [
+                  {
+                    "tag": "ACCEPT",
+                    "values": [
+                      "lambda",
+                      "0",
+                      "0"
+                    ]
+                  }
+                ]
+              }
+            },
+            "observable_class_count": null
+          }
+        },
+        {
+          "id": "M05-I",
+          "candidate_fixture": "F01",
+          "values": [
+            "0",
+            "lambda",
+            "rho"
+          ],
+          "initial": {
+            "left": {
+              "l0": "0",
+              "l1": "0",
+              "l2": "0"
+            },
+            "right": {
+              "r0": "0",
+              "r1": "0",
+              "r2": "0"
+            }
+          },
+          "updates": [
+            {
+              "id": "left_lambda",
+              "side": "left",
+              "target": "l0",
+              "value": "lambda",
+              "mandatory": true
+            }
+          ],
+          "policy": {
+            "complete": true,
+            "decisions": [
+              {
+                "id": "strict",
+                "retained": [
+                  "left_lambda"
+                ],
+                "waived": [],
+                "authorization": "All updates mandatory; no intention loss authorized."
+              }
+            ]
+          },
+          "query": "Q",
+          "independent_comparison": "INCOMPLETE",
+          "expected": {
+            "policy_status": "SUPPORTED",
+            "observable_status": "DEFINED",
+            "scientific_claim": "INCONCLUSIVE",
+            "outcomes": {
+              "012": {
+                "strict": [
+                  {
+                    "tag": "ACCEPT",
+                    "values": [
+                      "lambda",
+                      "0",
+                      "0"
+                    ]
+                  }
+                ]
+              },
+              "021": {
+                "strict": [
+                  {
+                    "tag": "ACCEPT",
+                    "values": [
+                      "lambda",
+                      "0",
+                      "0"
+                    ]
+                  }
+                ]
+              },
+              "102": {
+                "strict": [
+                  {
+                    "tag": "ACCEPT",
+                    "values": [
+                      "lambda",
+                      "0",
+                      "0"
+                    ]
+                  }
+                ]
+              },
+              "120": {
+                "strict": [
+                  {
+                    "tag": "ACCEPT",
+                    "values": [
+                      "lambda",
+                      "0",
+                      "0"
+                    ]
+                  }
+                ]
+              },
+              "201": {
+                "strict": [
+                  {
+                    "tag": "ACCEPT",
+                    "values": [
+                      "lambda",
+                      "0",
+                      "0"
+                    ]
+                  }
+                ]
+              },
+              "210": {
+                "strict": [
+                  {
+                    "tag": "ACCEPT",
+                    "values": [
+                      "lambda",
+                      "0",
+                      "0"
+                    ]
+                  }
+                ]
+              }
+            },
+            "observable_class_count": 1
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "accepted_polarity_configurations_per_instance": 262144,
+    "instances": [
+      "star/S_free",
+      "asymmetric tree/S_inc"
+    ],
+    "instance_configuration_pairs": 524288,
+    "tested_candidate_evaluations": 3145728,
+    "reference_relation_classifications": 1024,
+    "reference_candidate_evaluations": 3145728,
+    "record_orders": 23,
+    "record_duplications": 8,
+    "candidate_label_renamings": 468,
+    "material_label_renamings": 144,
+    "vertex_layouts": 2304,
+    "association_presentation_orders": 2160,
+    "outcome_presentation_orders": 2,
+    "execution": "NOT_RUN; phase A bounded checks are separately reported by the oracle."
+  },
+  "limitations": [
+    "No C11 qualification or complete campaign execution in phase A.",
+    "Provenance truth is assumed, not verified.",
+    "No actual historical identity/completeness or general STE/TPI implementation.",
+    "EXP-004 historical completeness remains INCONCLUSIVE.",
+    "EXP-004 material equivalence remains CALLER_ASSUMPTION."
+  ],
+  "serialization_contract": {
+    "schema": "ste-exp007-reference-v1",
+    "identity": "protocol_sha256 is mandatory; metadata is implementation-owned.",
+    "candidates": "candidate_sets contains U_H, C_E and A_E as arrays of relations, each relation an array of concrete [source,target] pairs. Invalid input has null candidate_sets and counts.",
+    "materials": "material.associations retains concrete association pairs, every decision, retained/waived intentions, conjuncts, all accepting witnesses and full 27-row rejection certificates; outcomes retain decision identity.",
+    "observables": "observable_classes partitions full extensional ACCEPT maps and REJECT, retaining association/decision members; null for undefined query or unsupported policy.",
+    "comparison": "Compare exact emitted result fields extensionally. Source/target orientation and provenance snapshot ordering are significant. Duplicate candidates, outcomes, witnesses, decisions and classes fail.",
+    "excluded_work_fields": [
+      "relations_examined",
+      "assignments_examined",
+      "union_assignments_examined"
+    ],
+    "work_independence": "Work counters are optional and ignored by comparison. C11 constructs six distinct-destination triples and direct material outcomes; it must not copy reference work counts.",
+    "limits": {
+      "max_json_bytes": 2000000,
+      "max_selected_cases": 64
+    },
+    "exit_status": {
+      "0": "successful bounded operation or comparison",
+      "1": "self-check or exact comparison failure",
+      "2": "unsupported/malformed CLI input"
+    }
+  }
+}
