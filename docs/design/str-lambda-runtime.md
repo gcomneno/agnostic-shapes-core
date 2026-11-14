@@ -16,6 +16,32 @@ Implementation begins only in later milestones.
 
 ---
 
+## Current status after COLLATZ retirement
+
+The M0 baseline, mathematical material, milestone descriptions, and M6 decision
+below retain their historical context. PETRA and COLLATZ were maintained STR
+consumers at M5/M6. COLLATZ is now retired from the active programme and its
+runtime package has been removed. The proposed COLLATZ work below is historical,
+not an active implementation plan.
+
+Current distribution ownership is:
+
+- `agnostic-shapes-core`: `src/shapes/` and `src/tensor_view/`;
+- `petra-interpretation`: `packages/petra/src/petra/`, depending on
+  `agnostic-shapes-core>=4.0.0,<5.0.0`.
+
+The active runtime dependencies remain `tensor_view -> shapes`,
+`petra -> shapes`, and `petra -> tensor_view`; SHAPES and Tensor View do not
+depend on interpretation packages. PETRA remains active and independent.
+The historical dependency graph in section 23 includes the retired COLLATZ
+consumer and is not the current package inventory.
+
+The `NO_SHARED_PROTOCOL_REQUIRED` decision remains in force. Retirement does
+not alter STR, PETRA semantics, or the proved structural seed below, and does
+not authorize a replacement COLLATZ runtime.
+
+---
+
 ## 1. Goal
 
 Introduce the minimum runtime machinery needed to represent the promoted path:

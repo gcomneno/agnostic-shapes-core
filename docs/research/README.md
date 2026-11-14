@@ -1,5 +1,14 @@
 # PET Research
 
+## COLLATZ retirement status
+
+COLLATZ is retired from the active programme. Its historical research,
+mathematical results, scientific references, and original terminology remain
+preserved as evidence and provenance. The research entries below do not imply
+an active COLLATZ project, maintained runtime, or a plan to revive its APIs.
+Historical runtime paths and maintenance descriptions retain their original
+context; current distribution ownership is recorded in `../reports/STATUS.md`.
+
 This directory contains research material at two distinct levels:
 
 1. **Current PETRA research** — active research directions on the PETRA

@@ -34,6 +34,10 @@ Other future interpretation layers may depend directly on SHAPES without dependi
 
 ASHES and PETRA are independently packaged in this repository.
 
+COLLATZ is retired from the active programme. Its package and CI entries have
+been removed; historical research and release-candidate documentation remain
+preserved. PETRA remains active and independent.
+
 Install the SHAPES structural core:
 
 ```bash

@@ -30,6 +30,13 @@ Tools must not implement structural discovery over opaque integers.
 - `research/shape_first_occurrence.py` — first-occurrence reporting for shapes
 - `research/surface_signature.py` — surface signature helper
 
+## Historical COLLATZ research tool
+
+`research/collatz_like_profile.py` is preserved as a historical research tool
+using retired PETRA/Resolver APIs. It is outside the maintained runtime and CI
+contract; its presence does not imply an active COLLATZ project or current API
+compatibility. The tool is unchanged by COLLATZ package retirement.
+
 ## Historical note
 
 During Phase 10, the historical PET runtime and its operator-side triage

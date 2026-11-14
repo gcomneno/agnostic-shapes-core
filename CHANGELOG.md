@@ -7,6 +7,11 @@ Versioning corrente: `3.y.z`.
 
 ## [Unreleased]
 
+### Removed
+- Retired the COLLATZ interpretation package and its CI installation, lint,
+  type-check, and test entries. Historical COLLATZ research and release-candidate
+  provenance are preserved; SHAPES and the active PETRA package are unchanged.
+
 ## [3.0.0] — 2026-10-05
 
 ### Added

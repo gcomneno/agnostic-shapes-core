@@ -30,7 +30,16 @@ otherwise.
 
 ## Independent projects
 
-ASHES owns the agnostic SHAPES and Tensor View/STR substrate. PETRA and COLLATZ are independent external consumers with their own semantic authority and future release lifecycles. Their current coexistence in this distribution is transitional, not evidence of shared project ownership.
+ASHES owns the agnostic SHAPES and Tensor View/STR substrate. PETRA remains an
+independent active interpretation project with its own semantic authority and
+release lifecycle, packaged separately as `petra-interpretation` in this
+repository. SHAPES does not depend on PETRA.
+
+COLLATZ is retired from the active programme; its historical research and
+mathematical results are preserved without an active runtime package. STE
+remains a separate research consumer, with no transfer of interpretation
+semantics into SHAPES or PETRA. Shared repository location does not establish
+shared project ownership.
 
 See `docs/architecture/0002-project-ownership-boundaries.md`.
 

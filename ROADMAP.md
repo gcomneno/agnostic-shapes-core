@@ -251,7 +251,7 @@ STR
 interpretation domain
 ```
 
-The runtime programme is complete:
+The historical M0–M6 runtime programme was completed:
 
 ```text
 M0  runtime design                  DONE
@@ -269,8 +269,12 @@ The M6 runtime-interface decision is:
 NO_SHARED_PROTOCOL_REQUIRED
 ```
 
-Two maintained STR consumers now exist, but no maintained caller requires
-polymorphic dispatch across them. Their shared architectural contract remains
+At M5/M6, PETRA and COLLATZ were both maintained STR consumers, but no
+maintained caller required polymorphic dispatch across them. COLLATZ has since
+been retired from the active programme and its runtime package removed; PETRA
+remains active. The M5/M6 DONE records and `NO_SHARED_PROTOCOL_REQUIRED`
+decision remain historical evidence, not a commitment to revive COLLATZ.
+Their shared architectural contract remains
 interpretation-owned LAMBDA over STR; no Python base class, `Protocol`,
 registry, or adapter layer is introduced without concrete consumer pressure.
 

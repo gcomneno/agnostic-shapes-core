@@ -19,7 +19,13 @@ Historical PETRA research terminology must not be interpreted automatically as f
 
 ## Independent project ownership
 
-ASHES, PETRA, and COLLATZ are separate projects even while their implementations share this repository. Follow `docs/architecture/0002-project-ownership-boundaries.md` for ownership and physical-extraction constraints.
+ASHES and PETRA remain independent active projects sharing this repository.
+COLLATZ is retired from active ownership; its historical research and provenance
+are preserved. STE remains a separate research consumer and does not define
+SHAPES or PETRA semantics. Retirement does not transfer COLLATZ semantics into
+SHAPES, PETRA, or STE. Follow
+`docs/architecture/0002-project-ownership-boundaries.md` for ownership and
+physical-extraction constraints.
 
 ## Core / interpretation boundary
 

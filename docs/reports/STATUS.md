@@ -2,7 +2,9 @@
 
 ## Current architecture
 
-**Agnostic SHAPES Core (ASHES)** is the maintained project container.
+**Agnostic SHAPES Core (ASHES)** owns the maintained structural substrate.
+PETRA is an independent active project sharing this repository. COLLATZ is
+retired from active ownership; its historical research remains preserved.
 
 **SHAPES** is the interpretation-agnostic structural core.
 
@@ -105,7 +107,7 @@ It must not redefine:
 The maintained PETRA runtime lives under:
 
 ```text
-src/petra/
+packages/petra/src/petra/
 ```
 
 Its current public API exports:
@@ -170,20 +172,15 @@ Resolver does not define SHAPES or PETRA semantics.
 
 ## Distribution and package identity
 
-The maintained distribution name is:
+The active distributions have separate ownership:
 
-```text
-agnostic-shapes-core
-```
+- `agnostic-shapes-core` packages `shapes` and `tensor_view` under `src/`;
+- `petra-interpretation` packages `petra` under `packages/petra/src/petra/`
+  and depends on `agnostic-shapes-core>=4.0.0,<5.0.0`.
 
-The maintained Python packages are:
-
-```text
-shapes
-petra
-```
-
-This distinction is intentional.
+COLLATZ's package and CI entries are retired. Its historical research and
+release-candidate record remain preserved; retirement does not establish
+publication, a Git tag, or a DOI.
 
 The `petra` Python package is the maintained interpretation layer, not a
 compatibility alias for the SHAPES structural core.
@@ -224,6 +221,15 @@ canonical specification and implementation process.
 
 Historical research terminology must not be interpreted automatically as
 current SHAPES or PETRA semantics.
+
+## STE research status
+
+STE remains ongoing research separate from SHAPES and PETRA semantics.
+EXP-007 (issue #415) remains `INCONCLUSIVE`; the Phase C campaign plan is
+`PLANNED_NOT_EXECUTED`. EXP-004 historical completeness remains `INCONCLUSIVE`
+and material equivalence remains `CALLER_ASSUMPTION`. COLLATZ retirement does
+not change these research gates or complete that work. No EXP-007 campaign is
+run as part of this retirement.
 
 ## Sources of truth
 

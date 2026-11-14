@@ -9,6 +9,24 @@ Documentation-only decision. Physical extraction is not yet implemented.
 This ADR defines project ownership, not new SHAPES or interpretation
 semantics. Normative semantics remain in their respective specifications.
 
+## Current-status clarification
+
+The decision and implementation snapshot below are preserved as originally
+accepted. They describe ownership and packaging at that historical point,
+not the current package inventory.
+
+ASHES now independently packages `shapes` and `tensor_view` in
+`agnostic-shapes-core`; PETRA remains active and independently packaged as
+`petra-interpretation` under `packages/petra/`. COLLATZ has been retired from
+active ownership and its eight tracked package files removed. Its research
+and release-candidate provenance remain historical evidence.
+
+SHAPES remains interpretation-agnostic and independent of PETRA and COLLATZ.
+PETRA retains its own semantics and lifecycle over SHAPES. STE remains a
+separate research consumer. Retirement does not transfer COLLATZ ownership or
+semantics to any of these projects and does not authorize physical extraction,
+publication, or changes to historical releases.
+
 ## Decision
 
 ASHES, PETRA, and COLLATZ are three distinct projects.
