@@ -68,7 +68,8 @@ sys.dont_write_bytecode = True
 BASE = Path(__file__).resolve().parent
 ROOT = BASE.parents[2]
 REL = 'tools/research/ste_001/'
-BASELINE = '5bbdc654c81d2d2f7c87adc89269b8c2b3cce630'
+# Published source provenance, not the revision of this driver or a future fix.
+BASELINE = 'e33db15d8f95499337409151d6063127734e079e'
 PLAN_HASH = 'f817bb6267f8eee2ddcc3bc24de498e00d19a412599d3df3ff31ce79f2e592bf'
 LIMIT = 2_000_000
 BATCH = 16
@@ -81,9 +82,9 @@ CURRENT_PINS = {
 }
 ORDER_SUITES = {'record_orders', 'record_duplications', 'association_orders',
                 'material_outcome_orders'}
-# Git baseline identity stays distinct from the reviewed operational adapter.
+# Immutable published content pins remain separate from Git commit identity.
 BASELINE_PINS = {
-    'exp007_reference_adapter.py': '6ebe32a0817a1254d1801f7134f571d920db6589262b07c836c8864ddf3cb5f8',
+    'exp007_reference_adapter.py': '09d94b196c577d52907d6487e863bfdc5b2e826c1bb3f02d82c515a732940b7f',
 }
 BLOCKED = [{
     'obligation': 'complete_scientific_acceptance',
@@ -933,7 +934,9 @@ def validate_sources(contract):
         require(file_hash(BASE / 'test_exp007.historical.c') == historical['sha256'],
                 'archived historical test source identity mismatch')
     else:
-        require(git('rev-parse', 'HEAD').decode().strip() == BASELINE, 'repository HEAD must match authorized baseline')
+        # A later publication may contain this fix. Require published ancestry
+        # and exact pinned source bytes, not a self-referential driver commit.
+        git('merge-base', '--is-ancestor', BASELINE, 'HEAD')
         for name, sha in contract.hashes.items():
             require(digest(git('show', BASELINE + ':' + REL + name)) == BASELINE_PINS.get(name, sha),
                     'baseline artifact identity mismatch: ' + name)
