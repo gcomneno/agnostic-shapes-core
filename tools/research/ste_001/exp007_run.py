@@ -20,9 +20,11 @@ confirmation of discrepancies and every frozen/derived gate, not process success
 
 The two M04 outcome-order cases use an independent Python ordered consumer
 before observation/partitioning; both sides' complete actual receipts are
-checked separately from extensional results. Complete scientific acceptance
-and automatic scientific counterexample certification
-are explicitly unavailable. Replay retains exact deltas for human triage.
+checked separately from extensional results. Aggregate acceptance enumerates
+every frozen requirement from audited evidence. Final reporting qualification
+and automatic scientific counterexample certification remain unavailable.
+Replay retains exact deltas for human triage. Audit exit codes retain their
+integrity/comparison meaning; inspect acceptance separately from exit status.
 
 Storage: exclusively created immutable blobs/chunks; append-only hash-chained
 index.jsonl; fsync files and parent directories before checkpoint credit.
@@ -88,8 +90,8 @@ BASELINE_PINS = {
 }
 BLOCKED = [{
     'obligation': 'complete_scientific_acceptance',
-    'missing_contract': 'All frozen gates require separate complete execution and qualification',
-    'effect': 'Never emitted as accepted by this driver',
+    'missing_contract': 'Verified final EXP007_RESULTS.md / exp007_evidence.json reporting of bounded model-relative scope and all frozen limitations',
+    'effect': 'Frozen full_acceptance.required[10] remains UNVERIFIED; aggregate acceptance is BLOCKED',
 }, {
     'obligation': 'automatic_scientific_counterexample_certification',
     'missing_contract': 'Independent review of input/oracle/transport/replay validity and semantic versus harness triage',
@@ -1006,6 +1008,8 @@ def verify_meta(root, meta, contract):
     require(meta['schema'] == 'ste-exp007-run-v1' and meta['baseline'] == BASELINE
             and meta['plan_sha256'] == PLAN_HASH and meta['protocol'] == contract.plan['protocol'],
             'metadata contract drift')
+    require(set(meta['source_hashes']) == set(contract.hashes) | {'exp007_run.py'},
+            'incomplete source archive identities')
     for name, receipt in meta['source_hashes'].items():
         verify_file(root, receipt, LIMIT)
         require(receipt['sha256'] == contract.hashes.get(name, meta['driver_sha256']), 'pinned source archive drift: ' + name)
@@ -1024,6 +1028,17 @@ def verify_meta(root, meta, contract):
         for key in ('stdin', 'stdout', 'stderr'):
             verify_file(root, process[key])
         require(process['exit_status'] == 0, 'unqualified build process')
+    require(meta['compiler']['version']['argv'] == [meta['compiler']['path'], '--version'],
+            'compiler version command drift')
+    require(set(meta['builds']) == set(meta['binaries']) == {'matrix', 'nonmatrix'},
+            'incomplete build identities')
+    for name, source in (('matrix', 'exp007_campaign.c'), ('nonmatrix', 'exp007_c_adapter.c')):
+        process = meta['builds'][name]
+        require(process['argv'] == [meta['compiler']['path'], *FLAGS,
+                    str(root / 'sources' / source), '-o', str(root / meta['binaries'][name]['path'])]
+                and process['cwd'] == str(root) and process['environment_overrides'] == environment()
+                and not process['timeout'] and process['signal'] is None,
+                'strict reproducible C11 build metadata drift')
 
 
 def verify_execution_identities(root, meta):
@@ -1109,8 +1124,152 @@ def validate_process_batch(root, contract, cases, inputs, ids, side, process):
     require(next(stream, None) is None, side + ': excess/duplicate response')
 
 
+def acceptance_evidence(contract):
+    """Bounded accumulator, populated only after audit reconstructs a case.
+
+    This is independent of credit()/saved ledgers and contains no saved summary
+    claims. Counts describe checked obligations, never estimated process work.
+    """
+    return {s['id']: dict(receipts=0, passed=0, failed=0, blocked=0,
+                          matrix_predicates=dict(tested=0, reference=0))
+            for s in contract.suites}
+
+
+def observe_acceptance(evidence, case, comparison, tested, reference):
+    row = evidence[case['suite_id']]
+    row['receipts'] += 1
+    require(comparison['status'] in ('PASS', 'FAIL', 'BLOCKED'), 'unknown case verdict')
+    row[{'PASS': 'passed', 'FAIL': 'failed', 'BLOCKED': 'blocked'}[comparison['status']]] += 1
+    if comparison['status'] == 'PASS' and case['suite_id'].startswith('matrix_'):
+        for side, response in (('tested', tested), ('reference', reference)):
+            candidate = response['candidate']
+            # Do not turn reported work totals into discharged obligations.
+            predicates = candidate['predicates']
+            require(len(predicates) == 6 and candidate['counts']['U_H'] == 6
+                    and len({canonical(p['association']) for p in predicates}) == 6,
+                    'matrix six-candidate obligation receipt incomplete')
+            row['matrix_predicates'][side] += len(predicates)
+
+
+def evaluate_acceptance(contract, mode, state):
+    """Pure deterministic B2 evaluator of independently audited evidence.
+
+    Callers must use audit(), never deserialize a summary into this function.
+    All eleven conditions retain the frozen text and position. A completed
+    execution, expected negative fixture, mismatch and certified scientific
+    finding are distinct. B3 has no certification input here: replay alone
+    cannot authorize a scientific FAIL. Final reporting has no trustworthy
+    evidence assessment contract yet and therefore cannot PASS, even with complete counts.
+    """
+    requirements = contract.plan['full_acceptance']['required']
+    require(len(requirements) == 11, 'unmapped frozen acceptance requirement')
+    evidence = state['acceptance_evidence']
+    ledger = state['ledgers']
+    require(set(evidence) == set(ledger) == {s['id'] for s in contract.suites},
+            'aggregate suite accounting mismatch')
+    for key, row in evidence.items():
+        saved = ledger[key]
+        require(all(type(row[f]) is int and row[f] >= 0
+                    for f in ('receipts', 'passed', 'failed', 'blocked'))
+                and row['receipts'] <= saved['required']
+                and row['receipts'] == row['passed'] + row['failed'] + row['blocked']
+                and row['passed'] == saved['passed'] and row['failed'] == saved['failed']
+                and row['blocked'] == saved['blocked']
+                and row['passed'] + row['failed'] == saved['compared'],
+                'case comparison / aggregate ledger disagreement: ' + key)
+    require(sum(r['receipts'] for r in evidence.values()) == state['completed_receipts'],
+            'aggregate receipt accounting mismatch')
+    campaign = mode == 'campaign'
+    groups = {'PRIMARY': [], 'AUXILIARY': [], 'DERIVED': []}
+    required_by_suite = {}
+    for suite in contract.suites:
+        key = suite['id']
+        category = ('DERIVED' if key == 'derived_observable_equivalence_laws' else
+                    'PRIMARY' if suite['in_frozen_suite_total'] else 'AUXILIARY')
+        groups[category].append(key)
+        required_by_suite[key] = (suite['required_cases'] if suite['required_cases'] is not None
+                                  else contract.plan['derived_gates']['observable_equivalence']['required_law_checks'])
+    counts = {}
+    for category, keys in groups.items():
+        required = sum(required_by_suite[k] for k in keys)
+        counts[category] = dict(required=required, **{
+            field: sum(evidence[k][field] for k in keys) if campaign else 0
+            for field in ('receipts', 'passed', 'failed', 'blocked')})
+        counts[category]['missing'] = required - counts[category]['passed'] - counts[category]['failed']
+    require({k: v['required'] for k, v in counts.items()} ==
+            dict(PRIMARY=529423, AUXILIARY=1, DERIVED=22764), 'frozen aggregate count drift')
+
+    def gate(keys):
+        if not campaign:
+            return 'UNSATISFIED'
+        if any(evidence[k]['failed'] for k in keys):
+            return 'UNSATISFIED'
+        if any(evidence[k]['blocked'] for k in keys):
+            return 'UNVERIFIED'
+        return ('PASS' if all(evidence[k]['passed'] == required_by_suite[k] for k in keys)
+                else 'UNSATISFIED')
+
+    primary = groups['PRIMARY'] + groups['AUXILIARY']
+    matrix = [k for k in primary if k.startswith('matrix_')]
+    named_transforms = [k for k in primary if k not in matrix]
+    material = ['named_materials', 'material_relabelings', 'association_orders', 'material_outcome_orders']
+    matrix_obligations = {side: sum(evidence[k]['matrix_predicates'][side] for k in matrix)
+                          if campaign else 0 for side in ('tested', 'reference')}
+    matrix_status = gate(matrix)
+    if matrix_status == 'PASS' and any(v != 3145728 for v in matrix_obligations.values()):
+        matrix_status = 'UNVERIFIED'
+    all_execution = campaign and all(v['receipts'] == v['required'] for v in counts.values())
+    all_passed = all(gate(keys) == 'PASS' for keys in groups.values())
+    clean = (state['operational_incidents'] == 0 and state['unindexed_chunk_count'] == 0
+             and state['unfinished_attempt'] is None)
+    pending = sum(v['failed'] for v in counts.values())
+    statuses = [
+        'PASS' if state['identities_verified'] else 'UNVERIFIED',
+        gate(primary), matrix_status, gate(named_transforms), gate(primary),
+        gate(material), gate(material), gate(groups['DERIVED']),
+        gate(['named_candidates', 'named_materials']),
+        'PASS' if all_passed and clean else 'UNSATISFIED',
+        'UNVERIFIED',
+    ]
+    sources = [
+        'verify_meta: frozen/current/historical sources, compiler/interpreter/binaries, strict flags and build commands; audit: raw execution argv/input/output bindings',
+        'audit schedule-prefix receipts; independently recounted case comparisons and paired/side ledgers',
+        'both matrix suite receipts and six distinct compared predicates per side per configuration',
+        'exact frozen named expectations and isolated transport/actual consumption comparisons',
+        'compare_case: exact sets, predicates, diagnostics, assessments and duplicate checks',
+        'compare_case / verify_material_evidence: complete independent outcomes, authorizations, witnesses and 27-map certificates',
+        'compare_case: exact normalized concrete observable maps and association/decision membership after material comparison',
+        'separate derived suite receipts and exact independent law verdicts',
+        'frozen original F13/F12/M05 expectations; EXP004 limitations explicitly retained in this report',
+        'hash-verified journals/raw receipts/replay records, operational incidents and exact coverage gaps',
+        'BLOCKED: no verified final EXP007_RESULTS.md / exp007_evidence.json reporting with explicit bounded model-relative qualification and frozen limitations; final reporting assessment is not implemented',
+    ]
+    rows = [dict(id=f'FA{i + 1:02d}', frozen_index=i, requirement=text,
+                 status=statuses[i], evidence=sources[i],
+                 dependency=('B3: semantic versus harness triage and independent certification of every mismatch'
+                             if i == 9 and pending else None))
+            for i, text in enumerate(requirements)]
+    accepted = all(r['status'] == 'PASS' for r in rows)
+    return dict(requirements=rows, counts=counts,
+                integrity_audit='PASS', execution='EXHAUSTIVE_EXECUTION' if all_execution else
+                    'PARTIAL_EXECUTION' if campaign else 'NON_CAMPAIGN_EXECUTION',
+                primary_completion=gate(groups['PRIMARY']), auxiliary_completion=gate(groups['AUXILIARY']),
+                derived_laws=gate(groups['DERIVED']), matrix_candidate_obligations=matrix_obligations,
+                case_comparison='UNSATISFIED' if pending else 'PASS' if all_passed else 'INCONCLUSIVE',
+                scientific_acceptance='PASS' if accepted else 'BLOCKED' if all_passed and clean else 'INCONCLUSIVE',
+                complete_scientific_acceptance=accepted,
+                scientific_finding='NEGATIVE_RESULT_PENDING_TRIAGE' if pending else 'INCONCLUSIVE',
+                pending_triage_cases=pending, scientific_counterexamples_certified=0,
+                B3_STATUS='OPEN',
+                scientific_claim_scope=contract.plan['full_acceptance']['scientific_claim_scope'],
+                EXP004=contract.plan['negative_and_inconclusive']['EXP004'],
+                reporting_gate='BLOCKED', unresolved_requirements=[r['id'] for r in rows if r['status'] != 'PASS'])
+
+
 def audit(root, meta, contract):
     """Reconstruct only a verified sequential prefix; no ID set proportional to campaign size."""
+    verify_meta(root, meta, contract)
+    acceptance = acceptance_evidence(contract)
     journal = Journal(root)
     ledger = ledgers(contract, meta['mode'])
     scheduler = iter(contract.schedule(meta['mode']))
@@ -1230,6 +1389,7 @@ def audit(root, meta, contract):
                 require(event[side]['comparison_status'] == comparison['status']
                         and event[side]['failure_class'] == (None if comparison['status'] == 'PASS'
                                                             else comparison['triage']), 'side verdict drift')
+            observe_acceptance(acceptance, planned, comparison, tested, reference)
             credit(ledger[planned['suite_id']], comparison['status'])
             completed += 1
             lookahead.pop(0)
@@ -1242,6 +1402,8 @@ def audit(root, meta, contract):
                 replay = decode(journal.read(event['replay']))
                 require(replay['case_id'] == planned['case_id'] and replay['transformed_input_sha256'] == event['input_sha256'],
                         'counterexample replay binding mismatch')
+            else:
+                require(comparison['status'] == 'PASS', 'missing negative/inconclusive replay evidence')
         elif event['kind'] == 'summary':
             require(event['completed_receipts'] == completed and event['ledgers'] == ledger, 'summary ledger mismatch')
             require(event['EXP007_STATUS'] == 'INCONCLUSIVE' and event['complete_scientific_acceptance'] is False,
@@ -1276,7 +1438,8 @@ def audit(root, meta, contract):
                     <= counters['generated'] <= counters['required']
                     and counters['missing'] == counters['required'] - counters['compared'],
                     'coverage ledger invariant failure')
-    return journal, dict(completed_receipts=completed, ledgers=ledger, measured_adapter_work=work,
+    state = dict(completed_receipts=completed, ledgers=ledger, measured_adapter_work=work,
+                         acceptance_evidence=acceptance, identities_verified=True,
                          process_invocations=process_invocations, attempts=attempts,
                          retry_invocations=retry_invocations, raw_process_bytes_written=process_bytes,
                          committed_driver_verifier_work=verifier_work,
@@ -1291,6 +1454,8 @@ def audit(root, meta, contract):
                              reason='Uncommitted suffix: use frozen schedule to expand exact per-ID gaps'),
                          unfinished_attempt=None if active is None or completed == active['start'] + len(active['inputs'])
                              else active['attempt_id'])
+    state['acceptance'] = evaluate_acceptance(contract, meta['mode'], state)
+    return journal, state
 
 
 def execution_hash(meta, case, side):
@@ -1477,9 +1642,11 @@ def summary(meta, state):
     completed = state['completed_receipts']
     frozen = sum(s['compared'] for key, s in state['ledgers'].items()
                  if key not in ('auxiliary_m04_association', 'derived_observable_equivalence_laws'))
-    if meta['mode'] == 'dry-run':
+    if meta['mode'] != 'campaign':
         frozen = 0
-        execution = 'DRY_RUN_QUALIFICATION' if completed == 20 else 'PARTIAL_DRY_RUN'
+        execution = ('DRY_RUN_QUALIFICATION' if completed == 20 else 'PARTIAL_DRY_RUN')
+        if meta['mode'] != 'dry-run':
+            execution = 'NON_CAMPAIGN_EXECUTION'
     else:
         execution = 'EXHAUSTIVE_EXECUTION' if completed == 529424 + 22764 else 'PARTIAL_EXECUTION'
     negative = any(s['failed'] for s in state['ledgers'].values())
@@ -1503,15 +1670,18 @@ def summary(meta, state):
                                'Unreceipted interrupted process work is unavailable; counters cover durable completed process receipts only.')
     logical_matrix = {side: 6 * sum(row['compared'] for key, row in state['ledgers'].items()
                                    if key.startswith('matrix_')) for side in ('tested', 'reference')}
-    if meta['mode'] == 'dry-run':
+    if meta['mode'] != 'campaign':
         logical_matrix = dict(tested=0, reference=0)
     return dict(execution=execution, result='NEGATIVE_RESULT_PENDING_TRIAGE' if negative else 'INCONCLUSIVE_RESULT',
                 qualification=('PASS_BOUNDED_DRY_RUN_ONLY' if meta['mode'] == 'dry-run' and completed == 20
                                and not negative and not state['operational_incidents'] else 'INCONCLUSIVE'),
-                complete_scientific_acceptance=False, EXP007_STATUS='INCONCLUSIVE',
-                CAMPAIGN_EXECUTED='NO' if meta['mode'] == 'dry-run' else 'YES',
+                integrity_audit='PASS',
+                scientific_acceptance=state['acceptance']['scientific_acceptance'],
+                complete_scientific_acceptance=state['acceptance']['complete_scientific_acceptance'],
+                EXP007_STATUS='INCONCLUSIVE',
+                CAMPAIGN_EXECUTED='YES' if meta['mode'] == 'campaign' else 'NO',
                 campaign_primary_compared=frozen,
-                campaign_auxiliary_compared=0 if meta['mode'] == 'dry-run' else state['ledgers']['auxiliary_m04_association']['compared'],
+                campaign_auxiliary_compared=state['ledgers']['auxiliary_m04_association']['compared'] if meta['mode'] == 'campaign' else 0,
                 dry_run_receipts=completed if meta['mode'] == 'dry-run' else 0,
                 measured_work=measured, logical_matrix_candidate_obligations_discharged=logical_matrix,
                 dry_run_candidate_obligations_per_side=completed * 6 if meta['mode'] == 'dry-run' else 0,
