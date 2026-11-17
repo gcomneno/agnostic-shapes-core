@@ -78,7 +78,14 @@ fresh result payload, raising RequestError for invalid selectors. The CLI adds
 framing/identity fields. One adapter belongs to one sequential stream; concurrent
 sharing is unsupported. Returned objects never alias the private geometry cache.
 
-LIMITATIONS: matrix only; no material solver, transformations, arbitrary geometry,
+The separate evaluate_m04_outcome_order Python seam adapts the frozen reference's
+material solver for exactly the two M04 presentation orders. It defers observation
+in that solver, then delivers independently computed full decision items to
+consume_ordered_outcomes before observable evaluation and partitioning. Receipts
+are copied inside the consuming loop; partition_called marks actual invocation,
+outcome_complete marks normal exhaustion. The MATRIX CLI and counters are unchanged.
+
+LIMITATIONS: no new material solver, transformations, arbitrary geometry,
 assessment overrides, orchestrator, ledger, evidence storage, resume or campaign
 execution. The caller owns run/attempt binding, executable/interpreter hashes,
 timeouts and durable raw receipts. No campaign qualification or general history,
@@ -95,6 +102,7 @@ from pathlib import Path
 import re
 import signal
 import sys
+import types
 
 # Set before loading the existing reference, also for imports without python -B.
 sys.dont_write_bytecode = True
@@ -124,6 +132,67 @@ WORK_FIELDS = (
 
 class RequestError(ValueError):
     """A rejected selector/frame, distinct from any scientific outcome."""
+
+
+OUTCOME_HOOK = 'consume_ordered_outcomes/received-item-before-observable'
+
+
+def consume_ordered_outcomes(reference, received, query, *, consumption, work):
+    """Consume full independent items, recording actual entry before observation.
+
+    This function receives no requested permutation and reads no final JSON.
+    Exceptions retain the actual prefix with outcome_complete=False. Internal
+    material maps and memberships become extensional only after consumption.
+    """
+    consumption.update(outcome_hook=OUTCOME_HOOK, partition_called=True,
+                       outcome_complete=False, consumed_outcomes=[])
+    work['outcome_consumer_calls'] = work.get('outcome_consumer_calls', 0) + 1
+    members = {}
+    for position, item in enumerate(received):
+        consumption['consumed_outcomes'].append(dict(position=position, **copy.deepcopy(item)))
+        work['outcomes_consumed'] = work.get('outcomes_consumed', 0) + 1
+        for outcome in item['decision']['outcomes']:
+            work['outcome_observable_calls'] = work.get('outcome_observable_calls', 0) + 1
+            observation = reference.observable(outcome, query)
+            if observation is not None:
+                members.setdefault(reference.stable(observation), []).append(dict(
+                    association=copy.deepcopy(item['association']), decision=item['decision']['id']))
+    consumption['outcome_complete'] = True
+    return [dict(observable=json.loads(key), members=reference.ordered(value))
+            for key, value in sorted(members.items())]
+
+
+def evaluate_m04_outcome_order(reference, material, fixture, candidate, order, *, consumption, work):
+    """Run frozen Python solving code with observation deferred to our consumer.
+
+    Bind a private globals dictionary to the exact existing evaluator code. The
+    sole substituted dependency returns no observation: the frozen 27-map scans,
+    obligations, witnesses and union-predicate checks run unchanged. No module
+    globals are patched, no C results are accepted, and no solver is translated.
+    The real observable is invoked only by consume_ordered_outcomes below.
+    """
+    if (material['id'] != 'M04' or type(order) is not list or len(order) != 2
+            or any(type(i) is not int for i in order) or sorted(order) != [0, 1]):
+        raise RequestError('UNSUPPORTED_OUTCOME_ORDER')
+    evaluator = reference.evaluate_material
+    deferred = types.FunctionType(evaluator.__code__,
+        dict(evaluator.__globals__, observable=lambda outcome, query: None),
+        evaluator.__name__, evaluator.__defaults__, evaluator.__closure__)
+    result = deferred(material, fixture, candidate)
+    if result['policy_status'] != 'SUPPORTED' or len(result['associations']) != 1:
+        raise RequestError('UNSUPPORTED_M04_OUTCOMES')
+    association = result['associations'][0]
+    decisions = association['decisions']
+    if len(decisions) != 2 or {d['id'] for d in decisions} != {'d_lambda', 'd_rho'}:
+        raise RequestError('UNSUPPORTED_M04_DECISIONS')
+    # The basis selects positions in independently computed items; it supplies
+    # neither outcomes nor witnesses. Never reorder the policy/solver itself.
+    by_id = {d['id']: d for d in decisions}
+    basis = ('d_lambda', 'd_rho')
+    offered = (dict(association=association['association'], decision=by_id[basis[i]]) for i in order)
+    result['observable_classes'] = consume_ordered_outcomes(
+        reference, offered, material['query'], consumption=consumption, work=work)
+    return result
 
 
 def canonical(value):
