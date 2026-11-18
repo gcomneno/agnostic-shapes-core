@@ -22,7 +22,8 @@ The two M04 outcome-order cases use an independent Python ordered consumer
 before observation/partitioning; both sides' complete actual receipts are
 checked separately from extensional results. Aggregate acceptance enumerates
 every frozen requirement from audited evidence. Final reporting qualification
-and automatic scientific counterexample certification remain unavailable.
+remains unavailable. B3 supports explicit, evidence-bound independent
+adjudication; automatic scientific counterexample certification is unavailable.
 Replay retains exact deltas for human triage. Audit exit codes retain their
 integrity/comparison meaning; inspect acceptance separately from exit status.
 
@@ -790,8 +791,9 @@ def safe_child(root, relative):
 
 
 class Journal:
-    def __init__(self, root):
+    def __init__(self, root, prefix=None):
         self.root = root
+        self.prefix = prefix
         self.sequence, self.previous = 0, None
 
     def blob(self, raw):
@@ -834,11 +836,14 @@ class Journal:
         index_path = self.root / 'index.jsonl'
         if not index_path.exists():
             return
+        if self.prefix is not None:
+            require(index_prefix(self.root, self.prefix['bytes']) == self.prefix, 'journal prefix drift')
         with index_path.open('rb') as stream:
-            while True:
+            while self.prefix is None or stream.tell() < self.prefix['bytes']:
                 raw = stream.readline(LIMIT + 1)
                 if not raw:
                     break
+                require(self.prefix is None or stream.tell() <= self.prefix['bytes'], 'prefix splits index record')
                 require(raw.endswith(b'\n'), 'torn index: explicit recovery review required; no repair')
                 index = decode(raw)
                 require(index['sequence'] == self.sequence and index['previous_sha256'] == self.previous
@@ -1157,8 +1162,9 @@ def evaluate_acceptance(contract, mode, state):
     Callers must use audit(), never deserialize a summary into this function.
     All eleven conditions retain the frozen text and position. A completed
     execution, expected negative fixture, mismatch and certified scientific
-    finding are distinct. B3 has no certification input here: replay alone
-    cannot authorize a scientific FAIL. Final reporting has no trustworthy
+    finding are distinct. Only B3 records rechecked by audit() can supply
+    certification counts; replay alone cannot authorize a scientific FAIL.
+    Final reporting has no trustworthy
     evidence assessment contract yet and therefore cannot PASS, even with complete counts.
     """
     requirements = contract.plan['full_acceptance']['required']
@@ -1222,7 +1228,17 @@ def evaluate_acceptance(contract, mode, state):
     all_passed = all(gate(keys) == 'PASS' for keys in groups.values())
     clean = (state['operational_incidents'] == 0 and state['unindexed_chunk_count'] == 0
              and state['unfinished_attempt'] is None)
-    pending = sum(v['failed'] for v in counts.values())
+    observed = sum(v['failed'] for v in evidence.values())
+    certification = state.get('certification', dict(original_observed_mismatches=observed,
+        states=dict(PENDING_TRIAGE=observed, REJECTED_AS_HARNESS_ERROR=0,
+                    CERTIFIED_COUNTEREXAMPLE=0, INCONCLUSIVE=0), campaign_credit=0))
+    cert = certification['states']
+    require(set(cert) == set(CERTIFICATION_STATES)
+            and all(type(v) is int and v >= 0 for v in cert.values())
+            and sum(cert.values()) == observed
+            and certification['original_observed_mismatches'] == observed
+            and certification['campaign_credit'] == 0, 'certification accounting drift')
+    pending = cert['PENDING_TRIAGE']
     statuses = [
         'PASS' if state['identities_verified'] else 'UNVERIFIED',
         gate(primary), matrix_status, gate(named_transforms), gate(primary),
@@ -1247,7 +1263,7 @@ def evaluate_acceptance(contract, mode, state):
     rows = [dict(id=f'FA{i + 1:02d}', frozen_index=i, requirement=text,
                  status=statuses[i], evidence=sources[i],
                  dependency=('B3: semantic versus harness triage and independent certification of every mismatch'
-                             if i == 9 and pending else None))
+                             if i == 9 and observed else None))
             for i, text in enumerate(requirements)]
     accepted = all(r['status'] == 'PASS' for r in rows)
     return dict(requirements=rows, counts=counts,
@@ -1255,22 +1271,27 @@ def evaluate_acceptance(contract, mode, state):
                     'PARTIAL_EXECUTION' if campaign else 'NON_CAMPAIGN_EXECUTION',
                 primary_completion=gate(groups['PRIMARY']), auxiliary_completion=gate(groups['AUXILIARY']),
                 derived_laws=gate(groups['DERIVED']), matrix_candidate_obligations=matrix_obligations,
-                case_comparison='UNSATISFIED' if pending else 'PASS' if all_passed else 'INCONCLUSIVE',
+                case_comparison='UNSATISFIED' if observed else 'PASS' if all_passed else 'INCONCLUSIVE',
                 scientific_acceptance='PASS' if accepted else 'BLOCKED' if all_passed and clean else 'INCONCLUSIVE',
                 complete_scientific_acceptance=accepted,
-                scientific_finding='NEGATIVE_RESULT_PENDING_TRIAGE' if pending else 'INCONCLUSIVE',
-                pending_triage_cases=pending, scientific_counterexamples_certified=0,
-                B3_STATUS='OPEN',
+                scientific_finding=('CERTIFIED_BOUNDED_NEGATIVE_RESULT' if cert['CERTIFIED_COUNTEREXAMPLE'] else
+                                    'NEGATIVE_RESULT_PENDING_TRIAGE' if pending else 'INCONCLUSIVE'),
+                original_observed_mismatches=observed, pending_triage_cases=pending,
+                rejected_harness_errors=cert['REJECTED_AS_HARNESS_ERROR'],
+                scientific_counterexamples_certified=cert['CERTIFIED_COUNTEREXAMPLE'],
+                inconclusive_adjudications=cert['INCONCLUSIVE'],
+                certification_counts=cert, B3_STATUS='IMPLEMENTED',
                 scientific_claim_scope=contract.plan['full_acceptance']['scientific_claim_scope'],
                 EXP004=contract.plan['negative_and_inconclusive']['EXP004'],
                 reporting_gate='BLOCKED', unresolved_requirements=[r['id'] for r in rows if r['status'] != 'PASS'])
 
 
-def audit(root, meta, contract):
+def audit(root, meta, contract, index_binding=None, original_driver=None, adjudications=None):
     """Reconstruct only a verified sequential prefix; no ID set proportional to campaign size."""
-    verify_meta(root, meta, contract)
+    verifier = original_driver or sys.modules[__name__]
+    verifier.verify_meta(root, meta, contract)
     acceptance = acceptance_evidence(contract)
-    journal = Journal(root)
+    journal = Journal(root, index_binding)
     ledger = ledgers(contract, meta['mode'])
     scheduler = iter(contract.schedule(meta['mode']))
     completed, first_failure, first_incident = 0, None, None
@@ -1381,7 +1402,7 @@ def audit(root, meta, contract):
                         and receipt['stdout_sha256'] == receipt['stdout']['sha256']
                         and receipt['stderr_sha256'] == process['stderr']['sha256']
                         and receipt['exit_status'] == process['exit_status'], 'side receipt identity drift')
-            comparison = compare_case(contract, planned, inputs, tested, reference)
+            comparison = verifier.compare_case(contract, planned, inputs, tested, reference)
             require(comparison == decode(journal.read(event['comparison'])), 'stored comparison is not reproducible')
             for key, count in comparison['driver_verifier_work'].items():
                 verifier_work[key] += count
@@ -1417,7 +1438,7 @@ def audit(root, meta, contract):
     # Actual process work includes retries/baseline/cache work even when no
     # case checkpoint was committed. Scan raw completed process outputs rather
     # than summing case receipts (which would double-count or lose crash work).
-    second = Journal(root)
+    second = Journal(root, index_binding)
     for event in second.records():
         if event['kind'] == 'processes':
             for side, process in event['processes'].items():
@@ -1445,7 +1466,8 @@ def audit(root, meta, contract):
                          committed_driver_verifier_work=verifier_work,
                          current_audit_verifier_work=verifier_work.copy(),
                          current_audit_case_comparisons=completed,
-                         unindexed_chunk_count=sum(1 for _ in os.scandir(root / 'chunks')) - journal.sequence,
+                         unindexed_chunk_count=(sum(1 for _ in os.scandir(root / 'chunks')) - journal.sequence
+                                                if index_binding is None else 0),
                          operational_incidents=incident_count, blocked_cases=blocked_cases,
                          first_mismatch=first_failure, first_operational_incident=first_incident,
                          missing_tail=dict(first_schedule_ordinal=completed,
@@ -1454,6 +1476,8 @@ def audit(root, meta, contract):
                              reason='Uncommitted suffix: use frozen schedule to expand exact per-ID gaps'),
                          unfinished_attempt=None if active is None or completed == active['start'] + len(active['inputs'])
                              else active['attempt_id'])
+    if adjudications is not None:
+        state['certification'] = audit_adjudications(root, adjudications, contract, meta, verifier)
     state['acceptance'] = evaluate_acceptance(contract, meta['mode'], state)
     return journal, state
 
@@ -1784,6 +1808,739 @@ def replay(root, meta, contract, case_id, destination, timeout):
     return 1 if result['status'] == 'FAIL' or result != previous else 3 if result['status'] == 'BLOCKED' else 0
 
 
+# B3 local record schema v1 (operational, subordinate to the frozen protocol).
+# Operations: adjudication-template creates a PENDING_TRIAGE proposal in a fresh
+# external directory; adjudicate validates and appends a reviewer-edited proposal
+# to a separate external Journal; audit --adjudications rechecks every record.
+# A record has EXACTLY: schema, binding, state, supersedes, review. Its SHA256 is
+# its identity. binding contains full case/inputs (including law operands), side,
+# attempt, metadata/source/executable identities, original receipts/comparison,
+# immutable index prefix {bytes,sha256}, replay root/report/receipts/comparison,
+# concrete discrepancy IDs and independent findings. All are recomputed, never
+# accepted from a summary. review has the fields in REVIEW_FIELDS and explicit
+# reviewer {identity, role, independence_statement, relationship_to_implementations}.
+# Supersedes is the preceding record SHA256 for this case (null only initially).
+# All four states may supersede any earlier state, with a new complete review.
+# History, case FAIL/PASS/BLOCKED, work counters and campaign credit never change.
+#
+# Verification checks supplied concrete relations/maps, NOT a third construction
+# algorithm. Six distinct supplied bijections exhaust the 3! universe. For each
+# supplied decision, every cell has an update or frame equality: a valid witness
+# is unique, while REJECT requires all 27 distinct failing assignments. Checks
+# call neither construction algorithm nor reference decision_obligations().
+#
+# Unsupported: human identity/authenticity/independence or mathematical prose
+# truth proofs; provenance truth; arbitrary models/policies/queries; certification
+# of process/storage corruption without intact original comparison evidence;
+# certification of order/transport/hook-only discrepancies as solver defects;
+# automatic migration, archive rewriting, final-report/FA11 certification.
+# Order/input/transport defects are harness findings. Unsupported concrete
+# checks are BLOCKED and cannot authorize a scientific certificate. Human text
+# must be complete and consistent with checked evidence; it is never a proof.
+ADJUDICATION_SCHEMA = 'ste-exp007-adjudication-v1'
+CERTIFICATION_STATES = ('PENDING_TRIAGE', 'REJECTED_AS_HARNESS_ERROR',
+                        'CERTIFIED_COUNTEREXAMPLE', 'INCONCLUSIVE')
+REVIEW_FIELDS = ('frozen_obligation', 'discrepancy_ids', 'finding_ids',
+                 'mathematical_derivation', 'oracle_validity_analysis',
+                 'harness_transport_exclusion_analysis', 'replay_evidence_references',
+                 'scoped_scientific_conclusion', 'rationale', 'timestamp')
+
+
+def index_prefix(root, length=None):
+    """Hash exact complete index bytes, allowing subsequent appends."""
+    path = root / 'index.jsonl'
+    size = path.stat().st_size if path.exists() else 0
+    length = size if length is None else length
+    require(type(length) is int and 0 <= length <= size, 'invalid journal prefix length')
+    sha, remaining, last = hashlib.sha256(), length, b''
+    if length:
+        with path.open('rb') as stream:
+            while remaining:
+                block = stream.read(min(65536, remaining))
+                require(block, 'truncated journal prefix')
+                sha.update(block)
+                remaining -= len(block)
+                last = block[-1:]
+        require(last == b'\n', 'prefix splits index record')
+    return dict(bytes=length, sha256=sha.hexdigest())
+
+
+def archive_context(root):
+    """Use exact archived comparison code for old observations, without rewriting.
+
+    Current pins and Git ancestry are still checked locally. The archived driver
+    must match metadata and its actual source receipt before loading. It is used
+    for historical comparison only; B3 policy/verifier comes from this runner.
+    """
+    root = external(root)
+    current = Contract()
+    validate_sources(current)
+    meta = decode(read_small(root / 'metadata.json'))
+    for name, receipt in meta['source_hashes'].items():
+        verify_file(root, receipt, LIMIT)
+        require(receipt['path'] == 'sources/' + name, 'noncanonical archived source path')
+        require(receipt['sha256'] == current.hashes.get(name, meta['driver_sha256']),
+                'archived source identity drift')
+    require(set(meta['source_hashes']) == set(current.hashes) | {'exp007_run.py'},
+            'incomplete archived sources')
+    driver = load_module('_exp007_archived_' + meta['driver_sha256'], root / 'sources/exp007_run.py')
+    # load_module intentionally does not install modules in sys.modules.
+    sys.modules[driver.__name__] = driver
+    driver.ROOT = ROOT
+    contract = driver.Contract(root / 'sources')
+    driver.verify_meta(root, meta, contract)
+    return meta, contract, driver
+
+
+def concrete_input_errors(value):
+    """Independent bounded input obligations, including root reachability."""
+    try:
+        snapshots = value['snapshots']
+        for side in ('left', 'right'):
+            snap = snapshots[side]
+            vertices, cells, root = (snap[k] for k in ('vertices', 'occurrences', 'root'))
+            require(len(vertices) == 4 and len(set(vertices)) == 4, 'duplicate/invalid vertices')
+            require(root in vertices and len(cells) == 3 and len(set(cells)) == 3
+                    and set(cells) == set(vertices) - {root}, 'invalid designated root/occurrences')
+            edges = snap['incidence']
+            require(len(edges) == 3 and len({tuple(e) for e in edges}) == 3, 'invalid incidence count')
+            require(all(len(e) == 2 and e[0] in vertices and e[1] in cells and e[0] != e[1]
+                        for e in edges), 'foreign/self/root incidence')
+            for v in cells:
+                # Follow unique parents to the designated root, detecting cycles.
+                visited = set()
+                while v != root:
+                    require(v not in visited, 'cyclic/disconnected incidence')
+                    visited.add(v)
+                    parents = [a for a, b in edges if b == v]
+                    require(len(parents) == 1, 'invalid parent occupancy')
+                    v = parents[0]
+        left, right = snapshots['left'], snapshots['right']
+        require(left['id'] != right['id'] and set(left['vertices']).isdisjoint(right['vertices']),
+                'snapshot identities overlap')
+        require(value['profile'] in ('S_free', 'S_inc')
+                and type(value['assumes_unchanged_incidence']) is bool
+                and (value['profile'] != 'S_inc' or value['assumes_unchanged_incidence']),
+                'undeclared structural profile/assumption')
+        records = value['evidence']
+        require(isinstance(records, list) and len(records) <= 64, 'unbounded evidence')
+        seen = {}
+        for e in records:
+            require(e['source'] in left['occurrences'] and e['target'] in right['occurrences'],
+                    'foreign evidence selector')
+            require(e['polarity'] in ('REQUIRE', 'EXCLUDE') and e['assessment'] in
+                    ('ACCEPTED', 'REJECTED', 'UNRESOLVED'), 'invalid evidence assessment/polarity')
+            p = e['provenance']
+            require(all(isinstance(p[k], str) and p[k].strip() for k in
+                        ('origin', 'source', 'assessment_rule', 'assumed_trust')), 'missing provenance')
+            require(p['scope'] == dict(snapshots=[left['id'], right['id']],
+                    source=e['source'], target=e['target']), 'provenance transport error')
+            require(isinstance(e['id'], str) and e['id'].strip()
+                    and (e['id'] not in seen or seen[e['id']] == e), 'conflicting record identity')
+            seen[e['id']] = e
+        return []
+    except (IntegrityError, KeyError, TypeError, ValueError) as error:
+        return [str(error)]
+
+
+def concrete_transport_errors(contract, case, inputs):
+    """Recheck input transport without oracle transport/renaming functions."""
+    if case['count_class'] == 'DERIVED':
+        kind, ranks = law_ranks(case['variant_rank'])
+        expected = dict(original=None, transformed=None, transformation=None,
+                        law=dict(law=kind, ranks=ranks,
+                                 operands=[law_operand(r) for r in ranks if r is not None]))
+        return presentation_equal(expected, inputs, '$.inputs')
+    original = inputs['original']
+    wanted = copy.deepcopy(original)
+    suite, rank = case['suite_id'], case['variant_rank']
+    maps = {s: {h: h for h in [original['snapshots'][s]['root'],
+                              *original['snapshots'][s]['occurrences']]} for s in ('left', 'right')}
+    record_order = association_order = outcome_order = None
+    if suite in ('candidate_relabelings', 'material_relabelings'):
+        for s, r in zip(('left', 'right'), (rank // 6, rank % 6)):
+            cells = original['snapshots'][s]['occurrences']
+            maps[s].update(zip(cells, [cells[i] for i in permutation(3, r)]))
+            snap = wanted['snapshots'][s]
+            for field in ('vertices', 'occurrences'):
+                snap[field] = [maps[s][h] for h in snap[field]]
+            snap['incidence'] = [[maps[s][a], maps[s][b]] for a, b in snap['incidence']]
+            if wanted['material'] is not None:
+                wanted['material']['initial'][s] = {maps[s][h]: v for h, v in
+                                                   original['material']['initial'][s].items()}
+        for e in wanted['evidence']:
+            e['source'], e['target'] = maps['left'][e['source']], maps['right'][e['target']]
+            e['provenance']['scope'].update(source=e['source'], target=e['target'])
+        if wanted['material'] is not None:
+            for u in wanted['material']['updates']:
+                u['target'] = maps[u['side']][u['target']]
+    elif suite == 'vertex_layouts':
+        for s, r in zip(('left', 'right'), (rank // 24, rank % 24)):
+            vertices = original['snapshots'][s]['vertices']
+            wanted['snapshots'][s]['vertices'] = [vertices[i] for i in permutation(4, r)]
+    elif suite in ('record_orders', 'record_duplications'):
+        n = len(original['evidence'])
+        record_order = (permutation(n, rank) if suite == 'record_orders' else
+                        [i for i in range(n) for _ in range(2)])
+        wanted['evidence'] = [original['evidence'][i] for i in record_order]
+    elif suite == 'association_orders':
+        association_order = permutation(6, rank)
+    elif suite == 'material_outcome_orders':
+        outcome_order = permutation(2, rank)
+    elif suite.startswith('matrix_'):
+        # Verify each base-4 pair and its complete declarative provenance.
+        wanted['evidence'] = []
+        emission = contract.plan['input_encoding']['record_emission']
+        token = emission['instance_tokens'][case['selector']]
+        for i, (a, b) in enumerate(contract.plan['input_encoding']['pair_order']):
+            digit = rank // 4**i % 4
+            for polarity, bit in (('REQUIRE', 1), ('EXCLUDE', 2)):
+                if digit & bit:
+                    fields = dict(instance_token=token, config_id=rank, i=i, polarity=polarity)
+                    p = emission['provenance']
+                    wanted['evidence'].append(dict(id=emission['id_format'].format(**fields),
+                        source=a, target=b, polarity=polarity, assessment='ACCEPTED',
+                        provenance=dict(origin=p['origin'], source=p['source_format'].format(**fields),
+                            assessment_rule=p['assessment_rule'], assumed_trust=p['assumed_trust'],
+                            scope=dict(snapshots=['snapshot_L', 'snapshot_R'], source=a, target=b))))
+    transform = dict(suite=suite, left_transport=maps['left'], right_transport=maps['right'],
+                     left_inverse={v: k for k, v in maps['left'].items()},
+                     right_inverse={v: k for k, v in maps['right'].items()}, composed=False,
+                     left_vertex_layout=wanted['snapshots']['left']['vertices'],
+                     right_vertex_layout=wanted['snapshots']['right']['vertices'])
+    expected = dict(original=original, transformed=wanted, transformation=transform,
+                    record_order=record_order, association_order=association_order, outcome_order=outcome_order)
+    return presentation_equal(expected, inputs, '$.inputs')
+
+
+def concrete_verification(case, inputs, response):
+    """Validate ONLY supplied evidence against frozen finite obligations.
+
+    No candidate/material construction, oracle calls, expected-output tables or
+    decision_obligations. Missing or unsupported structure fails closed.
+    """
+    failures, blocked = [], []
+    def check(path, expected, actual):
+        if canonical(expected) != canonical(actual):
+            failures.append(dict(path=path, kind='CONCRETE_OBLIGATION', expected=expected, actual=actual))
+    def collection(rows, path, relation=False):
+        values = [canonical(sorted(r) if relation else r) for r in rows]
+        check(path + '.unique', len(values), len(set(values)))
+        return set(values)
+    def markers(rows, relation=False):
+        return sorted(canonical(sorted(r) if relation else r).decode() for r in rows)
+    def sets(path, expected, actual, relation=False):
+        a, b = markers(expected, relation), markers(actual, relation)
+        check(path + '.unique', len(b), len(set(b)))
+        check(path, a, b)
+    try:
+        if case['count_class'] == 'DERIVED':
+            law = inputs['law']
+            ops = law['operands']
+            pairs = [(0, 0)] if len(ops) == 1 else [(0, 1), (1, 0)] if len(ops) == 2 else [(0, 1), (1, 2), (0, 2)]
+            exact = [ops[a] == ops[b] for a, b in pairs]
+            expected = dict(law=law['law'], operands=[dict(rank=r, observable=o) for r, o in
+                zip([r for r in law['ranks'] if r is not None], ops)], operation_results=exact,
+                expected_results=exact, law_holds=True, operation_matches_extensional_equality=True)
+            for k, v in expected.items():
+                check('$.law.' + k, v, response['law'][k])
+            return dict(status='PASS', violations=failures, blocked=blocked)
+        value = inputs['transformed']
+        invalid = concrete_input_errors(value)
+        row = response if case['suite_id'].startswith('matrix_') else response['result']
+        candidate = row['candidate']
+        if invalid:
+            if not case['selector'].startswith('F13-'):
+                blocked.append('invalid input outside the intentional frozen F13 cases: ' + str(invalid))
+            else:
+                for k, v in dict(status='UNSUPPORTED', diagnostics=['INVALID_INPUT'], conditional=None,
+                                 candidate_sets=None, counts=None, predicates=None,
+                                 evidence_records=None, assessment_counts=None).items():
+                    check('$.candidate.' + k, v, candidate[k])
+            return dict(status='BLOCKED' if blocked else 'PASS', violations=failures, blocked=blocked)
+        left, right = (value['snapshots'][s] for s in ('left', 'right'))
+        universe = candidate['candidate_sets']['U_H']
+        check('$.candidate.status', 'SUPPORTED', candidate['status'])
+        check('$.candidate.candidate_sets.U_H.cardinality', 6, len(universe))
+        collection(universe, '$.candidate.candidate_sets.U_H', True)
+        accepted = [e for e in value['evidence'] if e['assessment'] == 'ACCEPTED']
+        expected_members = {'C_E': [], 'A_E': []}
+        predicates = []
+        for phi in universe:
+            valid = (len(phi) == 3 and len({a for a, b in phi}) == 3 and len({b for a, b in phi}) == 3
+                     and {a for a, b in phi} == set(left['occurrences'])
+                     and {b for a, b in phi} == set(right['occurrences']))
+            check('$.candidate.candidate_sets.U_H.bijection', True, valid)
+            if not valid:
+                blocked.append('cannot verify coverage from malformed supplied universe')
+                continue
+            pairs = {tuple(p) for p in phi}
+            evidence = all(((e['source'], e['target']) in pairs) == (e['polarity'] == 'REQUIRE') for e in accepted)
+            extension = dict(phi, **{left['root']: right['root']})
+            structural = (value['profile'] == 'S_free' or
+                {(extension[a], extension[b]) for a, b in left['incidence']} == {tuple(e) for e in right['incidence']})
+            predicates.append(dict(association=sorted(phi), evidence_satisfied=evidence, structure_satisfied=structural))
+            if evidence:
+                expected_members['C_E'].append(phi)
+                if structural:
+                    expected_members['A_E'].append(phi)
+        for name, members in expected_members.items():
+            sets('$.candidate.candidate_sets.' + name, members, candidate['candidate_sets'][name], True)
+        # Supplied universe verification uses the finite 3! cardinality argument;
+        # it never generates a new candidate or searches for an association.
+        sets('$.candidate.predicates', predicates,
+             [dict(p, association=sorted(p['association'])) for p in candidate['predicates']])
+        check('$.candidate.counts', {k: len(v) for k, v in candidate['candidate_sets'].items()}, candidate['counts'])
+        counts = {s: sum(e['assessment'] == s for e in value['evidence']) for s in ('ACCEPTED', 'REJECTED', 'UNRESOLVED')}
+        check('$.candidate.assessment_counts', counts, candidate['assessment_counts'])
+        check('$.candidate.evidence_records', value['evidence'], candidate['evidence_records'])
+        check('$.candidate.conditional', bool(counts['UNRESOLVED']), candidate['conditional'])
+        diagnostics = ([] if value['evidence'] else ['MISSING_EVIDENCE'])
+        if counts['UNRESOLVED']:
+            diagnostics.append('ASSESSMENT_UNRESOLVED')
+        if not expected_members['C_E']:
+            diagnostics.append('EVIDENCE_INCONSISTENT')
+        elif not expected_members['A_E']:
+            diagnostics.append('STRUCTURALLY_UNSATISFIABLE')
+        check('$.candidate.diagnostics', sorted(diagnostics), candidate['diagnostics'])
+        material = value['material']
+        if material is None:
+            return dict(status='BLOCKED' if blocked else 'PASS', violations=failures, blocked=blocked)
+        result = row['material']
+        check('$.material.scientific_claim', 'INCONCLUSIVE', result['scientific_claim'])
+        check('$.material.independent_comparison', material['independent_comparison'], result['independent_comparison'])
+        if material['policy'] is None:
+            for k, v in dict(policy_status='UNSUPPORTED', observable_status='NOT_EVALUATED',
+                             diagnostics=['POLICY_UNSUPPORTED'], associations=None, observable_classes=None).items():
+                check('$.material.' + k, v, result[k])
+            return dict(status='BLOCKED' if blocked else 'PASS', violations=failures, blocked=blocked)
+        require(material['values'] == ['0', 'lambda', 'rho'] and material['policy']['complete'] is True,
+                'unsupported material domain/policy')
+        for s in ('left', 'right'):
+            require(material['initial'][s] == {h: '0' for h in value['snapshots'][s]['occurrences']},
+                    'unsupported initial material')
+        sources = left['occurrences']
+        domain = {canonical(dict(zip(sources, vals))) for vals in itertools.product(('0', 'lambda', 'rho'), repeat=3)}
+        declared = material['policy']['decisions']
+        updates = material['updates']
+        require(len({d['id'] for d in declared}) == len(declared) and 1 <= len(declared) <= 2,
+                'unsupported decision identities')
+        require(len({u['id'] for u in updates}) == len(updates) and 1 <= len(updates) <= 2,
+                'unsupported update identities')
+        for u in updates:
+            require(u['mandatory'] is True and u['value'] in material['values']
+                    and u['target'] in value['snapshots'][u['side']]['occurrences'], 'unsupported update')
+        associations = result['associations']
+        sets('$.material.associations.members', expected_members['A_E'], [a['association'] for a in associations], True)
+        members = {}
+        for ai, a in enumerate(associations):
+            ap = f'$.material.associations[{ai}]'
+            inverse = {r: l for l, r in a['association']}
+            sets(ap + '.decisions.ids', [d['id'] for d in declared], [d['id'] for d in a['decisions']])
+            union, all_outcomes = {}, []
+            for di, d in enumerate(a['decisions']):
+                dp = ap + f'.decisions[{di}]'
+                policy = next(p for p in declared if p['id'] == d['id'])
+                ids = {u['id'] for u in updates}
+                retained, waived = policy['retained'], policy['waived']
+                require(len(set(retained)) == len(retained) and len(set(waived)) == len(waived)
+                        and not set(retained) & set(waived) and set(retained) | set(waived) == ids,
+                        'unsupported retention/loss partition')
+                check(dp + '.authorization', policy['authorization'], d['authorization'])
+                for name, selected in (('retained_intentions', retained), ('waived_intentions', waived)):
+                    sets(dp + '.' + name, [u for u in updates if u['id'] in selected], d[name])
+                obligations = []
+                for u in updates:
+                    if u['id'] in retained:
+                        target = u['target'] if u['side'] == 'left' else inverse[u['target']]
+                        obligations.append(dict(id='update:' + u['id'], kind='UPDATE', intention=u['id'],
+                            side=u['side'], selector=u['target'], target=target, value=u['value']))
+                targets = {o['target'] for o in obligations}
+                obligations += [dict(id='preserve:' + h, kind='PRESERVE', target=h, value='0')
+                                for h in sources if h not in targets]
+                sets(dp + '.obligations', obligations, d['obligations'])
+                witness_maps = []
+                for wi, w in enumerate(d['witnesses']):
+                    wp = dp + f'.witnesses[{wi}]'
+                    valid = canonical(w['material']) in domain and all(w['material'].get(o['target']) == o['value'] for o in obligations)
+                    check(wp + '.valid', True, valid)
+                    sets(wp + '.satisfied', [o['id'] for o in obligations], w['satisfied'])
+                    witness_maps.append(w['material'])
+                # Equality/frame conditions determine every cell, so one valid
+                # supplied witness is complete. No accepting assignment search.
+                if d['outcomes'] == [dict(tag='REJECT')]:
+                    check(dp + '.witnesses', [], d['witnesses'])
+                    certificate = d['rejection_certificate']
+                    if not isinstance(certificate, list):
+                        check(dp + '.rejection_certificate', '27 distinct failing concrete maps', certificate)
+                        certificate = []
+                    maps = [canonical(r['material']) for r in certificate]
+                    check(dp + '.rejection_certificate.coverage', sorted(x.decode() for x in domain),
+                          sorted(x.decode() for x in maps))
+                    for ri, r in enumerate(certificate):
+                        require(isinstance(r, dict) and set(r) == {'material', 'violated'}
+                                and isinstance(r['material'], dict) and isinstance(r['violated'], list)
+                                and all(isinstance(identifier, str) for identifier in r['violated']),
+                                'malformed rejection certificate row')
+                        violated = sorted(o['id'] for o in obligations if r['material'].get(o['target']) != o['value'])
+                        check(dp + f'.rejection_certificate[{ri}].nonempty', True, bool(violated))
+                        # Conjuncts form an unordered collection; retain exact
+                        # contents and reject duplicates before set comparison.
+                        sets(dp + f'.rejection_certificate[{ri}].violated', violated, r['violated'])
+                else:
+                    check(dp + '.witnesses.cardinality', 1, len(witness_maps))
+                    sets(dp + '.outcomes', [dict(tag='ACCEPT', material=m) for m in witness_maps], d['outcomes'])
+                    check(dp + '.rejection_certificate', None, d['rejection_certificate'])
+                sets(dp + '.W_phi_d', witness_maps, d['W_phi_d'])
+                union.update({canonical(m): m for m in witness_maps})
+                for outcome in d['outcomes']:
+                    all_outcomes.append(dict(decision=d['id'], outcome=outcome))
+                    if material['query'] == 'Q':
+                        members.setdefault(canonical(outcome), []).append(dict(association=sorted(a['association']), decision=d['id']))
+            sets(ap + '.W_phi', list(union.values()), a['W_phi'])
+            check(ap + '.rejected_under_all_decisions', not bool(union), a['rejected_under_all_decisions'])
+            sets(ap + '.outcomes', all_outcomes, a['outcomes'])
+        defined = material['query'] == 'Q'
+        check('$.material.policy_status', 'SUPPORTED', result['policy_status'])
+        check('$.material.observable_status', 'DEFINED' if defined else 'OBSERVABLE_UNDEFINED', result['observable_status'])
+        md = [] if defined else ['OBSERVABLE_UNDEFINED']
+        if material['independent_comparison'] == 'INCOMPLETE':
+            md.append('INDEPENDENT_COMPARISON_INCOMPLETE')
+        if counts['UNRESOLVED']:
+            md.append('ASSESSMENT_UNRESOLVED')
+        if not expected_members['A_E']:
+            md.append('NO_ADMISSIBLE_ASSOCIATIONS')
+        check('$.material.diagnostics', sorted(md), result['diagnostics'])
+        if not defined:
+            check('$.material.observable_classes', None, result['observable_classes'])
+        else:
+            classes = result['observable_classes']
+            collection([c['observable'] for c in classes], '$.material.observable_classes')
+            check('$.material.observable_classes.keys', sorted(k.decode() for k in members),
+                  sorted(canonical(c['observable']).decode() for c in classes))
+            for ci, c in enumerate(classes):
+                sets(f'$.material.observable_classes[{ci}].members', members.get(canonical(c['observable']), []),
+                     [dict(m, association=sorted(m['association'])) for m in c['members']])
+    except (IntegrityError, KeyError, TypeError, ValueError, StopIteration) as error:
+        blocked.append('incomplete/unsupported concrete evidence: ' + str(error))
+    return dict(status='BLOCKED' if blocked else 'PASS', violations=failures, blocked=blocked)
+
+
+def verified_case(root, meta, contract, driver, case_id, prefix):
+    """Reconstruct the immutable prefix and locate its original FAIL receipt."""
+    audit(root, meta, contract, index_binding=prefix, original_driver=driver)
+    found, attempt, processes = None, None, None
+    journal = Journal(root, prefix)
+    for event in journal.records():
+        if event['kind'] == 'attempt':
+            attempt, processes = event, None
+        elif event['kind'] == 'processes':
+            processes = event
+        elif event['kind'] == 'case' and event['case']['case_id'] == case_id:
+            require(found is None, 'duplicate original case')
+            inputs = decode(journal.read(event['inputs']))
+            rows = {s: read_segment(root, event[s]['stdout']) for s in ('tested', 'reference')}
+            comparison = driver.compare_case(contract, event['case'], inputs, rows['tested'], rows['reference'])
+            require(comparison['status'] == 'FAIL' and comparison['discrepancies'],
+                    'adjudication requires an observed original mismatch')
+            found = dict(case_event=event, attempt=attempt, processes=processes,
+                         inputs=inputs, comparison=comparison, rows=rows)
+    require(found is not None, 'original case absent from journal prefix')
+    return found
+
+
+def verified_replay(root, replay_root, meta, contract, driver, original):
+    """Read complete raw replay evidence; never trust a reproduced flag."""
+    replay_root = external(replay_root)
+    require(not replay_root.is_relative_to(root) and not root.is_relative_to(replay_root),
+            'replay evidence must be separate from the run archive')
+    report_path = replay_root / 'replay.json'
+    raw = read_small(report_path)
+    report = decode(raw)
+    saved, inputs, case = original['case_event'], original['inputs'], original['case_event']['case']
+    require(report['mode'] == 'REPLAY_ONLY' and report['campaign_credit'] == 0
+            and report['case_id'] == case['case_id'] and report['saved_run_id'] == meta['run_id']
+            and report['metadata_sha256'] == file_hash(root / 'metadata.json')
+            and report['original_receipt'] == saved, 'replay original identity drift')
+    require(decode(Journal(replay_root).read(report['original_inputs'])) == inputs, 'replay full input drift')
+    require(report['previous_comparison'] == original['comparison'], 'replay previous comparison drift')
+    require(set(report['processes']) == {'tested', 'reference'}, 'replay missing side')
+    commands = commands_for(root, meta, case)
+    rows, request_ids = {}, []
+    for i, side in enumerate(('tested', 'reference')):
+        p = report['processes'][side]
+        for k in ('stdin', 'stdout', 'stderr'):
+            verify_file(replay_root, p[k])
+        require(p['argv'] == commands[i] and p['cwd'] == str(replay_root)
+                and p['environment_overrides'] == environment() and p['exit_status'] == 0
+                and p['signal'] is None and p['timeout'] is False, 'replay command/process binding drift')
+        stream = list(output_lines(replay_root, p['stdout']))
+        require(len(stream) == 1, 'duplicate/missing replay response')
+        row = decode(stream[0][0])
+        request_id = row['request_id']
+        request_ids.append(request_id)
+        validate_process_batch(replay_root, contract, [case], [inputs], [request_id], side, p)
+        rows[side] = row
+    require(len(set(request_ids)) == 1, 'replay paired request identity drift')
+    comparison = driver.compare_case(contract, case, inputs, rows['tested'], rows['reference'])
+    require(report['comparison'] == comparison, 'replay stored comparison does not match raw receipts')
+    return dict(root=str(replay_root), report=dict(path='replay.json', bytes=len(raw), sha256=digest(raw)),
+                inputs=report['original_inputs'], processes=report['processes'], comparison=comparison,
+                reproduced=(comparison == original['comparison']), rows=rows)
+
+
+def finding_obligation(path):
+    if path.startswith('$.law'):
+        return 'FA08'
+    if 'observable_classes' in path:
+        return 'FA07'
+    if path.startswith('$.material'):
+        return 'FA06'
+    return 'FA05'
+
+
+def discrepancy_covers(discrepancy, finding):
+    """Only attach independent findings to an actually observed discrepancy."""
+    path = finding['path']
+    other = discrepancy.get('path', '')
+    for prefix in ('$.tested.result', '$.reference.result', '$.tested', '$.reference'):
+        if other.startswith(prefix):
+            other = '$' + other[len(prefix):]
+            break
+    if other and (path == other or path.startswith(other + '.') or path.startswith(other + '[')
+                  or other.startswith(path + '.') or other.startswith(path + '[')):
+        return True
+    if discrepancy.get('kind') == 'EXACT_RESULT_MISMATCH':
+        return any(path.startswith('$.' + f + '.') for f in discrepancy['fields'])
+    field = discrepancy.get('field')
+    return bool(field and path.startswith('$.candidate.candidate_sets.' + field))
+
+
+def independent_assessment(contract, original):
+    case, inputs, rows = original['case_event']['case'], original['inputs'], original['rows']
+    harness = concrete_transport_errors(contract, case, inputs)
+    blocked, scientific = [], {}
+    if case['count_class'] != 'DERIVED':
+        errors = concrete_input_errors(inputs['transformed'])
+        if errors and not case['selector'].startswith('F13-'):
+            harness.append(dict(path='$.input', kind='INVALID_TEST_INPUT', actual=errors))
+        if case['suite_id'].startswith('matrix_'):
+            value = inputs['transformed']
+            expected = {k: value[k] for k in ('snapshots', 'profile', 'assumes_unchanged_incidence')}
+            expected['pair_states'] = [case['variant_rank'] // 4**i % 4 for i in range(9)]
+            for s, row in rows.items():
+                harness += input_equal(expected, row['input'], '$.' + s + '.input')
+        else:
+            harness += input_equal(inputs['transformed'], rows['tested']['input'], '$.tested.input')
+            harness += presentation_equal(inputs['transformation'], rows['tested']['transformation'], '$.transformation')
+            expected_records = [dict(position=i, record=r) for i, r in enumerate(inputs['transformed']['evidence'])]
+            harness += presentation_equal(expected_records, rows['tested']['consumption']['received_records'], '$.consumed_records')
+            if not rows['tested']['consumption'].get('candidate_called') or not rows['tested']['consumption'].get('record_hook'):
+                blocked.append('candidate consumption instrumentation missing')
+            # Existing comparison's trace deltas have already been reproduced
+            # from raw receipts. Classify their exact supplied order/transport
+            # failures as harness evidence, never as construction falsification.
+            for d in original['comparison']['discrepancies']:
+                if any(token in d.get('path', '') for token in
+                       ('consumed_', '.consumption', 'transported_baseline', 'paired_consumed')):
+                    harness.append(d)
+    for side, row in rows.items():
+        scientific[side] = concrete_verification(case, inputs, row)
+        blocked += [side + ': ' + b for b in scientific[side]['blocked']]
+    # Independently validate supplied comparison baselines as evidence too.
+    if rows['reference'].get('baseline') is not None:
+        base_inputs = dict(inputs, transformed=inputs['original'])
+        base_case = dict(case, suite_id='named_materials' if inputs['original']['material'] else 'named_candidates')
+        baseline = concrete_verification(base_case, base_inputs, dict(result=rows['reference']['baseline']))
+        if baseline['violations'] or baseline['blocked']:
+            blocked.append('independent original oracle baseline invalid/incomplete')
+    findings = []
+    for side, check in scientific.items():
+        for failure in check['violations']:
+            findings.append(dict(category='SCIENTIFIC', side=side,
+                                 obligation_id=finding_obligation(failure['path']), detail=failure))
+    for failure in harness:
+        findings.append(dict(category='HARNESS', side='paired', obligation_id='FA04', detail=failure))
+    for f in findings:
+        f['id'] = digest(canonical(f))
+    return dict(checks=scientific, findings=findings, blocked=blocked,
+                status='BLOCKED' if blocked else 'VERIFIED')
+
+
+def adjudication_binding(root, meta, contract, driver, case_id, side, replay_root, prefix=None):
+    require(side in ('tested', 'reference'), 'adjudication side must be explicit')
+    prefix = index_prefix(root) if prefix is None else prefix
+    require(index_prefix(root, prefix['bytes']) == prefix, 'journal prefix identity mismatch')
+    original = verified_case(root, meta, contract, driver, case_id, prefix)
+    repeated = verified_replay(root, replay_root, meta, contract, driver, original)
+    assessment = independent_assessment(contract, original)
+    replay_original = dict(original, rows=repeated.pop('rows'))
+    replay_assessment = independent_assessment(contract, replay_original)
+    # Reference framing/request IDs may differ on replay; only semantic
+    # checks and the original discrepancy must match, not process timestamps.
+    discrepancies = [dict(id=f'{i}:{digest(canonical(d))}', detail=d)
+                     for i, d in enumerate(original['comparison']['discrepancies'])]
+    return dict(run_root=str(root), run_id=meta['run_id'], side=side,
+        metadata=dict(path='metadata.json', bytes=(root / 'metadata.json').stat().st_size,
+                      sha256=file_hash(root / 'metadata.json')),
+        identities=meta, journal_prefix=prefix, case=original['case_event']['case'],
+        attempt_id=original['case_event']['attempt_id'], original_attempt=original['attempt'],
+        original_processes=original['processes'], original_receipt=original['case_event'],
+        inputs=original['inputs'], comparison=original['comparison'], discrepancies=discrepancies,
+        replay=repeated, independent=assessment, replay_independent=replay_assessment)
+
+
+def validate_adjudication(record, binding, contract):
+    require(set(record) == {'schema', 'binding', 'state', 'supersedes', 'review'}
+            and record['schema'] == ADJUDICATION_SCHEMA, 'unknown adjudication schema/fields')
+    require(canonical(record['binding']) == canonical(binding), 'immutable adjudication binding drift')
+    state, review = record['state'], record['review']
+    require(state in CERTIFICATION_STATES, 'unknown certification state')
+    require(record['supersedes'] is None or isinstance(record['supersedes'], str)
+            and len(record['supersedes']) == 64, 'invalid supersession identity')
+    if state == 'PENDING_TRIAGE' and review is None:
+        return
+    require(isinstance(review, dict) and set(review) == set(REVIEW_FIELDS) | {'reviewer'},
+            'incomplete independent adjudication')
+    reviewer = review['reviewer']
+    require(isinstance(reviewer, dict) and set(reviewer) == {
+        'identity', 'role', 'independence_statement', 'relationship_to_implementations'},
+        'explicit reviewer identity and independence statement required; boolean independence is insufficient')
+    require(all(isinstance(reviewer[k], str) and reviewer[k].strip() for k in
+                ('identity', 'role', 'independence_statement')), 'reviewer statement missing')
+    relationships = reviewer['relationship_to_implementations']
+    require(isinstance(relationships, dict) and set(relationships) == {'tested', 'reference', 'driver'}
+            and all(isinstance(v, str) and v.strip() for v in relationships.values()),
+            'reviewer relationships must be explicitly stated, never inferred from a boolean')
+    for field in ('mathematical_derivation', 'oracle_validity_analysis', 'harness_transport_exclusion_analysis',
+                  'rationale', 'timestamp'):
+        require(isinstance(review[field], str) and review[field].strip(), 'review text missing: ' + field)
+    stamp = datetime.datetime.fromisoformat(review['timestamp'])
+    require(stamp.tzinfo is not None and stamp.utcoffset() == datetime.timedelta(0), 'review timestamp must be UTC')
+    obligation = review['frozen_obligation']
+    require(isinstance(obligation, dict) and set(obligation) == {'id', 'requirement', 'protocol_sha256'},
+            'frozen obligation reference required')
+    allowed = {f'FA{i + 1:02d}': text for i, text in enumerate(contract.plan['full_acceptance']['required'])}
+    require(obligation['id'] in allowed and obligation['requirement'] == allowed[obligation['id']]
+            and obligation['protocol_sha256'] == contract.plan['protocol']['sha256'], 'frozen obligation drift')
+    ids = review['discrepancy_ids']
+    actual = {d['id']: d['detail'] for d in binding['discrepancies']}
+    require(isinstance(ids, list) and ids and len(set(ids)) == len(ids) and all(i in actual for i in ids),
+            'adjudication discrepancy absent from verified original evidence')
+    supplied = review['finding_ids']
+    findings = {f['id']: f for f in binding['independent']['findings']}
+    require(isinstance(supplied, list) and len(set(supplied)) == len(supplied)
+            and all(i in findings for i in supplied), 'unknown/duplicate independent finding')
+    require(review['replay_evidence_references'] == binding['replay'], 'review replay references drift')
+    conclusions = dict(PENDING_TRIAGE='PENDING_TRIAGE', REJECTED_AS_HARNESS_ERROR='HARNESS_ERROR',
+                       CERTIFIED_COUNTEREXAMPLE='BOUNDED_NEGATIVE_RESULT', INCONCLUSIVE='INCONCLUSIVE')
+    require(review['scoped_scientific_conclusion'] == dict(kind=conclusions[state],
+            obligation_id=obligation['id'], exhaustive_campaign_claim=False), 'unscoped/inconsistent scientific conclusion')
+    if state in ('CERTIFIED_COUNTEREXAMPLE', 'REJECTED_AS_HARNESS_ERROR'):
+        require(supplied, 'decision needs independently checked concrete findings')
+        category = 'SCIENTIFIC' if state == 'CERTIFIED_COUNTEREXAMPLE' else 'HARNESS'
+        for fid in supplied:
+            f = findings[fid]
+            require(f['category'] == category and f['obligation_id'] == obligation['id'], 'inconsistent finding/obligation')
+            require(any(discrepancy_covers(actual[i], f['detail']) for i in ids),
+                    'independent finding is not the original discrepancy being adjudicated')
+    if state == 'CERTIFIED_COUNTEREXAMPLE':
+        independent, replay_check = binding['independent'], binding['replay_independent']
+        side = binding['side']
+        other = 'reference' if side == 'tested' else 'tested'
+        require(binding['replay']['reproduced'], 'raw replay does not reproduce original violation')
+        require(independent['status'] == replay_check['status'] == 'VERIFIED'
+                and independent == replay_check, 'independent evidence checks BLOCKED or replay differs')
+        require(not any(f['category'] == 'HARNESS' for f in independent['findings']),
+                'harness/transport defect excludes scientific certification')
+        require(not independent['checks'][other]['violations'], 'oracle validity not independently established')
+        require(all(findings[fid]['side'] == side for fid in supplied), 'finding side differs from adjudicated side')
+
+
+def adjudication_store_identity(root, meta):
+    return dict(schema=ADJUDICATION_SCHEMA, run_root=str(root), run_id=meta['run_id'],
+                metadata_sha256=file_hash(root / 'metadata.json'))
+
+
+def read_adjudications(root, store, contract, meta, driver):
+    store = external(store)
+    require(not store.is_relative_to(root) and not root.is_relative_to(store), 'adjudications must be outside run archive')
+    identity = decode(read_small(store / 'adjudications.json'))
+    require(identity == adjudication_store_identity(root, meta), 'adjudication store identity drift')
+    latest, records = {}, []
+    journal = Journal(store)
+    for event in journal.records():
+        require(set(event) == {'kind', 'record', 'record_sha256'} and event['kind'] == 'adjudication',
+                'unknown adjudication journal event')
+        record = event['record']
+        sha = digest(canonical(record))
+        require(event['record_sha256'] == sha and sha not in {r['sha256'] for r in records}, 'duplicate/changed adjudication')
+        b = record['binding']
+        binding = adjudication_binding(root, meta, contract, driver, b['case']['case_id'], b['side'],
+                                        b['replay']['root'], b['journal_prefix'])
+        validate_adjudication(record, binding, contract)
+        key = b['case']['case_id']
+        previous = latest.get(key)
+        require(record['supersedes'] == (previous['sha256'] if previous else None),
+                'incompatible decision without valid explicit supersession')
+        if previous:
+            old = previous['record']['binding']
+            require(all(old[k] == b[k] for k in ('run_id', 'case', 'attempt_id', 'side', 'original_receipt')),
+                    'supersession changes original target identity')
+        item = dict(sha256=sha, record=record)
+        latest[key] = item
+        records.append(item)
+    require(sum(1 for _ in os.scandir(store / 'chunks')) == journal.sequence, 'unindexed adjudication history; no repair')
+    return journal, latest, records
+
+
+def append_adjudication(root, store, record, contract, meta, driver):
+    store = external(store)
+    require(not store.is_relative_to(root) and not root.is_relative_to(store), 'adjudications must be separate from run archive')
+    # Validate the concrete proposal completely BEFORE creating any store files.
+    b = record['binding']
+    binding = adjudication_binding(root, meta, contract, driver, b['case']['case_id'], b['side'],
+                                    b['replay']['root'], b['journal_prefix'])
+    validate_adjudication(record, binding, contract)
+    if not store.exists():
+        fresh(store)
+        write_new(store / 'adjudications.json', canonical(adjudication_store_identity(root, meta)))
+    with (store / 'adjudications.json').open('rb') as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        journal, latest, records = read_adjudications(root, store, contract, meta, driver)
+        previous = latest.get(b['case']['case_id'])
+        require(record['supersedes'] == (previous['sha256'] if previous else None),
+                'incompatible decision without valid explicit supersession')
+        if previous:
+            old = previous['record']['binding']
+            require(all(old[k] == b[k] for k in ('run_id', 'case', 'attempt_id', 'side', 'original_receipt')),
+                    'supersession changes original target identity')
+        sha = digest(canonical(record))
+        require(sha not in {r['sha256'] for r in records}, 'duplicate adjudication')
+        journal.append(dict(kind='adjudication', record=record, record_sha256=sha))
+    return dict(record_sha256=sha, state=record['state'], campaign_credit=0,
+                reviewer_truthfulness='NOT_MACHINE_VERIFIABLE')
+
+
+def audit_adjudications(root, store, contract, meta, driver):
+    """Deterministic offline re-audit, no replay execution and no campaign credit."""
+    _, original = audit(root, meta, contract, original_driver=driver)
+    observed = sum(e['failed'] for e in original['acceptance_evidence'].values())
+    with (external(store) / 'adjudications.json').open('rb') as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_SH | fcntl.LOCK_NB)
+        _, latest, records = read_adjudications(root, store, contract, meta, driver)
+    counts = dict.fromkeys(CERTIFICATION_STATES, 0)
+    counts['PENDING_TRIAGE'] = observed - len(latest)
+    require(counts['PENDING_TRIAGE'] >= 0, 'more adjudications than original mismatches')
+    for item in latest.values():
+        counts[item['record']['state']] += 1
+    return dict(schema=ADJUDICATION_SCHEMA, original_observed_mismatches=observed,
+                states=counts, records=len(records), campaign_credit=0,
+                latest=[dict(case_id=k, record_sha256=v['sha256'], state=v['record']['state'])
+                        for k, v in sorted(latest.items())],
+                reviewer_truthfulness='NOT_MACHINE_VERIFIABLE')
+
+
 def positive(value):
     number = int(value)
     if number <= 0:
@@ -1799,9 +2556,21 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='command', required=True)
     sub.add_parser('validate', help='read-only frozen identities, lazy schedule counts and blocked contracts')
+    for command in ('adjudication-template', 'adjudicate'):
+        child = sub.add_parser(command)
+        child.add_argument('--run', required=True, type=Path)
+        child.add_argument('--out', required=True, type=Path, help='separate external proposal/store directory')
+        if command == 'adjudication-template':
+            child.add_argument('--case-id', required=True)
+            child.add_argument('--side', required=True, choices=('tested', 'reference'))
+            child.add_argument('--replay', required=True, type=Path, help='complete existing external replay archive')
+        else:
+            child.add_argument('--record', required=True, type=Path, help='external reviewer-edited JSON proposal')
     for command in ('dry-run', 'campaign', 'resume', 'audit', 'replay'):
         child = sub.add_parser(command)
         child.add_argument('--out', required=True, type=Path, help='external directory; fresh except resume/audit')
+        if command == 'audit':
+            child.add_argument('--adjudications', type=Path, help='explicit external B3 store to re-audit')
         if command != 'audit':
             child.add_argument('--timeout', type=positive, default=60, help='per-process seconds')
         if command in ('campaign', 'resume', 'replay'):
@@ -1834,17 +2603,33 @@ def main(argv=None):
         root = fresh(args.out)
         meta = prepare(root, contract, args.command, args.timeout, args.cc)
     else:
-        root = external(args.run if args.command == 'replay' else args.out)
+        root = external(args.run if args.command in ('replay', 'adjudication-template', 'adjudicate') else args.out)
         meta = decode(read_small(root / 'metadata.json'))
     # Readers also lock exclusively so audit cannot inspect a partially appended
     # writer record. No separate mutable lock/index database is created.
     with (root / 'metadata.json').open('rb') as lock:
         fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-        verify_meta(root, meta, contract)
+        if args.command in ('audit', 'replay', 'adjudication-template', 'adjudicate'):
+            meta, contract, driver = archive_context(root)
+        else:
+            driver = sys.modules[__name__]
+            verify_meta(root, meta, contract)
+        if args.command == 'adjudication-template':
+            binding = adjudication_binding(root, meta, contract, driver, args.case_id, args.side, args.replay)
+            target = fresh(args.out)
+            record = dict(schema=ADJUDICATION_SCHEMA, binding=binding, state='PENDING_TRIAGE', supersedes=None, review=None)
+            write_new(target / 'proposal.json', canonical(record))
+            print(canonical(dict(proposal=str(target / 'proposal.json'), state='PENDING_TRIAGE', campaign_credit=0)).decode())
+            return 0
+        if args.command == 'adjudicate':
+            record = decode(read_small(external(args.record)))
+            print(canonical(append_adjudication(root, args.out, record, contract, meta, driver)).decode())
+            return 0
         if args.command == 'replay':
-            return replay(root, meta, contract, args.case_id, args.out, args.timeout)
+            return driver.replay(root, meta, contract, args.case_id, args.out, args.timeout)
         if args.command == 'audit':
-            journal, state = audit(root, meta, contract)
+            journal, state = audit(root, meta, contract, original_driver=driver,
+                                   adjudications=args.adjudications)
             report = summary(meta, state)
             report.update(journal_head_sha256=journal.previous,
                           index_sha256=file_hash(root / 'index.jsonl') if (root / 'index.jsonl').exists() else None)

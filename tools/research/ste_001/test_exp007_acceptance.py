@@ -350,7 +350,7 @@ class Acceptance(unittest.TestCase):
         self.assertEqual(result['scientific_finding'], 'NEGATIVE_RESULT_PENDING_TRIAGE')
         self.assertEqual(result['pending_triage_cases'], 1)
         self.assertIn('B3:', result['requirements'][9]['dependency'])
-        self.assertEqual(result['B3_STATUS'], 'OPEN')
+        self.assertEqual(result['B3_STATUS'], 'IMPLEMENTED')
 
     def test_incorrect_frozen_negative_diagnostic(self):
         def mutate(row):
